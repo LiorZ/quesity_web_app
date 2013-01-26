@@ -6,8 +6,9 @@ $(function() {
 		jointObj: undefined,
 		events: {
 			"mouseenter":"mouse_enter",
-			"mouseleave":"mouseleave"
+			"mouseleave":"mouseleave",
 		},
+		
 		initialize: function(options){ 
 			this.eventagg = options.eventagg;
 			var relevant_attrs = app.Attributes[this.model.get('page_type')];
@@ -27,34 +28,22 @@ $(function() {
 					}
 			});
 			this.$el = jQuery(this.jointObj.wrapper.node);
-			
 		},
 		mouse_enter: function(e){
-//			var pos = this.$el.offset();
-//			var width = this.jointObj.origBBox.width;
-//			var height = this.jointObj.origBBox.height;
-//			console.log(this.connection_btn.render());
-////			this.$el.$("#btn_connection").css(
-////						{
-////							"left": (pos.left + width)+"px",
-////							"top":(pos.top + height/4)+"px",
-////							"display":"inline"
-////						}
-////			).show();
-//			clearTimeout(app.timeoutId);
+			var pos = this.$el.offset();
+			var width = this.jointObj.origBBox.width;
+			var height = this.jointObj.origBBox.height;
+			this.model.trigger("show_menu",this.model,pos,width,height)
 		},
 		mouseleave: function(e){
-//			var posX = e.clientX;
-//			var posY = e.clientY;
-//			var pos = this.$el.offset();
-//			var width = this.jointObj.origBBox.width;
-//			var height = this.jointObj.origBBox.height;
-//			if ( (posX >= pos.left && posX <= pos.left+width) && (posY >= pos.top && posY <= pos.top+height) )
-//				return;
-//			app.timeoutId = setTimeout(function(){
-//				$("#btn_connection").css('display','none');
-//			},500);
-			
+			var posX = e.clientX;
+			var posY = e.clientY;
+			var pos = this.$el.offset();
+			var width = this.jointObj.origBBox.width;
+			var height = this.jointObj.origBBox.height;
+			if ( (posX >= pos.left && posX <= pos.left+width) && (posY >= pos.top && posY <= pos.top+height) )
+				return;
+			this.model.trigger("hide_menu",this.model);
 		}
 		
 	});

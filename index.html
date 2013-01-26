@@ -23,7 +23,7 @@
 <script type="text/javascript" src="js/views/appView.js"></script>
 
 <script type="text/javascript" src="js/app.js"></script>
-<script type="text/javascript" src="js/views/ConnectionButtonView.js"></script>
+<script type="text/javascript" src="js/views/MenuView.js"></script>
 <script type="text/javascript" src="js/views/appView.js"></script>
 <script type="text/javascript" src="js/views/QuestPageDiagramView.js"></script>
 <script type="text/javascript" src="js/models/QuestPage.js"></script>
@@ -57,7 +57,8 @@
 #toolbar {
 		padding: 4px;
 		display: inline-block;
-		width:180px;
+		display:none;
+		position:absolute;
 	}
 body {
    background:url(
@@ -208,7 +209,6 @@ $("document").ready(function(){
 <div id="toolbar" class="ui-widget-header ui-corner-all">
 	<button id="btn_delete" class='smaller_fonts'>Delete page</button>
 	<button id="btn_edit" class='smaller_fonts'>Edit page</button>
-	
 </div>
 
 <div id='world' style="height:100%">

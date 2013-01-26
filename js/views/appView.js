@@ -5,7 +5,7 @@ $(function( $ ) {
 	
 	app.AppView = Backbone.View.extend({
 		el: '#container',
-		
+		menu_view:undefined,
 		events: {
 			'click li a': 'create_new_page',
 		},
@@ -13,6 +13,8 @@ $(function( $ ) {
 		
 		initialize: function() { 
 			this.listenTo(app.Pages,'add',this.addQuestDiagramView);
+			this.menu_view = new app.MenuView();
+
 		},
 		
 		addQuestDiagramView: function(page) {
