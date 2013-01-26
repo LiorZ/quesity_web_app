@@ -1,7 +1,7 @@
 <html>
 <head>
 <!--  CSS Includes: -->
-  <link rel="stylesheet" href="js/lib/jquery-ui/css/jquery-ui-1.10.0.custom.css" />
+	<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.0/themes/base/jquery-ui.css" />
 
 <!-- Javascript includes: -->
 <script type="text/javascript" src="js/lib/jquery/jquery.1.9.0.js"></script>
@@ -54,7 +54,11 @@
 	width:20px;
 	height:20px;
 }
-
+#toolbar {
+		padding: 4px;
+		display: inline-block;
+		width:180px;
+	}
 body {
    background:url(
    
@@ -167,6 +171,20 @@ $("document").ready(function(){
 			console.log(this)
 		});
 		
+		$("#btn_delete").button( {
+			text: false,
+			icons: {
+				primary: "ui-icon-trash"
+			}
+		});
+		
+		$("#btn_edit").button( {
+			text: false,
+			icons: {
+				primary: "ui-icon-pencil"
+			}
+		});
+		
 		});
 </script>
 <body>
@@ -187,6 +205,11 @@ $("document").ready(function(){
 </ul>
 </div>
 
+<div id="toolbar" class="ui-widget-header ui-corner-all">
+	<button id="btn_delete" class='smaller_fonts'>Delete page</button>
+	<button id="btn_edit" class='smaller_fonts'>Edit page</button>
+	
+</div>
 
 <div id='world' style="height:100%">
 	
