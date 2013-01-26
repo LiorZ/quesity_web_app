@@ -4,7 +4,6 @@ $(function() {
 	app.QuestPageDiagramView = Backbone.View.extend({
 		eventagg: undefined,
 		jointObj: undefined,
-		connection_btn: undefined,
 		events: {
 			"mouseenter":"mouse_enter",
 			"mouseleave":"mouseleave"
@@ -28,34 +27,33 @@ $(function() {
 					}
 			});
 			this.$el = jQuery(this.jointObj.wrapper.node);
-			this.connection_btn = new app.ConnectionButtonView();
 			
 		},
 		mouse_enter: function(e){
-			var pos = this.$el.offset();
-			var width = this.jointObj.origBBox.width;
-			var height = this.jointObj.origBBox.height;
-			console.log(this.connection_btn.render());
-//			this.$el.$("#btn_connection").css(
-//						{
-//							"left": (pos.left + width)+"px",
-//							"top":(pos.top + height/4)+"px",
-//							"display":"inline"
-//						}
-//			).show();
-			clearTimeout(app.timeoutId);
+//			var pos = this.$el.offset();
+//			var width = this.jointObj.origBBox.width;
+//			var height = this.jointObj.origBBox.height;
+//			console.log(this.connection_btn.render());
+////			this.$el.$("#btn_connection").css(
+////						{
+////							"left": (pos.left + width)+"px",
+////							"top":(pos.top + height/4)+"px",
+////							"display":"inline"
+////						}
+////			).show();
+//			clearTimeout(app.timeoutId);
 		},
 		mouseleave: function(e){
-			var posX = e.clientX;
-			var posY = e.clientY;
-			var pos = this.$el.offset();
-			var width = this.jointObj.origBBox.width;
-			var height = this.jointObj.origBBox.height;
-			if ( (posX >= pos.left && posX <= pos.left+width) && (posY >= pos.top && posY <= pos.top+height) )
-				return;
-			app.timeoutId = setTimeout(function(){
-				$("#btn_connection").css('display','none');
-			},500);
+//			var posX = e.clientX;
+//			var posY = e.clientY;
+//			var pos = this.$el.offset();
+//			var width = this.jointObj.origBBox.width;
+//			var height = this.jointObj.origBBox.height;
+//			if ( (posX >= pos.left && posX <= pos.left+width) && (posY >= pos.top && posY <= pos.top+height) )
+//				return;
+//			app.timeoutId = setTimeout(function(){
+//				$("#btn_connection").css('display','none');
+//			},500);
 			
 		}
 		
