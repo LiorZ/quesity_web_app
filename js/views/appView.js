@@ -23,7 +23,8 @@ $(function( $ ) {
 		
 		create_new_page: function(ev){
 			var q_type = $(ev.target).data("page-type");
-			app.Pages.add(new app.QuestPage({page_type:q_type}));
+			var page_num = ++app.pageCount;
+			app.Pages.add(new app.QuestPage({page_type:q_type, page_number: page_num}));
 		},
 		
 		render: function() {

@@ -1,8 +1,7 @@
 var app = app || {};
-
 $(function() {
 	app.timeoutId = 0;
-
+	app.pageCount = 0;
 	app.Attributes ={
 			'static': {
 				model: {

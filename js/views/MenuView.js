@@ -11,7 +11,7 @@ $(function() {
 		initialize: function() {
 			this.listenTo(app.Pages,"add",this.attachListener);
 			this.$("#btn_delete").button( {
-				text: false,
+				text: false,	
 				icons: {
 					primary: "ui-icon-trash"
 				}
@@ -31,7 +31,7 @@ $(function() {
 		},
 		
 		show_properties_page:function() {
-			var prop_page = new app.QuestPropertiesPageView({model:this.model, template:'#dialog-form'});
+			var prop_page = new app.QuestPagePropertiesView({model:this.model, template:'#some_form'});
 			prop_page.render();
 		},
 		
@@ -68,7 +68,6 @@ $(function() {
 		},
 		
 		cancel_timeout: function() {
-			console.log("Clearing timeout " + app.timeoutId);
 			clearTimeout(app.timeoutId);
 		},
 		restart_timeout: function() {

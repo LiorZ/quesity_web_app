@@ -9,7 +9,8 @@
 			x:220,
 			y:220,
 			page_name:"Untitled",
-			page_type: ""
+			page_type: "",
+			page_number: 1
 		}
 	});
 	

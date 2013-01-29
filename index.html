@@ -1,10 +1,11 @@
 <html>
 <head>
 <!--  CSS Includes: -->
-	<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.0/themes/base/jquery-ui.css" />
+	<link rel="stylesheet" href="js/lib/jquery-ui/css/smoothness/jquery-ui-1.10.0.custom.css" />
 
 <!-- Javascript includes: -->
 <script type="text/javascript" src="js/lib/jquery/jquery.1.9.0.js"></script>
+<script type="text/javascript" src="js/lib/utils/utils.js"></script>
 
 <script type="text/javascript" src="js/lib/jointjs/raphael.js"></script>
 <script type="text/javascript" src="js/lib/jquery-ui/plugins/jquery-easing/jquery.easing.1.3.js"></script>
@@ -67,6 +68,14 @@ body {
    
 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAIUlEQVQYV2NkYGDwAeIthGhGoAKiAEghzES8GkZNxBs8ALOvCQtmZ8UqAAAAAElFTkSuQmCC   ) repeat;
 }
+
+.quest_page {
+	border: 1px solid black;
+	border-radius: 30px;
+	display: 'inline';
+	background-color:rgba(189,223,255,0.8);
+	position: fixed;
+}
 </style>
 <script type="text/javascript">
 $("document").ready(function(){
@@ -74,76 +83,6 @@ $("document").ready(function(){
 	var org = Joint.dia.org;
 		Joint.paper("world");
 
-		var static_page = org.Member.create({
-			rect : {
-				x : 305,
-				y : 70,
-				width : 180,
-				height : 60
-			},
-			name : "Content page",
-			position : "Name of the page",
-			avatar : 'img/document_scroll.png',
-			attrs : {
-				fill : '#99FF99',
-				stroke : 'gray'
-			}
-		});
-
-		var location_page = org.Member.create({
-			rect : {
-				x : 90,
-				y : 200,
-				width : 180,
-				height : 60
-			},
-			name : "Location page",
-			position : "Name of the page",
-			avatar : 'img/location_icon.png',
-			attrs : {
-					fill : '#BDDFFF',
-					stroke : 'gray'
-				}
-		});
-
-		var stall_page = org.Member.create({
-			rect : {
-				x : 300,
-				y : 200,
-				width : 180,
-				height : 60
-			},
-			name : "Stall page",
-			position : "Name of the page",
-			avatar : 'img/stall_icon.png',
-			attrs : {
-					fill : '#FFFF99',
-					stroke : 'gray'
-				}
-		});
-
-		var question_page = org.Member.create({
-			rect : {
-				x : 500,
-				y : 200,
-				width : 180,
-				height : 60
-			},
-			name : "Question page",
-			position : "Name of the page",
-			avatar : 'img/question_icon.png',
-			attrs : {
-					fill : '#FFCCCC',
-					stroke : 'gray'
-				}
-		});
-
-		/*homer.joint(marge, org.arrow);
-		marge.joint(lisa, org.arrow);
-
-		marge.joint(maggie, org.arrow).setVertices([ '375 380' ]);
-		homer.joint(lenny, org.arrow).setVertices([ '165 380' ]);
-		homer.joint(carl, org.arrow).setVertices([ '165 530' ]);*/
 		$( "button" ).button();
 		$("#menu_opener").mouseenter(function(e){
 			e.preventDefault();
@@ -206,21 +145,11 @@ $("document").ready(function(){
 <!--   <button id="btn_connection" class="smaller_fonts"></button> -->
 </div> <!-- Container -->
  <script type='text/template' id='some_form'>
-  <p class="validateTips">All form fields are required.</p>
-  <form>
-  <fieldset>
-    <label for="name">Name</label>
-    <input type="text" name="name" id="name" class="text ui-widget-content ui-corner-all" />
-    <label for="email">Email</label>
-    <input type="text" name="email" id="email" value="" class="text ui-widget-content ui-corner-all" />
-    <label for="password">Password</label>
-    <input type="password" name="password" id="password" value="" class="text ui-widget-content ui-corner-all" />
-  </fieldset>
-  </form>
+
 </script>
 
 
-<div id="dialog-form" title="Create new user">
+<div id="dialog-form" title="Create new user" class='quest_page'>
 
 </div>
 </body>

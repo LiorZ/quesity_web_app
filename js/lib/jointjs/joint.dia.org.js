@@ -50,7 +50,7 @@ org.Member = Element.extend({
             radius: 10,
             shadow: true,
             avatar: '',
-            padding: 5
+            padding: 5,
         });
         this.setWrapper(this.paper.rect(p.rect.x, p.rect.y, p.rect.width, p.rect.height, p.radius).attr(p.attrs));
         if (p.avatar) {
@@ -77,7 +77,7 @@ org.Member = Element.extend({
         var l = this.paper.path(['M', tbb.x, tbb.y + tbb.height + p.padding, 
                                  'L', tbb.x + tbb.width, tbb.y + tbb.height + p.padding].join(' '));
         var numbering_box = this.paper.rect(bb.x+bb.width-20-p.padding,bb.y+p.padding,20,20,4).attr({'stroke':'gray','stroke-width':1.5});
-        var numbering = this.paper.text(numbering_box.attrs.x+numbering_box.attrs.width/2,numbering_box.attrs.y + +numbering_box.attrs.height/2,'1');
+        var numbering = this.paper.text(numbering_box.attrs.x+numbering_box.attrs.width/2,numbering_box.attrs.y + +numbering_box.attrs.height/2,p.numbering);
 	return [t, l,numbering,numbering_box];
     },
     getNameElement: function() {

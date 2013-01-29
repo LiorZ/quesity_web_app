@@ -25,7 +25,8 @@ $(function() {
 				attrs : {
 						fill : relevant_attrs.view.fill,
 						stroke : 'gray'
-					}
+					},
+				numbering: this.model.get('page_number')
 			});
 			this.$el = jQuery(this.jointObj.wrapper.node);
 			
