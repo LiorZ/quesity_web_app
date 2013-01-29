@@ -5,8 +5,8 @@ $(function() {
 		eventagg: undefined,
 		jointObj: undefined,
 		events: {
-			"mouseenter":"mouse_enter",
-			"mouseleave":"mouseleave",
+			"mouseenter":"show_menu",
+			"mouseleave":"hide_menu",
 		},
 		
 		initialize: function(options){ 
@@ -28,14 +28,22 @@ $(function() {
 					}
 			});
 			this.$el = jQuery(this.jointObj.wrapper.node);
+			
+			//listens to:
+			this.listenTo(this.model,'destroy',this.delete_page);
 		},
-		mouse_enter: function(e){
+		delete_page: function() {
+			this.jointObj.remove();
+			this.jointObj.shadow.remove(); 
+			this.remove();
+		},
+		show_menu: function(e){
 			var pos = this.$el.offset();
 			var width = this.jointObj.origBBox.width;
 			var height = this.jointObj.origBBox.height;
 			this.model.trigger("show_menu",this.model,pos,width,height)
 		},
-		mouseleave: function(e){
+		hide_menu: function(e){
 			var posX = e.clientX;
 			var posY = e.clientY;
 			var pos = this.$el.offset();
