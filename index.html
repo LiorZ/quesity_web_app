@@ -63,6 +63,18 @@
 		display:none;
 		position:absolute;
 	}
+#page_number{ 
+  border-radius: 55em;
+  -moz-border-radius: 55em;
+  -webkit-border-radius: 55em;
+  border:3px solid black;
+  display: inline-block;
+  font-weight: bold;
+  line-height: 3em;
+  margin-right: 5px;
+  text-align: center;
+  width: 6em; 
+}
 body {
    background:url(
    
@@ -75,6 +87,20 @@ data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAIUlEQVQYV2
 	display: 'inline';
 	background-color:rgba(189,223,255,0.8);
 	position: fixed;
+	padding-top: 20px;
+}
+#page_symbol {
+	position: absolute;
+	float: right;
+	height:100px;
+	margin-right:1em;
+	right: 0px;
+}
+#page_symbol td {
+	text-align: center;
+}
+#page_symbol img {
+	height:100px;
 }
 </style>
 <script type="text/javascript">
@@ -142,10 +168,13 @@ $("document").ready(function(){
 	
 </div> <!-- world -->
 
-<!--   <button id="btn_connection" class="smaller_fonts"></button> -->
 </div> <!-- Container -->
  <script type='text/template' id='some_form'>
-
+<div id='quest_page_title' style='text-align:center'>
+	<table id='page_symbol'><tr><td><img src='img/location_icon.png'/></td></tr><tr><td id='type_title'></td></tr></table>
+	<span id='page_number'><h1><%=page_number%> </h1></span>
+	<h1 ><%=page_name%></h1>
+</div>
 </script>
 
 
