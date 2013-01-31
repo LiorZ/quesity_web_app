@@ -12,7 +12,7 @@ $(function() {
 		initialize: function(options){ 
 			this.eventagg = options.eventagg;
 			var relevant_attrs = app.Attributes[this.model.get('page_type')];
-			this.jointObj = Joint.dia.org.Member.create({
+			var jointObj = Joint.dia.org.Member.create({
 				rect : {
 					x : this.model.get('x'),
 					y : this.model.get('y'),
@@ -28,31 +28,40 @@ $(function() {
 					},
 				numbering: this.model.get('page_number')
 			});
-			this.$el = jQuery(this.jointObj.wrapper.node);
+			this.model.set("jointObj", jointObj );
+			this.$el = jQuery(jointObj.wrapper.node);
 			
 			//listens to:
 			this.listenTo(this.model,'destroy',this.delete_page);
 		},
 		delete_page: function() {
-			this.jointObj.remove();
-			this.jointObj.shadow.remove(); 
+			var jointObj = this.model.get("jointObj");
+			jointObj.remove();
+			jointObj.shadow.remove(); 
 			this.remove();
 		},
 		show_menu: function(e){
+			var jointObj = this.model.get("jointObj");
 			var pos = this.$el.offset();
-			var width = this.jointObj.origBBox.width;
-			var height = this.jointObj.origBBox.height;
+			var width = jointObj.origBBox.width;
+			var height = jointObj.origBBox.height;
 			this.model.trigger("show_menu",this.model,pos,width,height)
 		},
 		hide_menu: function(e){
 			var posX = e.clientX;
 			var posY = e.clientY;
 			var pos = this.$el.offset();
-			var width = this.jointObj.origBBox.width;
-			var height = this.jointObj.origBBox.height;
+			var jointObj = this.model.get("jointObj");
+
+			var width = jointObj.origBBox.width;
+			var height = jointObj.origBBox.height;
 			if ( (posX >= pos.left && posX <= pos.left+width) && (posY >= pos.top && posY <= pos.top+height) )
 				return;
 			this.model.trigger("hide_menu",this.model);
+		},
+		
+		connect_pages: function() { 
+			
 		}
 		
 	});

@@ -1,7 +1,7 @@
 var app = app || {};
 $(function( $ ) {
 	
-	var vent = _.extend({}, Backbone.Events);
+	app.eventagg = _.extend({}, Backbone.Events);
 	
 	app.AppView = Backbone.View.extend({
 		el: '#container',
@@ -18,13 +18,14 @@ $(function( $ ) {
 		},
 		
 		addQuestDiagramView: function(page) {
-			var view = new app.QuestPageDiagramView({model: page, eventagg: vent});
+			var view = new app.QuestPageDiagramView({model: page, eventagg: app.eventagg});
 		},
 		
 		create_new_page: function(ev){
 			var q_type = $(ev.target).data("page-type");
 			var page_num = ++app.pageCount;
-			var page = new app.QuestPageLocation({page_type:q_type, page_number: page_num, hints: new app.HintCollection()});
+			var prototype = app.Attributes[q_type].model.page_prototype;
+			var page = new prototype({page_type:q_type, page_number: page_num});
 			console.log(page);
 			app.Pages.add(page);
 		},

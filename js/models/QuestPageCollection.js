@@ -17,6 +17,12 @@ var app = app || {};
 //			console.log("The collection recorded a model change" + model);
 //		}
 		
+		byPageNumber:function(number){
+			return this.filter(function(page){
+				return page.get('page_number') == number;
+			})[0];
+		}
+		
 	});
 	
 	app.Pages = new QuestPageList();

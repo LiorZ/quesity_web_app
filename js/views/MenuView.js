@@ -8,7 +8,7 @@ $(function() {
 			'click #btn_delete':'delete_page',
 			'click #btn_edit':'show_properties_page'
 		},
-		initialize: function() {
+		initialize: function(options) {
 			this.listenTo(app.Pages,"add",this.attachListener);
 			this.$("#btn_delete").button( {
 				text: false,	
@@ -23,6 +23,7 @@ $(function() {
 					primary: "ui-icon-pencil"
 				}
 			});
+			
 		},
 		attachListener: function(element) {
 			this.listenTo(element,"show_menu",this.show_menu);
@@ -31,7 +32,9 @@ $(function() {
 		},
 		
 		show_properties_page:function() {
-			var prop_page = new app.QuestPageLocationPropertiesView({model:this.model, template:'#tmpl_page_location'});
+			var template_id = app.Attributes[this.model.get('page_type')].view.properties_template;
+			var properties_prototype = app.Attributes[this.model.get('page_type')].view.properties_prototype;
+			var prop_page = new properties_prototype({model:this.model, template:template_id});
 			prop_page.render();
 		},
 		

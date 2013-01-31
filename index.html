@@ -14,6 +14,8 @@
 <script type="text/javascript" src="js/lib/jointjs/joint.js"></script>
 <script type="text/javascript" src="js/lib/jointjs/json2.js"></script>
 <script type="text/javascript" src="js/lib/jointjs/joint.dia.js"></script>
+<script type="text/javascript" src="js/lib/jointjs/joint.dia.uml.js"></script>
+
 <script type="text/javascript" src="js/lib/jointjs/joint.dia.org.js"></script>
 
 <script src="js/lib/jquery-ui/jquery-ui-1.10.0.custom.js"></script>
@@ -27,17 +29,31 @@
 
 <script type="text/javascript" src="js/app.js"></script>
 <script type="text/javascript" src="js/views/MenuView.js"></script>
-<script type="text/javascript" src="js/views/NewHintView.js"></script>
+
+<script type="text/javascript" src="js/views/EditableRowView.js"></script>
+<script type="text/javascript" src="js/views/EditableTableView.js"></script>
+<script type="text/javascript" src="js/views/EditableRowDialog.js"></script>
+<script type="text/javascript" src="js/views/LinkEditableRowDialog.js"></script>
+<script type="text/javascript" src="js/views/LinkEditableRowView.js"></script>
+<script type="text/javascript" src="js/views/LinkView.js"></script>
+
+
 
 <script type="text/javascript" src="js/views/appView.js"></script>
 <script type="text/javascript" src="js/views/QuestPagePropertiesView.js"></script>
 
 <script type="text/javascript" src="js/views/QuestPageDiagramView.js"></script>
 <script type="text/javascript" src="js/views/QuestPageLocationPropertiesView.js"></script>
+<script type="text/javascript" src="js/views/QuestPageQuestionPropertiesView.js"></script>
+
 <script type="text/javascript" src="js/models/Hint.js"></script>
 <script type="text/javascript" src="js/models/LinkLocation.js"></script>
+<script type="text/javascript" src="js/models/LinkAnswer.js"></script>
 <script type="text/javascript" src="js/models/QuestPage.js"></script>
 <script type="text/javascript" src="js/models/QuestPageLocation.js"></script>
+<script type="text/javascript" src="js/models/QuestPageQuestion.js"></script>
+<script type="text/javascript" src="js/models/Mixins.js"></script>
+
 
 
 <script type="text/javascript" src="js/models/QuestPageCollection.js"></script>
@@ -118,11 +134,7 @@ data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAIUlEQVQYV2
 	float:right;
 	width:25%;
 }
-#new_hint_form{
-	display:none;
-}
-
-#new_hint_form input, #new_hint_form label {
+#dialog_form input, #dialog_form label {
 	display: block;
 }
 </style>
@@ -196,7 +208,7 @@ $("document").ready(function(){
 <div id='quest_page_title' style='text-align:center'>
 	<table id='page_symbol'><tr><td><img src='img/location_icon.png'/></td></tr><tr><td id='type_title'></td></tr></table>
 	<span id='page_number'><h1><%=page_number%> </h1></span>
-	<h1 ><%=page_name%></h1>
+	<h1 onClick="this.contentEditable='true';"><%=page_name%></h1>
 <div id='links'>
 
 </script>
@@ -236,6 +248,35 @@ $("document").ready(function(){
 <div style='float:right'><button id='btn_add_location'>Add</button></div>
 </script>
 
+<script type='text/template' id='tmpl_answers'>
+<table id="answers" class="tablesorter"> 
+<thead> 
+<tr> 
+    <th>Answer</th> 
+    <th>Leads to page</th> 
+	<th>Delete</th>
+</tr> 
+</thead> 
+<tbody id='row_table_body'> 
+</tbody>
+</table>
+<div style='float:right'><button id='btn_add_row'>Add</button></div>
+</script>
+
+<script type='text/template' id='tmpl_one_hint'>
+	<td><a href='#' id='lnk_edit_row'><%=hint_title%></a></td>
+	<td><button id='btn_delete_row' class='btn_delete_hint'>X</button>
+</script>
+
+<script type='text/template' id='tmpl_one_answer'>
+	<td><a href='#' id='lnk_edit_row'><%=answer_txt%></a></td>
+	<td>
+			<%if ( links_to_page ) %> 
+				<a href='#' id='lnk_links_to_page'><%= links_to_page.get('page_number') %> - <%=links_to_page.get('page_name')%></a>
+			<%else { %> N/A </td> <% } %>
+	<td><button id='btn_delete_row' class='btn_delete_hint'>X</button></td>
+</script>
+
 <script type='text/template' id='tmpl_hints'>
 <table id="hints" class="tablesorter"> 
 <thead> 
@@ -244,22 +285,17 @@ $("document").ready(function(){
     <th> </th> 
 </tr> 
 </thead> 
-<tbody> 
-<% hints.each(function (hint) { %>
-<tr>
-	<td><%=hint.get('hint_title')%></td>
-	<td><button class='btn_delete_hint'>X</button>
-</tr>
-<% }); %>
+<tbody id='row_table_body'> 
+
 </tbody> 
 </table> 
-<div style='float:right'><button id='btn_add_hint'>Add</button></div>
+<div style='float:right'><button id='btn_add_row'>Add</button></div>
 </script>
 
 <script type='text/template' id='tmpl_page_location'>
 	<%= _.template($('#tmpl_header').html())(data) %>
 	<%= _.template($('#tmpl_locations').html())(data) %>
-	<%= _.template($('#tmpl_hints').html())(data) %>
+	<div id='hint_place_holder'></div>
 <br/>
 <button id='btn_exit_prop'>Back to diagram</button>
 
@@ -267,18 +303,49 @@ $("document").ready(function(){
 </div>
 </script>
 
+<script type='text/template' id=tmpl_page_question>
+	<%= _.template($('#tmpl_header').html())(data) %>
+	<div id='answers_place_holder'></div>
+	<div id='hint_place_holder'></div>
+<br/>
+<button id='btn_exit_prop'>Back to diagram</button>
 
-<div id="new_hint_form" title="Add New Hint">
+</div>
+</div>
+</script>
+
+<script type='text/template' id=tmpl_hint_dialog>
+
+<div id="dialog_form" title="Add New Hint">
   <form>
   <fieldset>
     <label for="txt_hint_title">Title:</label>
-  	<input type="text" name="txt_hint_title" id="txt_hint_title" class="text ui-widget-content ui-corner-all" />
+  	<input type="text" name="txt_hint_title" id="txt_hint_title" class="text ui-widget-content ui-corner-all" value="<%=hint_title%>"/>
     <label for="txt_hint">Hint:</label>
-    <textarea type="text" name="txt_hint" id="txt_hint" class="text ui-widget-content ui-corner-all"></textarea>
+    <textarea type="text" name="txt_hint" id="txt_hint" class="text ui-widget-content ui-corner-all"><%=hint_txt%></textarea>
   </fieldset>
   </form>
 </div>
+</script>
 
+<script type='text/template' id=tmpl_answer_dialog>
+
+<div id="dialog_form" title="Add New answer">
+  <form>
+  <fieldset>
+    <label for="txt_hint_title">Answer:</label>
+  	<input type="text" name="txt_answer" id="txt_answer" class="text ui-widget-content ui-corner-all"  value=<%=answer_txt%>/>
+    <label for="next_page_link">This answer links to page:</label>
+
+  	<select id='next_page_link' name='next_page_link'>
+	<% app.Pages.each( function(page) { %>
+		<option value='<%= page.get('page_number')%>'><%=page.get('page_number') %> - <%=page.get('page_name') %></option>
+	<% }); %>
+	</select>
+  </fieldset>
+  </form>
+</div>
+</script>
 </body>
 </head>
 </html>

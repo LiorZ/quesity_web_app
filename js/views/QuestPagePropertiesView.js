@@ -5,8 +5,8 @@ $(function() {
 		template: undefined,
 		id:'#dialog-form',
 		className:'quest_page',
+		hint_section:undefined,
 		events: {
-			'click #btn_add_hint': 'add_hint',
 			'click #btn_exit_prop': 'exit_properties_view'
 		},
 		initialize: function(options) {
@@ -15,16 +15,10 @@ $(function() {
 		exit_properties_view: function() {
 			this.remove();
 		},
-		add_hint: function() {
-			var dialog = new app.NewHintView({model:this.model});
-			dialog.render();
-		},
 		
 		render:function() {
-			console.log("Rendering properties page...");
 			var type_obj = app.Attributes[this.model.get('page_type')];
 			var fill_color = utils.hexToRgb(type_obj.view.fill);
-			console.log(this.model.toJSON());
 			this.$el.html(this.template({data:this.model.toJSON()}));
 			var size = utils.precentToPixels(0.85);
 			this.$el.css({
@@ -43,6 +37,7 @@ $(function() {
 		    this.$('#type_title').text(type_obj.view.type_title);
 		    this.$('#locations').tablesorter();
 		    $('body').append(this.$el);
-		}
+		},
+		
 	});
 }());

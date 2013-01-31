@@ -1,7 +1,10 @@
 var app = app || {};
+
+var consts = consts || {};
 $(function() {
 	app.timeoutId = 0;
 	app.pageCount = 0;
+	consts.LABEL_LENGTH = 15;
 	app.Attributes ={
 			'static': {
 				model: {
@@ -17,13 +20,15 @@ $(function() {
 			},
 			'location': {
 				model: {
-					
+					page_prototype: app.QuestPageLocation
 				},
 				
 				view:{
 					avatar : 'img/location_icon.png',
 					fill: '#BDDFFF',
-					type_title:'Location Page'
+					type_title:'Location Page',
+					properties_template:'#tmpl_page_location',
+					properties_prototype: app.QuestPageLocationPropertiesView
 				}
 				
 			},
@@ -42,13 +47,15 @@ $(function() {
 			},
 			'question': {
 				model: {
-					
+					page_prototype: app.QuestPageQuestion
 				},
 				
 				view:{
 					avatar : 'img/question_icon.png',
 					fill: '#FFCCCC',
-					type_title:"Question page"
+					type_title:"Question page",
+					properties_template:'#tmpl_page_question',
+					properties_prototype: app.QuestPageQuestionPropertiesView
 				}
 				
 			},

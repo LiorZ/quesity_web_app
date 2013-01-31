@@ -4,7 +4,10 @@
 
 
 	app.QuestPageLocation = app.QuestPage.extend({
-		
+		initialize:function(options) {
+			this.constructor.__super__.initialize.apply(this, [options]);
+			this.set('hints',new app.HintCollection());
+		},
 		defaults:
 		 {
 			locations: new app.LinkLocationCollection(),
