@@ -24,7 +24,9 @@ $(function( $ ) {
 		create_new_page: function(ev){
 			var q_type = $(ev.target).data("page-type");
 			var page_num = ++app.pageCount;
-			app.Pages.add(new app.QuestPage({page_type:q_type, page_number: page_num}));
+			var page = new app.QuestPageLocation({page_type:q_type, page_number: page_num, hints: new app.HintCollection()});
+			console.log(page);
+			app.Pages.add(page);
 		},
 		
 		render: function() {

@@ -3,20 +3,29 @@ $(function() {
 	
 	app.QuestPagePropertiesView = Backbone.View.extend({
 		template: undefined,
-		el:'#dialog-form',
-		initialize: function(options) {
-			console.log("Template: ");
-			console.log($(options.template).html());
-			this.template = _.template( $(options.template).html() );
-			
+		id:'#dialog-form',
+		className:'quest_page',
+		events: {
+			'click #btn_add_hint': 'add_hint',
+			'click #btn_exit_prop': 'exit_properties_view'
 		},
+		initialize: function(options) {
+			this.template = _.template( $(options.template).html() );
+		},
+		exit_properties_view: function() {
+			this.remove();
+		},
+		add_hint: function() {
+			var dialog = new app.NewHintView({model:this.model});
+			dialog.render();
+		},
+		
 		render:function() {
-			this.$el.empty();	
+			console.log("Rendering properties page...");
 			var type_obj = app.Attributes[this.model.get('page_type')];
-			
 			var fill_color = utils.hexToRgb(type_obj.view.fill);
-			
-			this.$el.html(this.template(this.model.toJSON()));
+			console.log(this.model.toJSON());
+			this.$el.html(this.template({data:this.model.toJSON()}));
 			var size = utils.precentToPixels(0.85);
 			this.$el.css({
 				display: 'inline',
@@ -31,8 +40,9 @@ $(function() {
                     $(window).scrollLeft()) + "px");
 		    
 		    this.$('img').attr('src',type_obj.view.avatar);
-		    console.log(this.$('img').attr('src'));
 		    this.$('#type_title').text(type_obj.view.type_title);
+		    this.$('#locations').tablesorter();
+		    $('body').append(this.$el);
 		}
 	});
 }());

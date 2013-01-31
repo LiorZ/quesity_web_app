@@ -31,7 +31,7 @@ $(function() {
 		},
 		
 		show_properties_page:function() {
-			var prop_page = new app.QuestPagePropertiesView({model:this.model, template:'#some_form'});
+			var prop_page = new app.QuestPageLocationPropertiesView({model:this.model, template:'#tmpl_page_location'});
 			prop_page.render();
 		},
 		
