@@ -14,6 +14,8 @@ $(function() {
 			
 			var view = new app.LinkView({model: this.model});
 			view.render();
+			
+			
 		}
 		
 	})}());

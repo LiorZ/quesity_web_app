@@ -65,7 +65,12 @@ uml.generalizationArrow = {
 uml.arrow = {
     startArrow: {type: "none"},
     endArrow: {type: "basic", size: 5},
-    attrs: {"stroke-dasharray": "none"}
+    attrs: {"stroke-dasharray": "none"},
+    handle:{
+    	start:{
+    		dragging:false
+    	}
+    }
 };
 
 /**

@@ -26,7 +26,7 @@ $(function() {
 						fill : relevant_attrs.view.fill,
 						stroke : 'gray'
 					},
-				numbering: this.model.get('page_number')
+				numbering: this.model.get('page_number'),
 			});
 			this.model.set("jointObj", jointObj );
 			this.$el = jQuery(jointObj.wrapper.node);
@@ -36,8 +36,8 @@ $(function() {
 		},
 		delete_page: function() {
 			var jointObj = this.model.get("jointObj");
-			jointObj.remove();
-			jointObj.shadow.remove(); 
+			jointObj.shadow.remove();
+			jointObj.liquidate();
 			this.remove();
 		},
 		show_menu: function(e){
@@ -59,10 +59,6 @@ $(function() {
 				return;
 			this.model.trigger("hide_menu",this.model);
 		},
-		
-		connect_pages: function() { 
-			
-		}
 		
 	});
 	

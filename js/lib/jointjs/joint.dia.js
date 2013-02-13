@@ -98,7 +98,14 @@ var dia = Joint.dia = {
 	while (idx--)
 	    if (register[idx] === j)
 		register.splice(idx, 1);
-    }
+    },
+    remove_joint:function(j) {
+ 	   j.freeJoint(j.startObject()); 
+ 	   j.freeJoint(j.endObject()); 
+ 	   j.clean(["connection", "startCap", "endCap", "handleStart", 
+ 	"handleEnd", "label"]); 
+ 	   this.unregisterJoint(j); 
+     },
 };
 
 /**
@@ -635,7 +642,6 @@ Element.prototype = {
         this.removed = true;
         return null;
     },
-
     /**
      * Remove element and all joints pointing from and to this element.
      * @methodOf Joint.dia.Element#
@@ -907,4 +913,4 @@ Joint.addEvent(document, "mousemove", Element.mouseMove);
 Joint.addEvent(document, "mouseup", Element.mouseUp);
 
 
-})(this);	// END CLOSURE
+}) (this);	// END CLOSURE

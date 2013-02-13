@@ -41,6 +41,7 @@ $(function() {
 		delete_page: function(e) {
 			console.log("Destroying " + this.model.get('page_name'));
 			this.model.destroy();
+			this.hide_menu(undefined,0);
 		},
 		show_menu: function(model,pos,width,height) {
 			clearTimeout(app.timeoutId);
@@ -60,14 +61,18 @@ $(function() {
 			
 		},
 		
-		hide_menu: function(model){ 
+		hide_menu: function(model,t){
+			var tout=t;
+			if ( t == undefined ){
+				tout = 500;
+			}
 			menu = this.$el;
 			clearTimeout(app.timeoutId);
 			var menuObj = this;
 			app.timeoutId = setTimeout(function(){
 				menu.css('display','none');
 				menuObj.model = undefined;
-			},500);	
+			},tout);	
 		},
 		
 		cancel_timeout: function() {
