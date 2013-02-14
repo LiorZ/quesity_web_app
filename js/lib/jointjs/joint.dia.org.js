@@ -53,6 +53,9 @@ org.Member = Element.extend({
             padding: 5,
         });
         this.setWrapper(this.paper.rect(p.rect.x, p.rect.y, p.rect.width, p.rect.height, p.radius).attr(p.attrs));
+        this.addInnerNodes(p);
+    },
+    addInnerNodes:function(p) {
         if (p.avatar) {
             this.addInner(this.paper.image(p.avatar, p.rect.x + p.padding, p.rect.y + p.padding, p.rect.height - 2*p.padding, p.rect.height - 2*p.padding));
             p.labelOffsetX = p.rect.height;
@@ -87,6 +90,18 @@ org.Member = Element.extend({
 	    tbb = t.getBBox();
 	t.translate(bb.x - tbb.x + p.labelOffsetX, bb.y - tbb.y + tbb.height*2 + p.labelOffsetY);
 	return t;
+    }, 
+    
+    zoom:function() {
+
+    	//Update the name label:
+    	var t = this.inner[1];
+    	var p = this.properties;
+	    bb = this.wrapper.getBBox(),
+    	t.attr("text",this.properties.position);
+	    tbb = t.getBBox();
+		t.translate(bb.x - tbb.x + p.labelOffsetX, bb.y - tbb.y + tbb.height);
+    	
     }
 });
 

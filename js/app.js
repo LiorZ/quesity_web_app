@@ -5,16 +5,20 @@ $(function() {
 	app.timeoutId = 0;
 	app.pageCount = 0;
 	consts.LABEL_LENGTH = 15;
+	consts.ENTER_KEY_CODE = 13;
+	consts.LENGTH_DIAGRAM_TITLE = 18;
 	app.Attributes ={
 			'static': {
 				model: {
-					
+					page_prototype: app.QuestPageStatic
 				},
 				
 				view:{
 					avatar : 'img/document_scroll.png',
 					fill: '#99FF99',
-					type_title:'Static Page'
+					type_title:'Static Page',
+					properties_template:'#tmpl_page_static',
+					properties_prototype: app.QuestPageStaticPropertiesView
 				}
 				
 			},

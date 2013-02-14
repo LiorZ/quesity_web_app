@@ -7,13 +7,25 @@ $(function() {
 		className:'quest_page',
 		hint_section:undefined,
 		events: {
-			'click #btn_exit_prop': 'exit_properties_view'
+			'click #btn_exit_prop': 'exit_properties_view',
+			'focusout #page_title_text':'save_page_title',
+			'keypress #page_title_text':'handle_enter_on_title'
 		},
 		initialize: function(options) {
 			this.template = _.template( $(options.template).html() );
 		},
 		exit_properties_view: function() {
-			this.remove();
+			app.Router.navigate("show_diagram",{trigger: true});
+		},
+		
+		handle_enter_on_title:function(e) {
+			if ( e.keyCode == consts.ENTER_KEY_CODE)
+				this.$("#page_title_text").blur();
+		},
+		
+		save_page_title:function() {
+			var title = this.$("#page_title_text").val();
+			this.model.set("page_name",title);
 		},
 		
 		render:function() {
@@ -36,6 +48,7 @@ $(function() {
 		    this.$('img').attr('src',type_obj.view.avatar);
 		    this.$('#type_title').text(type_obj.view.type_title);
 		    this.$('#locations').tablesorter();
+		    
 		    $('body').append(this.$el);
 		},
 		

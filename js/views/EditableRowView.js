@@ -10,16 +10,19 @@ $(function() {
 		},
 		initialize: function(options) {
 			this.templateName = options.templateName;
-			this.binding = options.binding;
-			this.dialog_binding = options.dialog_binding;
+			if ( options.binding )	this.binding = options.binding;
+			if ( options.dialog_binding) this.dialog_binding = options.dialog_binding;
 			this.dialog_template = options.dialog_template;
 			this.template = _.template( $(this.templateName).html() );
 			this.listenTo(this.model,'change',this.refresh_data);
+			this.listenTo(this.model,'destroy',this.delete_row_view);
 			this.dialog_class = options.dialog_class;
 		},
 		refresh_data:function() { 
-			for (var obj in this.binding) {
-				this.$(obj).text(this.model.get(this.binding[obj]));
+			if (this.binding){
+				for (var obj in this.binding) {
+					this.$(obj).text(this.model.get(this.binding[obj]));
+				}
 			}
 			
 		},
@@ -33,10 +36,11 @@ $(function() {
 			var edit_view = new this.dialog_class({model:this.model, binding:this.dialog_binding, dialog_template: this.dialog_template});
 			edit_view.render(false);
 		},
-		
+		delete_row_view:function() {
+			this.remove();
+		},
 		delete_row:function() {
 			this.model.destroy();
-			this.remove();
 		}
 		
 	})}());

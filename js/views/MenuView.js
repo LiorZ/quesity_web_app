@@ -32,10 +32,8 @@ $(function() {
 		},
 		
 		show_properties_page:function() {
-			var template_id = app.Attributes[this.model.get('page_type')].view.properties_template;
-			var properties_prototype = app.Attributes[this.model.get('page_type')].view.properties_prototype;
-			var prop_page = new properties_prototype({model:this.model, template:template_id});
-			prop_page.render();
+			var page_number = this.model.get("page_number");
+			app.Router.navigate("page/"+page_number,{trigger: true});
 		},
 		
 		delete_page: function(e) {

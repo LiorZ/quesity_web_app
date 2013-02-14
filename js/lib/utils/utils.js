@@ -15,5 +15,22 @@ var utils = utils || {};
 	        b: parseInt(result[3], 16)
 	    } : null;
 	}
+	
+	utils.show_property_page = function(model) {
+		var template_id = app.Attributes[model.get('page_type')].view.properties_template;
+		var properties_prototype = app.Attributes[model.get('page_type')].view.properties_prototype;
+		var prop_page = new properties_prototype({model:model, template:template_id});
+		
+		app.active_property_page = prop_page;
+		
+		prop_page.render();
+	}
+	
+	utils.remove_property_page = function() {
+		if ( app.active_property_page ){
+			app.active_property_page.remove();
+			app.active_property_page = undefined;
+		}
+	}
 
 }());

@@ -3,6 +3,7 @@ $(function() {
 	
 	app.EditableTableView = Backbone.View.extend({
 		template: undefined,
+		rows:[],
 		events: {
 			'click #btn_add_row': 'create_new_row',
 		},
@@ -26,8 +27,9 @@ $(function() {
 			}
 			this.template = _.template( $(this.templateName).html() );
 			this.model_prototype = options.model_prototype;
-			
+			if ( options.model_prototype_options ) this.model_prototype_options = options.model_prototype_options;
 			this.listenTo(this.model,'add',this.add_row);
+			
 		},
 		add_row:function(row){
 			var row_view = new this.row_class({
@@ -38,8 +40,19 @@ $(function() {
 				dialog_template: this.dialog_template,
 				dialog_class: this.dialog_class
 			});
+			this.rows.push(row_view);
 			var element = row_view.render();
 			this.$("#row_table_body").append(element);
+		},
+		
+		remove_row:function(row) {
+			if ( this.rows.length == 0 )
+				return;
+			for ( var i = 0; i<this.rows.length; i++ ) {
+				if (this.rows[i].model == row) {
+					this.rows[i].remove();
+				}
+			}
 		},
 		
 		render:function() {
@@ -51,7 +64,11 @@ $(function() {
 			return this.$el;
 		},
 		create_new_row:function() {
-			var new_row = new this.model_prototype();
+			var new_row;
+			if (this.model_prototype_options)
+				new_row = new this.model_prototype(this.model_prototype_options);
+			else
+				new_row = new this.model_prototype();
 			this.add_row_dialog(new_row);
 		},
 		add_row_dialog: function(new_model) {

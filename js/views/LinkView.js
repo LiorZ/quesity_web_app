@@ -12,8 +12,14 @@ $(function() {
 			var parent_joint = parent_page.get('jointObj');
 			var target_joint = links_to_page.get('jointObj');
 			if (parent_joint != target_joint) {
-				var jointObj = parent_joint.joint(target_joint,
+				var jointObj;
+				if ( model.get_label() )
+					jointObj = parent_joint.joint(target_joint,
 						Joint.dia.uml.arrow).label(model.get_label());
+				else{
+					jointObj = parent_joint.joint(target_joint,
+							Joint.dia.uml.arrow);
+				}
 				
 				//Disable dragging of start cap:
 				
@@ -26,8 +32,10 @@ $(function() {
 						if (page_model == undefined)
 							return;
 
-						if (parent_page != page_model)
+						if (parent_page != page_model){
 							context.model.set('links_to_page', page_model);
+							context.listenTo(page_model,'destroy',context.destroy_view_model);
+						}
 					}
 				});
 				

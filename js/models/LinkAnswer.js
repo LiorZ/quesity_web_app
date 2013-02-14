@@ -3,12 +3,10 @@
 	'use strict';
 
 
-	app.LinkAnswer = Backbone.Model.extend({
+	app.LinkAnswer = app.Link.extend({
 		
 		defaults: {
 			answer_txt:'',
-			links_to_page: undefined,
-			parent_page: undefined,
 		},
 		get_label:function() {
 			var answer_txt = this.get('answer_txt');
@@ -18,7 +16,8 @@
 			return answer_txt.slice(0,consts.LABEL_LENGTH);
 		}
 	});
-	
+	_.extend(app.LinkAnswer.prototype.defaults, app.Link.prototype.defaults);
+
 	app.LinkAnswerCollection = Backbone.Collection.extend({
 		model: app.LinkAnswer,
 	});

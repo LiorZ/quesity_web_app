@@ -34,6 +34,7 @@ $(function() {
 				dialog_class: app.LinkEditableRowDialog,
 				row_class: app.LinkEditableRowView,
 				model_prototype: app.LinkAnswer,
+				model_prototype_options: {parent_page: this.model}
 			});
 		},
 		

@@ -33,7 +33,20 @@ $(function() {
 			
 			//listens to:
 			this.listenTo(this.model,'destroy',this.delete_page);
+			this.listenTo(this.model,'change:page_name',this.update_page_name);
 		},
+		
+		update_page_name:function() {
+			var jointObj = this.model.get('jointObj');
+			var raw_name = this.model.get('page_name');
+			var d_name = raw_name;
+			if ( raw_name.length > consts.LENGTH_DIAGRAM_TITLE ) {
+				d_name = this.model.get('page_name').slice(0,consts.LENGTH_DIAGRAM_TITLE-3) + '...';
+			}
+			jointObj.properties.position = d_name;
+			jointObj.zoom();//does the actual updating ... 
+		},
+		
 		delete_page: function() {
 			var jointObj = this.model.get("jointObj");
 			jointObj.shadow.remove();

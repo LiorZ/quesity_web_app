@@ -4,11 +4,12 @@ $(function() {
 	app.EditableRowDialog = Backbone.View.extend({
 		initialize: function(options) {
 			this.template = _.template( $(options.dialog_template).html() );
-			this.binding = options.binding;
+			if ( options.binding) this.binding = options.binding;
 		},
 		render:function(collection) {
 			var model = this.model;
 			var context = this;
+			console.log(model.toJSON());
 			this.$el.html(this.template(model.toJSON()));
 			$("body").append(this.$el);
 			var dialog_obj = this.$el.find("#dialog_form");
@@ -33,10 +34,11 @@ $(function() {
 			dialog_obj.dialog("open");
 		}, 
 		save_object: function(dialog_obj,collection) {
-  			for (obj in this.binding){
-				this.model.set(this.binding[obj], dialog_obj.find(obj).val());
-				dialog_obj.find(obj).val('');
-			}
+			if (  this.binding ) 
+	  			for (obj in this.binding){
+					this.model.set(this.binding[obj], dialog_obj.find(obj).val());
+					dialog_obj.find(obj).val('');
+				}
     		dialog_obj.dialog("close");
     		  if (collection){
     			  collection.add(this.model);

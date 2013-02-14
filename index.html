@@ -28,6 +28,8 @@
 <script type="text/javascript" src="js/views/appView.js"></script>
 
 <script type="text/javascript" src="js/app.js"></script>
+<script type="text/javascript" src="js/routers/Router.js"></script>
+
 <script type="text/javascript" src="js/views/MenuView.js"></script>
 
 <script type="text/javascript" src="js/views/EditableRowView.js"></script>
@@ -45,12 +47,17 @@
 <script type="text/javascript" src="js/views/QuestPageDiagramView.js"></script>
 <script type="text/javascript" src="js/views/QuestPageLocationPropertiesView.js"></script>
 <script type="text/javascript" src="js/views/QuestPageQuestionPropertiesView.js"></script>
+<script type="text/javascript" src="js/views/QuestPageStaticPropertiesView.js"></script>
+
 
 <script type="text/javascript" src="js/models/Hint.js"></script>
+<script type="text/javascript" src="js/models/Link.js"></script>
 <script type="text/javascript" src="js/models/LinkLocation.js"></script>
+
 <script type="text/javascript" src="js/models/LinkAnswer.js"></script>
 <script type="text/javascript" src="js/models/QuestPage.js"></script>
 <script type="text/javascript" src="js/models/QuestPageLocation.js"></script>
+<script type="text/javascript" src="js/models/QuestPageStatic.js"></script>
 <script type="text/javascript" src="js/models/QuestPageQuestion.js"></script>
 <script type="text/javascript" src="js/models/Mixins.js"></script>
 
@@ -137,6 +144,13 @@ data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAIUlEQVQYV2
 #dialog_form input, #dialog_form label {
 	display: block;
 }
+
+#page_title_text {
+	background-color:rgba(189,223,255,0);
+	font-size: 2em;
+	border: 0px;
+	text-align: center;
+}
 </style>
 <script type="text/javascript">
 $("document").ready(function(){
@@ -186,11 +200,11 @@ $("document").ready(function(){
 	<button>Exit Editor</button>
 	<button id="menu_opener" class="smaller_fonts">&gt;&gt; </button>
 	<ul id="new_page_menu" class="smaller_fonts">
-	<li><a href="#" data-page-type='location'>Location based page</a></li>
-	<li><a href="#" data-page-type='question'>Question page</a></li>
-	<li><a href="#" data-page-type='static'>Static page</a></li>
-	<li><a href="#"data-page-type='surprise'>Surprise page</a></li>
-	<li><a href="#" data-page-type='stall'>Stall page</a></li>
+	<li><a href="#show_diagram" data-page-type='location'>Location based page</a></li>
+	<li><a href="#show_diagram" data-page-type='question'>Question page</a></li>
+	<li><a href="#show_diagram" data-page-type='static'>Static page</a></li>
+	<li><a href="#show_diagram" data-page-type='surprise'>Surprise page</a></li>
+	<li><a href="#show_diagram" data-page-type='stall'>Stall page</a></li>
 </ul>
 </div>
 
@@ -208,7 +222,7 @@ $("document").ready(function(){
 <div id='quest_page_title' style='text-align:center'>
 	<table id='page_symbol'><tr><td><img src='img/location_icon.png'/></td></tr><tr><td id='type_title'></td></tr></table>
 	<span id='page_number'><h1><%=page_number%> </h1></span>
-	<h1 onClick="this.contentEditable='true';"><%=page_name%></h1>
+	<div text-align:'center'><input id='page_title_text'  type="text" value="<%=page_name%>"/></div>
 <div id='links'>
 
 </script>
@@ -263,6 +277,25 @@ $("document").ready(function(){
 <div style='float:right'><button id='btn_add_row'>Add</button></div>
 </script>
 
+<script type='text/template' id='tmpl_static_links'>
+<table id="tbl_links" class="tablesorter"> 
+<thead> 
+<tr> 
+    <th>Leads to page</th> 
+	<th>Delete</th>
+</tr> 
+</thead> 
+<tbody id='row_table_body'> 
+</tbody>
+</table>
+<div style='float:right'><button id='btn_add_row'>Set Link</button></div>
+</script>
+
+<script type='text/template' id='tmpl_one_link'>
+	<td><a href='#' id='lnk_edit_row'><a href='#page/<%= links_to_page.get('page_number') %>' id='lnk_links_to_page'><%= links_to_page.get('page_number') %> - <%=links_to_page.get('page_name')%></a></a></td>
+	<td><button id='btn_delete_row' class='btn_delete_hint'>X</button>
+</script>
+
 <script type='text/template' id='tmpl_one_hint'>
 	<td><a href='#' id='lnk_edit_row'><%=hint_title%></a></td>
 	<td><button id='btn_delete_row' class='btn_delete_hint'>X</button>
@@ -272,7 +305,7 @@ $("document").ready(function(){
 	<td><a href='#' id='lnk_edit_row'><%=answer_txt%></a></td>
 	<td>
 			<%if ( links_to_page ) %> 
-				<a href='#' id='lnk_links_to_page'><%= links_to_page.get('page_number') %> - <%=links_to_page.get('page_name')%></a>
+				<a href='#page/<%= links_to_page.get('page_number') %>' id='lnk_links_to_page'><%= links_to_page.get('page_number') %> - <%=links_to_page.get('page_name')%></a>
 			<%else { %> N/A </td> <% } %>
 	<td><button id='btn_delete_row' class='btn_delete_hint'>X</button></td>
 </script>
@@ -314,6 +347,16 @@ $("document").ready(function(){
 </div>
 </script>
 
+<script type='text/template' id='tmpl_page_static'>
+	<%= _.template($('#tmpl_header').html())(data) %>
+	<div id='link_place_holder'></div>
+
+<button id='btn_exit_prop'>Back to diagram</button>
+
+</div>
+</div>
+</script>
+
 <script type='text/template' id=tmpl_hint_dialog>
 
 <div id="dialog_form" title="Add New Hint">
@@ -338,8 +381,39 @@ $("document").ready(function(){
     <label for="next_page_link">This answer links to page:</label>
 
   	<select id='next_page_link' name='next_page_link'>
-	<% app.Pages.each( function(page) { %>
+	<% app.Pages.chain().filter( function(page) { return page != parent_page } ).each( function(page) { %>
 		<option value='<%= page.get('page_number')%>'><%=page.get('page_number') %> - <%=page.get('page_name') %></option>
+	<% }); %>
+	</select>
+  </fieldset>
+  </form>
+</div>
+</script>
+
+<script type='text/template' id=tmpl_set_link_dialog>
+
+<div id="dialog_form" title="Set Link">
+  <form>
+  <fieldset>
+    <label for="next_page_link">Set the next page:</label>
+
+  	<select id='next_page_link' name='next_page_link'>
+	<% app.Pages.chain().filter( function(page) { return page != parent_page } ).each( function(page) { %>
+		<option value='<%= page.get('page_number')%>'  
+		<% 
+		var links = parent_page.get('links');
+		if ( links.length >0 ) {
+			var only_page = links.at(0).get('links_to_page'); 
+			console.log("only page:");
+			console.log(only_page);
+			
+			console.log("Current page:" );
+			console.log(page);
+			if ( only_page == page ) { %>
+				selected
+		<% } } %>
+ ><%=page.get('page_number') %> - <%=page.get('page_name') %>
+		 </option>
 	<% }); %>
 	</select>
   </fieldset>
