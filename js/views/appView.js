@@ -8,9 +8,14 @@ $(function( $ ) {
 		menu_view:undefined,
 		events: {
 			'click li a': 'create_new_page',
+			'click #world':'exit_property_page' //if a property page is open, a click outside of it exists the page
 		},
 		
-		
+		exit_property_page:function() {
+			if (app.active_property_page ){
+				app.Router.navigate("show_diagram",{trigger: true});
+			}
+		},
 		initialize: function() { 
 			this.listenTo(app.Pages,'add',this.addQuestDiagramView);
 			this.menu_view = new app.MenuView();
