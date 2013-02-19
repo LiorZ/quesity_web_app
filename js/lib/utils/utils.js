@@ -34,7 +34,11 @@ var utils = utils || {};
 	}
 	
 	utils.get_linkable_pages = function(parent_page) {
-		return app.Pages.chain().filter( function(page) { return (page != parent_page && page.get('page_type') != 'surprise') } );
+		return app.Pages.chain().filter( function(page) { return (
+				page != parent_page && 
+				page.get('page_type') != 'surprise' &&
+				page.get('page_type') != 'stall'
+					) } );
 	}
 
 }());

@@ -39,13 +39,16 @@ $(function() {
 			
 			'stall': {
 				model: {
-					
+					page_prototype: app.QuestPageStall
+
 				},
 				
 				view:{
 					avatar : 'img/stall_icon.png',
 					fill: '#FFFF99',
-					type_title:'Stall Page'
+					type_title:'Stall Page',
+					properties_template:'#tmpl_page_stall',
+					properties_prototype: app.QuestPageStallPropertiesView
 				}
 				
 			},

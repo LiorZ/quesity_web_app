@@ -8,6 +8,7 @@
 			this.constructor.__super__.initialize.apply(this, [options]);
 			this.set('hints',new app.HintCollection());
 			this.set('locations',new app.LinkLocationCollection());
+			this.listenTo(this.get('locations'),'add',this.handle_add_link);
 		},
 		
 	});

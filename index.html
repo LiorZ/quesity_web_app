@@ -26,6 +26,7 @@
 <script src="js/lib/backbone/backbone.js"></script>
 <!--  The app itself -->
 <script type="text/javascript" src="js/views/appView.js"></script>
+<script type="text/javascript" src="js/models/Mixins.js"></script>
 
 <script type="text/javascript" src="js/app.js"></script>
 <script type="text/javascript" src="js/routers/Router.js"></script>
@@ -49,6 +50,7 @@
 <script type="text/javascript" src="js/views/QuestPageQuestionPropertiesView.js"></script>
 <script type="text/javascript" src="js/views/QuestPageStaticPropertiesView.js"></script>
 <script type="text/javascript" src="js/views/QuestPageSurprisePropertiesView.js"></script>
+<script type="text/javascript" src="js/views/QuestPageStallPropertiesView.js"></script>
 
 
 
@@ -62,8 +64,7 @@
 <script type="text/javascript" src="js/models/QuestPageStatic.js"></script>
 <script type="text/javascript" src="js/models/QuestPageSurprise.js"></script>
 <script type="text/javascript" src="js/models/QuestPageQuestion.js"></script>
-<script type="text/javascript" src="js/models/Mixins.js"></script>
-
+<script type="text/javascript" src="js/models/QuestPageStall.js"></script>
 
 
 <script type="text/javascript" src="js/models/QuestPageCollection.js"></script>
@@ -355,6 +356,18 @@ $("document").ready(function(){
 	<div id='location_place_holder'></div>
 	<div id='hint_place_holder'></div>
 <br/>
+<button id='btn_exit_prop'>Back to diagram</button>
+
+</div>
+</div>
+</script>
+
+
+<script type='text/template' id='tmpl_page_stall'>
+	<%= _.template($('#tmpl_header').html())(data) %>
+	<div id='link_place_holder'></div>
+	<div><button id='btn_set_time'>Set Time</button></div>
+
 <button id='btn_exit_prop'>Back to diagram</button>
 
 </div>
