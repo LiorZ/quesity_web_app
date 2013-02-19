@@ -31,7 +31,7 @@ $(function() {
 						var page_model = app.Pages.byJointObject(this);
 						if (page_model == undefined)
 							return;
-
+						
 						if (parent_page != page_model){
 							context.model.set('links_to_page', page_model);
 							context.listenTo(page_model,'destroy',context.destroy_view_model);
@@ -41,9 +41,7 @@ $(function() {
 				
 				jointObj.registerCallback("floating", function(side) {
 					if ( side == "end") {
-					    jointObj.replaceDummy(jointObj["_end"], this);
-					    jointObj.addJoint(this);
-					    jointObj.update();
+						jointObj.back_to_previous_node('end');
 					}
 				});
 				this.jointObj = jointObj;

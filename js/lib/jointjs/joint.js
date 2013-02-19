@@ -595,9 +595,7 @@ Joint.prototype = {
 	var o = this.objectContainingPoint(point(dummyBB.x, dummyBB.y));
 	
 	if ( o == this.startObject() ) { //LiorZ: I dont want to allow connecting objects to themselves... 
-	    this.replaceDummy(this["_" + capType], this.prev_node);
-	    this.addJoint(this.prev_node);
-	    this.update();
+		this.back_to_previous_node(capType);
 	    return;
 	}
 	if (o){
@@ -609,6 +607,15 @@ Joint.prototype = {
 	}
 
 	this.update();
+    },
+    
+  //if the connection is wrong, this function returns the connection back to where it was.
+    back_to_previous_node:function(capType) { 
+    	if (! this.prev_node )
+    		return;
+	    this.replaceDummy(this["_" + capType], this.prev_node);
+	    this.addJoint(this.prev_node);
+	    this.update();
     },
     connectionWiring: function(e){
 	var mousePos = Joint.getMousePosition(e, this.paper.canvas);

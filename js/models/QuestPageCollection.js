@@ -14,6 +14,8 @@ var app = app || {};
 			elem.once("change:jointObj",this.add_joint,this);
 		},
 		add_joint:function(elem) {
+			if (elem.get('page_type') == 'surprise')
+				return;
 			this.arr.push(elem.get('jointObj'));
 		},
 		remove_from_array:function(elem){ 

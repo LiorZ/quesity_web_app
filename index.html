@@ -48,6 +48,8 @@
 <script type="text/javascript" src="js/views/QuestPageLocationPropertiesView.js"></script>
 <script type="text/javascript" src="js/views/QuestPageQuestionPropertiesView.js"></script>
 <script type="text/javascript" src="js/views/QuestPageStaticPropertiesView.js"></script>
+<script type="text/javascript" src="js/views/QuestPageSurprisePropertiesView.js"></script>
+
 
 
 <script type="text/javascript" src="js/models/Hint.js"></script>
@@ -58,6 +60,7 @@
 <script type="text/javascript" src="js/models/QuestPage.js"></script>
 <script type="text/javascript" src="js/models/QuestPageLocation.js"></script>
 <script type="text/javascript" src="js/models/QuestPageStatic.js"></script>
+<script type="text/javascript" src="js/models/QuestPageSurprise.js"></script>
 <script type="text/javascript" src="js/models/QuestPageQuestion.js"></script>
 <script type="text/javascript" src="js/models/Mixins.js"></script>
 
@@ -347,6 +350,17 @@ $("document").ready(function(){
 </div>
 </script>
 
+<script type='text/template' id=tmpl_page_surprise>
+	<%= _.template($('#tmpl_header').html())(data) %>
+	<div id='location_place_holder'></div>
+	<div id='hint_place_holder'></div>
+<br/>
+<button id='btn_exit_prop'>Back to diagram</button>
+
+</div>
+</div>
+</script>
+
 <script type='text/template' id='tmpl_page_static'>
 	<%= _.template($('#tmpl_header').html())(data) %>
 	<div id='link_place_holder'></div>
@@ -381,7 +395,7 @@ $("document").ready(function(){
     <label for="next_page_link">This answer links to page:</label>
 
   	<select id='next_page_link' name='next_page_link'>
-	<% app.Pages.chain().filter( function(page) { return page != parent_page } ).each( function(page) { %>
+	<% utils.get_linkable_pages(parent_page).each( function(page) { %>
 		<option value='<%= page.get('page_number')%>'><%=page.get('page_number') %> - <%=page.get('page_name') %></option>
 	<% }); %>
 	</select>
@@ -398,7 +412,7 @@ $("document").ready(function(){
     <label for="next_page_link">Set the next page:</label>
 
   	<select id='next_page_link' name='next_page_link'>
-	<% app.Pages.chain().filter( function(page) { return page != parent_page } ).each( function(page) { %>
+	<% utils.get_linkable_pages(parent_page).each( function(page) { %>
 		<option value='<%= page.get('page_number')%>'  
 		<% 
 		var links = parent_page.get('links');
@@ -407,7 +421,6 @@ $("document").ready(function(){
 			console.log("only page:");
 			console.log(only_page);
 			
-			console.log("Current page:" );
 			console.log(page);
 			if ( only_page == page ) { %>
 				selected

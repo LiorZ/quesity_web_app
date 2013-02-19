@@ -66,13 +66,15 @@ $(function() {
 			
 			'surprise': {
 				model: {
-					
+					page_prototype: app.QuestPageSurprise
 				},
 				
 				view:{
 					avatar : 'img/location_icon.png',
 					fill: '#E5E5E5',
-					type_title:"Surprise page"
+					type_title:"Surprise page",
+					properties_template:'#tmpl_page_surprise',
+					properties_prototype: app.QuestPageSurprisePropertiesView
 				}
 				
 			},

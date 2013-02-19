@@ -32,5 +32,9 @@ var utils = utils || {};
 			app.active_property_page = undefined;
 		}
 	}
+	
+	utils.get_linkable_pages = function(parent_page) {
+		return app.Pages.chain().filter( function(page) { return (page != parent_page && page.get('page_type') != 'surprise') } );
+	}
 
 }());
