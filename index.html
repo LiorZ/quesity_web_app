@@ -236,34 +236,7 @@ $("document").ready(function(){
 <script type='text/template' id='tmpl_locations'>
 <table id="locations" class="tablesorter"> 
 <thead> 
-<tr> 
-    <th>Location</th> 
-    <th>Leads to page</th> 
-    <th> </th> 
-</tr> 
-</thead> 
-<tbody> 
-<tr> 
-    <td>Smith</td> 
-    <td>John</td> 
-    <td><button>X</button></td>
 
-</tr> 
-<tr> 
-    <td>Bach</td> 
-    <td>Frank</td> 
-    <td><button>X</button></td> 
-</tr> 
-<tr> 
-    <td>Doe</td> 
-    <td>Jason</td> 
-    <td><button>X</button></td> 
-</tr> 
-<tr> 
-    <td>Conway</td> 
-    <td>Tim</td> 
-    <td><button>X</button></td> 
-</tr> 
 </tbody>
 </table>
 <div style='float:right'><button id='btn_add_location'>Add</button></div>
@@ -432,7 +405,11 @@ $("document").ready(function(){
   <input id="time_delay_spinner" name="value" />
 </div>
 </script>
-
+<script type='text/template' id='tmpl_set_time_dialog'>
+<div id="dialog_form" title="How much time would you like to delay?">
+	<div id='google_map'></div>
+</div>
+</script>
 <script type='text/template' id=tmpl_set_link_dialog>
 
 <div id="dialog_form" title="Set Link">
