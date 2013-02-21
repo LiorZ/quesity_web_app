@@ -14,6 +14,7 @@
 			page_type: "",
 			page_number: 1,
 			jointObj: undefined,
+			page_content:'',
 		}
 	});
 	

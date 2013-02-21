@@ -9,7 +9,6 @@ $(function() {
 		render:function(collection) {
 			var model = this.model;
 			var context = this;
-			console.log(model.toJSON());
 			this.$el.html(this.template(model.toJSON()));
 			$("body").append(this.$el);
 			var dialog_obj = this.$el.find("#dialog_form");

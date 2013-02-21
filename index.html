@@ -23,6 +23,8 @@
 <script src="js/lib/underscore/underscore.js"></script>
 <script src="js/lib/jquery-ui/plugins/tablesorter/jquery.tablesorter.js"></script>
 
+<script type="text/javascript" src="js/lib/tiny_mce/jquery.tinymce.js"></script>
+
 <script src="js/lib/backbone/backbone.js"></script>
 <!--  The app itself -->
 <script type="text/javascript" src="js/views/appView.js"></script>
@@ -43,8 +45,8 @@
 
 
 <script type="text/javascript" src="js/views/appView.js"></script>
+<script type="text/javascript" src="js/views/QuestPageContentView.js"></script>
 <script type="text/javascript" src="js/views/QuestPagePropertiesView.js"></script>
-
 <script type="text/javascript" src="js/views/QuestPageDiagramView.js"></script>
 <script type="text/javascript" src="js/views/QuestPageLocationPropertiesView.js"></script>
 <script type="text/javascript" src="js/views/QuestPageQuestionPropertiesView.js"></script>
@@ -227,6 +229,7 @@ $("document").ready(function(){
 	<table id='page_symbol'><tr><td><img src='img/location_icon.png'/></td></tr><tr><td id='type_title'></td></tr></table>
 	<span id='page_number'><h1><%=page_number%> </h1></span>
 	<div text-align:'center'><input id='page_title_text'  type="text" value="<%=page_name%>"/></div>
+	<div id='content_wrapper' style='float:left; border:1px solid black; height:80%; width:60%'><textarea style='height:100%; width:100%;' id='content_editor'></textarea></div>
 <div id='links'>
 
 </script>
@@ -292,7 +295,7 @@ $("document").ready(function(){
 <tbody id='row_table_body'> 
 </tbody>
 </table>
-<div style='float:right'><button id='btn_add_row'>Set Link</button></div>
+<div style='text-align:right;'><button id='btn_add_row'>Set Link</button></div>
 </script>
 
 <script type='text/template' id='tmpl_one_link'>
@@ -362,12 +365,17 @@ $("document").ready(function(){
 </div>
 </script>
 
-
+<script type='text/template' id='tmpl_time_label'>
+	<%if (stall_time) {%>
+		<span id='time_delay_label'><%=stall_time%> min delay</span>
+	<%}%>
+</script>
 <script type='text/template' id='tmpl_page_stall'>
 	<%= _.template($('#tmpl_header').html())(data) %>
 	<div id='link_place_holder'></div>
-	<div><button id='btn_set_time'>Set Time</button></div>
+	<div id='time_delay'></div>
 
+	<div><button id='btn_set_time'>Set Time</button></div>
 <button id='btn_exit_prop'>Back to diagram</button>
 
 </div>
@@ -417,6 +425,14 @@ $("document").ready(function(){
 </div>
 </script>
 
+<script type='text/template' id='tmpl_set_time_dialog'>
+<div id="dialog_form" title="How much time would you like to delay?">
+
+  <label for="spinner">Minutes delay:</label>
+  <input id="time_delay_spinner" name="value" />
+</div>
+</script>
+
 <script type='text/template' id=tmpl_set_link_dialog>
 
 <div id="dialog_form" title="Set Link">
@@ -431,10 +447,6 @@ $("document").ready(function(){
 		var links = parent_page.get('links');
 		if ( links.length >0 ) {
 			var only_page = links.at(0).get('links_to_page'); 
-			console.log("only page:");
-			console.log(only_page);
-			
-			console.log(page);
 			if ( only_page == page ) { %>
 				selected
 		<% } } %>
