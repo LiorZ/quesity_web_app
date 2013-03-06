@@ -6,9 +6,11 @@
 	app.LinkLocation = app.Link.extend({
 		
 		defaults: {
-			gps_coords:'',
+			lat:undefined,
+			lng:undefined,
 			txt_street: '',
-		}
+			radius:100 //in meters
+		},
 	});
 	
 	_.extend(app.LinkLocation.prototype.defaults, app.Link.prototype.defaults);

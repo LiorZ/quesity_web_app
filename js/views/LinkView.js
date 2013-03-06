@@ -52,6 +52,7 @@ $(function() {
 			this.listenTo(parent_page, 'destroy', this.destroy_view_model);
 			this.listenTo(model, 'destroy', this.destroy_view); // destroy just the view, avoid long recursion...
 			this.listenTo(links_to_page,'destroy',this.destroy_view_model);
+			this.listenTo(model,'change:links_to_page',this.destroy_view);
 
 		},
 		destroy_view_model:function() {
@@ -61,7 +62,7 @@ $(function() {
 			Joint.dia.remove_joint(this.jointObj);
 			this.remove();
 		},
-
+		
 		render : function() {
 
 		}

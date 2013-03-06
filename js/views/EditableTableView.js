@@ -25,6 +25,12 @@ $(function() {
 			}else {
 				this.dialog_class = app.EditableRowDialog;
 			}
+			
+			if ( options.dialog_size ) {
+				this.dialog_size = options.dialog_size;
+			}else {
+				this.dialog_size = {height:300, width:350};
+			}
 			this.template = _.template( $(this.templateName).html() );
 			this.model_prototype = options.model_prototype;
 			if ( options.model_prototype_options ) this.model_prototype_options = options.model_prototype_options;
@@ -38,7 +44,8 @@ $(function() {
 				binding: this.binding,
 				dialog_binding: this.dialog_binding,
 				dialog_template: this.dialog_template,
-				dialog_class: this.dialog_class
+				dialog_class: this.dialog_class,
+				dialog_size: this.dialog_size
 			});
 			this.rows.push(row_view);
 			var element = row_view.render();
@@ -76,7 +83,9 @@ $(function() {
 				model:new_model,
 				binding: this.dialog_binding, 
 				dialog_template:this.dialog_template, 
-				dialog_class: this.dialog_class
+				dialog_class: this.dialog_class,
+				dialog_size: this.dialog_size
+
 			});
 			dialog.render(this.model);
 		},

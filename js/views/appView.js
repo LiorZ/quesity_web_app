@@ -31,7 +31,6 @@ $(function( $ ) {
 			var page_num = ++app.pageCount;
 			var prototype = app.Attributes[q_type].model.page_prototype;
 			var page = new prototype({page_type:q_type, page_number: page_num});
-			console.log(page);
 			app.Pages.add(page);
 		},
 		

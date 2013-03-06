@@ -7,6 +7,7 @@ $(function() {
 	consts.LABEL_LENGTH = 15;
 	consts.ENTER_KEY_CODE = 13;
 	consts.LENGTH_DIAGRAM_TITLE = 18;
+	consts.DEFAULT_LOCATION_RADIUS = 50;
 	app.Attributes ={
 			'static': {
 				model: {
@@ -89,6 +90,4 @@ $(function() {
 	
 	// Kick things off by creating the **App**.
 	new app.AppView().render();
-	
-	
 });

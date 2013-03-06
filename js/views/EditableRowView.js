@@ -17,12 +17,12 @@ $(function() {
 			this.listenTo(this.model,'change',this.refresh_data);
 			this.listenTo(this.model,'destroy',this.delete_row_view);
 			this.dialog_class = options.dialog_class;
+			this.dialog_size = options.dialog_size;
+			
 		},
 		refresh_data:function() { 
 			if (this.binding){
-				for (var obj in this.binding) {
-					this.$(obj).text(this.model.get(this.binding[obj]));
-				}
+				this.$el.html(this.template(this.model.toJSON()));
 			}
 			
 		},
@@ -33,7 +33,10 @@ $(function() {
 		},
 		
 		edit_row:function() {
-			var edit_view = new this.dialog_class({model:this.model, binding:this.dialog_binding, dialog_template: this.dialog_template});
+			var edit_view = new this.dialog_class({model:this.model,
+				binding:this.dialog_binding, 
+				dialog_template: this.dialog_template,
+				dialog_size: this.dialog_size});
 			edit_view.render(false);
 		},
 		delete_row_view:function() {
