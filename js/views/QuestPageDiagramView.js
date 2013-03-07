@@ -1,4 +1,5 @@
 var app = app || {};
+var consts = consts || {};
 $(function() {
 	
 	app.QuestPageDiagramView = Backbone.View.extend({
@@ -16,8 +17,8 @@ $(function() {
 				rect : {
 					x : this.model.get('x'),
 					y : this.model.get('y'),
-					width : 180,
-					height : 60
+					width : consts.DIAGRAM_ELEMENT_WIDTH,
+					height : consts.DIAGRAM_ELEMENT_HEIGHT,
 				},
 				name : relevant_attrs.view.type_title,
 				position :this.model.get("page_name"),
@@ -27,6 +28,11 @@ $(function() {
 						stroke : 'gray'
 					},
 				numbering: this.model.get('page_number'),
+			});
+			var context = this;
+			jointObj.registerCallback('elementMoved',function(new_loc){
+				context.model.set('x',new_loc.x);
+				context.model.set('y',new_loc.y);
 			});
 			this.model.set("jointObj", jointObj );
 			this.$el = jQuery(jointObj.wrapper.node);

@@ -31,7 +31,20 @@ $(function( $ ) {
 			var page_num = ++app.pageCount;
 			var prototype = app.Attributes[q_type].model.page_prototype;
 			var page = new prototype({page_type:q_type, page_number: page_num});
+			var x_coord = page.get('x');
+			var y_coord = page.get('y');
+			//Get the location of next_page:
+			if ( app.Pages.length > 0 ){
+				var last_page = app.Pages.at(app.Pages.length-1);
+				x_coord = (last_page.get('x') + 20 + consts.DIAGRAM_ELEMENT_WIDTH) % window.innerWidth; 
+				y_coord = last_page.get('y');
+			}
+			
+			page.set('x',x_coord);
+			page.set('y',y_coord);
+			
 			app.Pages.add(page);
+			$("#new_page_menu").css('display','none');
 		},
 		
 		render: function() {

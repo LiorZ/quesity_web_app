@@ -228,6 +228,9 @@ Element.prototype = {
 	    ghosting: false,		// enable ghosting?
 	    toolbox: false		// enable toolbox?
 	};
+	this._callbacks = {
+			elementMoved: function(new_location){}
+	}
 
 	this.paper = Joint.paper();
 	dia.register(this); // register me in the global table
@@ -284,7 +287,24 @@ Element.prototype = {
 	this._opt.ghosting = !this._opt.ghosting;
 	return this;
     },
-
+    
+    
+    
+    /**
+     * Registers a callback for an element. Can be either of the following:
+     * 'elementMoved' - function(new_location) {...} is called when an element has a new location. this points to moved element.
+     * @param callback
+     * @param func
+     */
+    registerCallback: function(callback, func) {
+    	this._callbacks[callback] = func;
+    },
+    
+    
+    callback: function(fnc, scope, args){
+    	this._callbacks[fnc].apply(scope, args);
+            return this;
+    },
     /**
      * Create a ghost shape which is used when dragging.
      * (in the case _opt.ghosting is enabled)
@@ -903,8 +923,10 @@ Element.mouseUp = function(e){
 	dia._currentZoom.removeToolbox();
 	dia._currentZoom.addToolbox();
 	dia._currentZoom.toFront();
+	
     }
-
+    if ( dia._currentDrag )
+    	dia._currentDrag.callback('elementMoved',dia._currentDrag,[{x:dia._currentDrag.wrapperPos().x, y: dia._currentDrag.wrapperPos().y}]);
     dia._currentDrag = false;
     dia._currentZoom = false;
 };

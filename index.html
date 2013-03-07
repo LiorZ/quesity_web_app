@@ -29,6 +29,8 @@
 <script src="js/lib/backbone/backbone.js"></script>
 <!--  The app itself -->
 <script type="text/javascript" src="js/views/appView.js"></script>
+<script type="text/javascript" src="js/lib/behavior/EasingMenu.js"></script>
+
 <script type="text/javascript" src="js/models/Mixins.js"></script>
 
 <script type="text/javascript" src="js/app.js"></script>
@@ -166,22 +168,22 @@ $("document").ready(function(){
 		Joint.paper("world");
 
 		$( "button" ).button();
-		$("#menu_opener").mouseenter(function(e){
-			e.preventDefault();
-			this.blur();
-			$("#menu").animate({left:0}, {duration: 1000, complete:function() {
-				$("#menu_opener span").text("<<")
-			}});
-		});
-		$("#menu").mouseleave(function(e){
-			e.preventDefault();
-			this.blur();
-			 $("#new_page_menu").css('display','none');
-			$("#menu").animate({left:-600}, {duration: 1000, complete: function() {
-				$("#menu_opener span").text(">>")
-			}});
+// 		$("#menu_opener").mouseenter(function(e){
+// 			e.preventDefault();
+// 			this.blur();
+// 			$("#menu").animate({left:0}, {duration: 1000, complete:function() {
+// 				$("#menu_opener span").text("<<")
+// 			}});
+// 		});
+// 		$("#menu").mouseleave(function(e){
+// 			e.preventDefault();
+// 			this.blur();
+// 			 $("#new_page_menu").css('display','none');
+// 			$("#menu").animate({left:-600}, {duration: 1000, complete: function() {
+// 				$("#menu_opener span").text(">>")
+// 			}});
 
-		});
+// 		});
 		
 		$("#btn_new_page").click(function(e){
 			var menu = $("#new_page_menu")
@@ -352,6 +354,22 @@ $("document").ready(function(){
 </div>
 </script>
 
+<script type='text/template' id='tmpl_select_link'>
+  	<select id='next_page_link' name='next_page_link'>
+	<% utils.get_linkable_pages(parent_page).each( function(page) { %>
+		<option value='<%= page.get('page_number')%>'    
+	<% if (page == links_to_page) { %>
+	SELECTED
+	<% } %>
+
+		>
+
+<%=page.get('page_number') %> - <%=page.get('page_name') %>
+	</option>
+	<% }); %>
+	</select>
+</script>
+
 <script type='text/template' id='tmpl_time_label'>
 	<%if (stall_time) {%>
 		<span id='time_delay_label'><%=stall_time%> min delay</span>
@@ -401,12 +419,9 @@ $("document").ready(function(){
     <label for="txt_hint_title">Answer:</label>
   	<input type="text" name="txt_answer" id="txt_answer" class="text ui-widget-content ui-corner-all"  value='<%=answer_txt%>' />
     <label for="next_page_link">This answer links to page:</label>
+	<%= _.template($('#tmpl_select_link').html())({'parent_page':parent_page, 'links_to_page':links_to_page}) %>
 
-  	<select id='next_page_link' name='next_page_link'>
-	<% utils.get_linkable_pages(parent_page).each( function(page) { %>
-		<option value='<%= page.get('page_number')%>'><%=page.get('page_number') %> - <%=page.get('page_name') %></option>
-	<% }); %>
-	</select>
+
   </fieldset>
   </form>
 </div>
@@ -422,10 +437,7 @@ $("document").ready(function(){
 <script type='text/template' id='tmpl_add_location_dialog'>
 <div id="dialog_form" title="Choose Location for linked page">
 <div id='map_container'></div>
-  	<select id='next_page_link' name='next_page_link'>
-	<% utils.get_linkable_pages(parent_page).each( function(page) { %>
-		<option value='<%= page.get('page_number')%>'><%=page.get('page_number') %> - <%=page.get('page_name') %></option>
-	<% }); %>
+	<%= _.template($('#tmpl_select_link').html())({'parent_page':parent_page, 'links_to_page':links_to_page}) %>
 <input type='hidden' id='txt_lat' value="<%=lat %>"/>
 <input type='hidden' id='txt_lng' value="<%= lng %>"/>
 <input type='hidden' id='txt_radius' value="<%= radius %>"/>

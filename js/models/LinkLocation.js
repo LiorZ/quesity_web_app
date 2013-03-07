@@ -11,6 +11,11 @@
 			txt_street: '',
 			radius:100 //in meters
 		},
+		
+		get_label:function(){ 
+			var label = app.Link.prototype.get_label.apply(this,['txt_street']);
+			return label;
+		}
 	});
 	
 	_.extend(app.LinkLocation.prototype.defaults, app.Link.prototype.defaults);

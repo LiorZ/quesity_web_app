@@ -8,6 +8,8 @@ $(function() {
 	consts.ENTER_KEY_CODE = 13;
 	consts.LENGTH_DIAGRAM_TITLE = 18;
 	consts.DEFAULT_LOCATION_RADIUS = 50;
+	consts.DIAGRAM_ELEMENT_WIDTH = 180;
+	consts.DIAGRAM_ELEMENT_HEIGHT = 60;
 	app.Attributes ={
 			'static': {
 				model: {
