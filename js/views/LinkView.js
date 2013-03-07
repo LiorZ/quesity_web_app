@@ -33,7 +33,9 @@ $(function() {
 							return;
 						
 						if (parent_page != page_model){
-							context.model.set('links_to_page', page_model);
+							var prev_link = context.model.get('links_to_page');
+							context.model.set('links_to_page', page_model, {mode:'diagram'});
+							if ( prev_link != undefined ) context.stopListening(prev_link);
 							context.listenTo(page_model,'destroy',context.destroy_view_model);
 						}
 					}
@@ -52,8 +54,7 @@ $(function() {
 			this.listenTo(parent_page, 'destroy', this.destroy_view_model);
 			this.listenTo(model, 'destroy', this.destroy_view); // destroy just the view, avoid long recursion...
 			this.listenTo(links_to_page,'destroy',this.destroy_view_model);
-			this.listenTo(model,'change:links_to_page',this.destroy_view);
-
+			this.listenTo(model,"change:links_to_page",this.page_changed_event);
 		},
 		destroy_view_model:function() {
 			this.model.destroy();
@@ -63,8 +64,17 @@ $(function() {
 			this.remove();
 		},
 		
-		render : function() {
+		page_changed_event : function(model,gogo,options) {
 
+			/*The following is an ugly workaround for a bug that behaves like the following: when changing the connection between pages from within a pages, everything works fine.
+			 * But if we change the connection from the diagram, it goes out of sync. it appears that invoking {silent:true} from the change event in the 'justConnected' callback 
+			 * causes the model to be out of sync for some reason. For that reason I added a {mode:...} object so that I know when to erase the object and when not.
+			 */
+			if ( options != undefined && options.mode == 'diagram'){
+				return;
+			}
+			Joint.dia.remove_joint(this.jointObj);
+			this.remove();
 		}
 
 	})

@@ -579,6 +579,13 @@ Joint.prototype = {
 
 	this.update();
     },
+    
+    connect_to_element: function(element,capType) {
+	    this.replaceDummy(this["_" + capType], element);
+	    this.addJoint(element);
+	    this.update();
+    },
+    
     capEndDragging: function(){
 	var dummyBB, 
 	    STARTCAPDRAGGING = (this.state === this.STARTCAPDRAGGING),
