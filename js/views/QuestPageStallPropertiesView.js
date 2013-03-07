@@ -34,8 +34,12 @@ $(function() {
 		},
 		
 		open_set_time_dlg: function() {
-			var dlg = new app.EditableRowDialog({dialog_template: '#tmpl_set_time_dialog',model: this.model,
-			binding: {'#time_delay_spinner':'stall_time'}});
+			var dlg = new app.EditableRowDialog({
+				dialog_template: '#tmpl_set_time_dialog',
+				model: this.model,
+				binding: {'#time_delay_spinner':'stall_time'},
+				dialog_size:{height:300, width:350},
+			});
 			dlg.render();
 			$("#time_delay_spinner").spinner();
 		}
