@@ -31,7 +31,7 @@ $(function() {
 						var page_model = app.Pages.byJointObject(this);
 						if (page_model == undefined)
 							return;
-						
+						//TODO: What if someone tries to manually connect a surprise page? (which shouldn't be connected to anything)
 						if (parent_page != page_model){
 							var prev_link = context.model.get('links_to_page');
 							context.model.set('links_to_page', page_model, {mode:'diagram'});
