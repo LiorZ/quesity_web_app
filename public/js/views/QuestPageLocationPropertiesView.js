@@ -1,10 +1,10 @@
-var app = app || {};
-$(function() {
-	
-	app.QuestPageLocationPropertiesView = app.QuestPagePropertiesView.extend({
+define(['views/QuestPagePropertiesView','views/EditableTableView','views/LinkablePositionEditableRowDialog','views/LinkEditableRowView',
+        'models/LinkLocation','models/Hint'],function(QuestPagePropertiesView,EditableTableView,LinkablePositionEditableRowDialog,LinkEditableRowView,
+        		LinkLocation,Hint) {	
+	var QuestPageLocationPropertiesView = QuestPagePropertiesView.extend({
 		initialize: function(options) {
 			this.constructor.__super__.initialize.apply(this, [options])
-			this.location_section = new app.EditableTableView({
+			this.location_section = new EditableTableView({
 				model:this.model.get('locations'),
 				templateName:'#tmpl_locations',
 				row_templateName:'#tmpl_one_location',
@@ -19,14 +19,14 @@ $(function() {
 					'#txt_street':'txt_street'
 				},
 				dialog_template:'#tmpl_add_location_dialog',
-				dialog_class: app.LinkablePositionEditableRowDialog,
+				dialog_class: LinkablePositionEditableRowDialog,
 				dialog_size: {height: '800', width:'600' },
-				row_class: app.LinkEditableRowView,
-				model_prototype: app.LinkLocation,
+				row_class: LinkEditableRowView,
+				model_prototype: LinkLocation,
 				model_prototype_options: {parent_page: this.model}
 			});
 			
-			this.hint_section = new app.EditableTableView({
+			this.hint_section = new EditableTableView({
 				model:this.model.get('hints'),
 				templateName:'#tmpl_hints',
 				row_templateName:'#tmpl_one_hint',
@@ -38,7 +38,7 @@ $(function() {
 					'#txt_hint': 'hint_txt'
 				},
 				dialog_template:'#tmpl_hint_dialog',
-				model_prototype: app.Hint
+				model_prototype: Hint
 			});
 		},
 		
@@ -49,4 +49,6 @@ $(function() {
 
 		},
 	});
-}());
+	
+	return QuestPageLocationPropertiesView;
+});

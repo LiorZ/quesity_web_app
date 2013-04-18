@@ -1,7 +1,5 @@
-var app = app || {};
-$(function() {
-
-	app.LinkView = Backbone.View.extend({
+define(['Joint'],function(Joint) {
+	var LinkView = Backbone.View.extend({
 
 		jointObj : undefined,
 		initialize : function() {
@@ -22,13 +20,14 @@ $(function() {
 				}
 				
 				//Disable dragging of start cap:
-				
-				jointObj.registerForever(app.Pages.as_joints_array());
+				var quest_model = parent_page.get('quest')
+				var pages = quest_model.get('pages');
+				jointObj.registerForever(pages.as_joints_array());
 				var context = this;
 				jointObj.registerCallback("justConnected", function(side) {
 					if (side == "end") {
 
-						var page_model = app.Pages.byJointObject(this);
+						var page_model = pages.byJointObject(this);
 						if (page_model == undefined)
 							return;
 						//TODO: What if someone tries to manually connect a surprise page? (which shouldn't be connected to anything)
@@ -78,4 +77,5 @@ $(function() {
 		}
 
 	})
-}());
+	return LinkView;
+});

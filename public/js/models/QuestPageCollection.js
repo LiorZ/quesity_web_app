@@ -1,9 +1,6 @@
-var app = app || {};
-
-(function() {
-	
+define(['models/QuestPage'],function(QuestPage) {
 	var QuestPageList = Backbone.Collection.extend({
-		model: app.QuestPage,
+		model: QuestPage,
 		arr:[],
 		initialize:function() {
 			this.listenTo(this,'add',this.add_joint_listener);
@@ -33,8 +30,6 @@ var app = app || {};
 		},
 		byJointObject:function(joint_obj){
 			var res= this.filter(function(object){
-				console.log(object);
-				console.log(joint_obj);
 				return object.get('jointObj') == joint_obj.wholeShape;
 			});
 			if ( res == undefined )
@@ -54,5 +49,5 @@ var app = app || {};
 		
 	});
 	
-	app.Pages = new QuestPageList();
-}());
+	return QuestPageList;
+});

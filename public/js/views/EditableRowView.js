@@ -1,7 +1,5 @@
-var app = app || {};
-$(function() {
-	
-	app.EditableRowView = Backbone.View.extend({
+define([],function() {
+	var EditableRowView = Backbone.View.extend({
 		tagName:'tr',
 		template: undefined,
 		events: {
@@ -45,5 +43,7 @@ $(function() {
 		delete_row:function() {
 			this.model.destroy();
 		}
-		
-	})}());
+	});
+	return EditableRowView;
+});
+

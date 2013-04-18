@@ -1,28 +1,22 @@
-(function() {
-	
-	'use strict';
-
-
-	app.LinkLocation = app.Link.extend({
+define(['models/Link'],function(Link){
+	var LinkLocation = Link.extend({
 		
 		defaults: {
 			lat:undefined,
 			lng:undefined,
 			txt_street: '',
-			radius:100 //in meters
+			radius:100, //in meters
+			type:'location'
 		},
 		
 		get_label:function(){ 
-			var label = app.Link.prototype.get_label.apply(this,['txt_street']);
+			var label = Link.prototype.get_label.apply(this,['txt_street']);
 			return label;
 		}
 	});
 	
-	_.extend(app.LinkLocation.prototype.defaults, app.Link.prototype.defaults);
+	_.extend(LinkLocation.prototype.defaults, Link.prototype.defaults);
+	return LinkLocation;
 
-	
-	app.LinkLocationCollection = Backbone.Collection.extend({
-		model: app.LinkLocation
-	});
-	
-}());
+});
+

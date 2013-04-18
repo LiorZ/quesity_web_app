@@ -1,21 +1,21 @@
-(function() {
-	
-	'use strict';
-
-
-	app.QuestPageLocation = app.QuestPage.extend({
+define(['models/LinkLocationCollection','models/HintCollection','models/QuestPage'],function(LinkLocationCollection,HintCollection,QuestPage){
+	var QuestPageLocation = QuestPage.extend({
 		initialize:function(options) {
 			this.constructor.__super__.initialize.apply(this, [options]);
-			this.set('hints',new app.HintCollection());
-			this.set('locations',new app.LinkLocationCollection());
+			this.set('hints',new HintCollection());
+			this.set('locations',new LinkLocationCollection());
 		},
 		defaults:
 		 {
-			locations: new app.LinkLocationCollection(),
-			hints: new app.HintCollection()
+			locations: undefined,
+			hints: undefined
 		},
 		
 	});
-	_.extend(app.QuestPageLocation.prototype.defaults, app.QuestPage.prototype.defaults);
+	_.extend(QuestPageLocation.prototype.defaults, QuestPage.prototype.defaults);
+	
+	return QuestPageLocation;
+	
+});
 
-}());
+

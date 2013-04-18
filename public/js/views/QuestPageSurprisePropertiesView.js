@@ -1,10 +1,8 @@
-var app = app || {};
-$(function() {
-	
-	app.QuestPageSurprisePropertiesView = app.QuestPagePropertiesView.extend({
+define(['views/QuestPagePropertiesView','views/EditableTableView','models/Hint'],function(QuestPagePropertiesView,EditableTableView,Hint) {
+	var QuestPageSurprisePropertiesView = QuestPagePropertiesView.extend({
 		initialize: function(options) {
 			this.constructor.__super__.initialize.apply(this, [options]);
-			this.hint_section = new app.EditableTableView({
+			this.hint_section = new EditableTableView({
 				model:this.model.get('hints'),
 				templateName:'#tmpl_hints',
 				row_templateName:'#tmpl_one_hint',
@@ -16,7 +14,7 @@ $(function() {
 					'#txt_hint': 'hint_txt'
 				},
 				dialog_template:'#tmpl_hint_dialog',
-				model_prototype: app.Hint,
+				model_prototype: Hint,
 			});
 		},
 		render:function() {
@@ -24,4 +22,6 @@ $(function() {
 			this.$("#hint_place_holder").append(this.hint_section.render());
 		},
 	});
-}());
+	
+	return QuestPageSurprisePropertiesView;
+});

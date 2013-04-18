@@ -1,8 +1,8 @@
-var app = app || {};
-var consts = consts || {};
-$(function() {
+define(['views/Attributes','lib/utils/consts','Joint','Joint_dia','Joint_dia_org','Joint_dia_uml'],
+		function(Attributes,consts,Joint,Joint_dia,Joint_dia_org,Joint_dia_uml){
 	
-	app.QuestPageDiagramView = Backbone.View.extend({
+	
+	var QuestPageDiagramView = Backbone.View.extend({
 		eventagg: undefined,
 		jointObj: undefined,
 		events: {
@@ -12,7 +12,7 @@ $(function() {
 		
 		initialize: function(options){ 
 			this.eventagg = options.eventagg;
-			var relevant_attrs = app.Attributes[this.model.get('page_type')];
+			var relevant_attrs = Attributes[this.model.get('page_type')];
 			var jointObj = Joint.dia.org.Member.create({
 				rect : {
 					x : this.model.get('x'),
@@ -79,6 +79,7 @@ $(function() {
 			this.model.trigger("hide_menu",this.model);
 		},
 		
-	});
+	});	
 	
-});
+	return QuestPageDiagramView;
+})

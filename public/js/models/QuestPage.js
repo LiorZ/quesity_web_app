@@ -1,9 +1,6 @@
-(function() {
-	
-	'use strict';
+define(['Backbone'],function(Backbone) {
 
-
-	app.QuestPage = Backbone.Model.extend({
+	var QuestPage = Backbone.Model.extend({
 		initialize: function(options) {
 			
 		},
@@ -15,7 +12,18 @@
 			page_number: 1,
 			jointObj: undefined,
 			page_content:'',
+		},
+		get_linkable_pages: function() {
+			var pages = this.get('quest').get('pages');
+			var me = this;
+			return pages.chain().filter( function(page) { return (
+					page != me && 
+					page.get('page_type') != 'surprise' 
+			) } );
 		}
 	});
+		
+	return QuestPage;
 	
-}());
+});
+

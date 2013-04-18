@@ -1,13 +1,10 @@
-(function() {
-	
-	'use strict';
-
-
-	app.Link = Backbone.Model.extend({
+define(['lib/utils/consts'],function(consts) {
+	var Link = Backbone.Model.extend({
 		
 		defaults: {
 			links_to_page: undefined,
 			parent_page: undefined,
+			type:'regular'
 		},
 		get_label: function(property) {
 			var txt = this.get(property);
@@ -21,8 +18,6 @@
 		}
 	});
 	
-	app.LinkCollection = Backbone.Collection.extend({
-		model: app.Link,
-	});
-	
-}());
+	return Link;
+});
+

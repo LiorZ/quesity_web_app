@@ -1,7 +1,6 @@
-var app = app || {};
-$(function() {
+define(['views/Attributes','lib/utils/consts','lib/utils/utils','jQueryUI_tablesorter','tinymce'],function(Attributes, consts,utils,jQueryUI_tablesorter,tinymce) {
 	
-	app.QuestPagePropertiesView = Backbone.View.extend({
+	var QuestPagePropertiesView = Backbone.View.extend({
 		template: undefined,
 		id:'#dialog-form',
 		className:'quest_page',
@@ -15,7 +14,7 @@ $(function() {
 			this.template = _.template( $(options.template).html() );
 		},
 		exit_properties_view: function() {
-			app.Router.navigate("show_diagram",{trigger: true});
+			window.location.hash = "show_diagram";
 		},
 		
 		handle_enter_on_title:function(e) {
@@ -31,7 +30,8 @@ $(function() {
 			this.model.set('page_content',this.$('#content_editor').html());
 		},
 		render:function() {
-			var type_obj = app.Attributes[this.model.get('page_type')];
+			var Attributes = require('views/Attributes');
+			var type_obj = Attributes[this.model.get('page_type')];
 			var fill_color = utils.hexToRgb(type_obj.view.fill);
 			this.$el.html(this.template({data:this.model.toJSON()}));
 			var size = utils.precentToPixels(0.85);
@@ -86,4 +86,6 @@ $(function() {
 			this.$('#content_editor').tinymce().execCommand('mceInsertContent',false,this.model.get('page_content'));
 		}
 	});
-}());
+	
+	return QuestPagePropertiesView;
+});

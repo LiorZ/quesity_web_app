@@ -1,7 +1,5 @@
-var app = app || {};
-$(function() {
-
-	app.MapView = Backbone.View.extend({
+define(['JQueryUI_Maps','lib/utils/consts'],function(JQueryUI_Maps,consts) {
+	MapView = Backbone.View.extend({
 		id:'map_view',
 		initialize:function(){
 			
@@ -121,4 +119,6 @@ $(function() {
 			this.update_txt_fields(lat,lng,consts.DEFAULT_LOCATION_RADIUS);
 		}
 	});
-}());
+	
+	return MapView;
+});

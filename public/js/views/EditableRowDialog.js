@@ -1,7 +1,5 @@
-var app = app || {};
-$(function() {
-	
-	app.EditableRowDialog = Backbone.View.extend({
+define(["jQueryUI"],function(jQueryUI) {
+	var EditableRowDialog = Backbone.View.extend({
 		initialize: function(options) {
 			this.template = _.template( $(options.dialog_template).html() );
 			if ( options.binding) this.binding = options.binding;
@@ -25,7 +23,7 @@ $(function() {
 			    	  OK: function(){
 			    		  _.bindAll(context.save_object);
 			    		  context.save_object(dialog_obj,collection);
-		    	  },
+			    	  },
 			    	  Cancel: function() {
 			    		  $(this).dialog("close");
 			    		  context.remove();
@@ -48,5 +46,6 @@ $(function() {
     		  }
     		this.remove();
 		}
-		
-	})}());
+	});
+	return EditableRowDialog;
+});

@@ -1,7 +1,5 @@
-var app = app || {};
-$(function() {
-	
-	app.EditableTableView = Backbone.View.extend({
+define(['views/EditableRowView','views/EditableRowDialog'],function(EditableRowView,EditableRowDialog){
+	var EditableTableView = Backbone.View.extend({
 		template: undefined,
 		rows:[],
 		events: {
@@ -17,13 +15,13 @@ $(function() {
 			if ( options.row_class ) {
 				this.row_class = options.row_class;
 			}else { 
-				this.row_class = app.EditableRowView;
+				this.row_class = EditableRowView;
 			}
 			
 			if ( options.dialog_class ) {
 				this.dialog_class = options.dialog_class;
 			}else {
-				this.dialog_class = app.EditableRowDialog;
+				this.dialog_class = EditableRowDialog;
 			}
 			
 			if ( options.dialog_size ) {
@@ -88,6 +86,8 @@ $(function() {
 
 			});
 			dialog.render(this.model);
-		},
-		
-	})}());
+		}
+	});
+	
+	return EditableTableView;
+});

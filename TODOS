@@ -1,11 +1,3 @@
 TODOS:
--------
-* Add a ranking page in which editing is disabled and pages can be connected to. Only one edge can come out of it.
-
-DONE TODOS:
------------
-* 3 points if the name of the link is too long.
-* fix the menu
-* Newly added pages shouldn't mask each other
-* Connection rename - another label is always added on top..
-* Stall page - set time doesn't work (dialog doesn't exist assertion)
+------
+(*) Write a get_quest_model function in models that require it.

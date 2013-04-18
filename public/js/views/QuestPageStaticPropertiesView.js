@@ -1,17 +1,17 @@
-var app = app || {};
-$(function() {
+define(['views/QuestPagePropertiesView','views/EditableTableView','views/LinkEditableRowDialog','views/LinkEditableRowView','models/Link'] , 
+		function(QuestPagePropertiesView,EditableTableView,LinkEditableRowDialog,LinkEditableRowView,Link) {
 	
-	app.QuestPageStaticPropertiesView = app.QuestPagePropertiesView.extend({
+	var QuestPageStaticPropertiesView = QuestPagePropertiesView.extend({
 		initialize: function(options) {
 			this.constructor.__super__.initialize.apply(this, [options])
-			this.link_section = new app.EditableTableView({
+			this.link_section = new EditableTableView({
 				model:this.model.get('links'),
 				templateName:'#tmpl_static_links',
 				row_templateName:'#tmpl_one_link',
 				dialog_template:'#tmpl_set_link_dialog',
-				dialog_class: app.LinkEditableRowDialog,
-				row_class: app.LinkEditableRowView,
-				model_prototype: app.Link,
+				dialog_class: LinkEditableRowDialog,
+				row_class: LinkEditableRowView,
+				model_prototype: Link,
 				model_prototype_options: {parent_page: this.model}
 			});
 			
@@ -22,4 +22,6 @@ $(function() {
 			this.$("#link_place_holder").append(this.link_section.render());
 		},
 	});
-}());
+	
+	return QuestPageStaticPropertiesView;
+});

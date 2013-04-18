@@ -29,20 +29,3 @@
 			});
 	  };
 	})( jQuery );
-	
-
-(function() {
-	$(document).ready(function() {
-		var menu_container_start_left = $("#menu").css('left');
-		
-		$("#menu").make_menu({
-			start_loc: {left  : 0}, 
-			start_method: {duration: 1000, method: 'easeInSine'},
-			end_loc: {left:menu_container_start_left},
-			end_method:{duration: 1000, method: 'easeOutSine'},
-			menu_fold_callback: function() { $("#new_page_menu").css('display','none'); }
-		});
-		
-	});
-	
-}());
