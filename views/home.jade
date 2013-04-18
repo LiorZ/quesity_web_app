@@ -1,0 +1,8 @@
+html(lang="en")
+	head
+		title Quesity Homepage
+		body
+			div#content
+				h1 Your quests:
+				each q in quests
+					a(href='/quests/'+q.id)=q.title

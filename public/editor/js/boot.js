@@ -1,0 +1,55 @@
+require.config({
+  paths: {
+	models:'/shared/js/models',  
+    jQuery: '/shared/js/lib/jquery/jquery.1.9.0',
+    Underscore: '/shared/js/lib/underscore/underscore',
+    Backbone: '/shared/js/lib/backbone/backbone',
+    jQueryUI: '/shared/js/lib/jquery-ui/jquery-ui-1.10.0.custom',
+    JQueryUI_Maps: '/shared/js/lib/jquery-ui/plugins/google-maps/jquery.ui.map.full.min',
+    jQueryUI_easing: '/shared/js/lib/jquery-ui/plugins/jquery-easing/jquery.easing.1.3',
+    jQueryUI_tablesorter: '/shared/js/lib/jquery-ui/plugins/tablesorter/jquery.tablesorter',
+    EasingMenu: '/editor/js/lib/behavior/EasingMenu',
+    Joint: '/editor/js/lib/jointjs/joint',
+    Joint_dia:'/editor/js/lib/jointjs/joint.dia',
+    Joint_dia_org:'/editor/js/lib/jointjs/joint.dia.org',
+    Joint_dia_uml:'/editor/js/lib/jointjs/joint.dia.uml',
+    Raphael: '/editor/js/lib/jointjs/raphael',
+    json2: '/editor/js/lib/jointjs/json2',
+    tinymce: '/editor/js/lib/tiny_mce/jquery.tinymce',
+    text: '/shared/js/lib/text/text'
+//    gmaps:'http://maps.google.com/maps/api/js?sensor=true&key=AIzaSyCI3y0xsOOIUye7jrp6HWjnOl1OTrCY4ls'
+  },
+
+  shim: {
+      'Backbone': {
+          deps: ['Underscore', 'jQuery'],
+          exports: 'Backbone'
+      },
+      jQueryUI:['jQuery'],
+      jQueryUI_Maps:['jQueryUI'],
+//      gmaps: {
+//    	  exports: 'google'
+//      },
+      jQueryUI_easing:['jQueryUI'],
+      jQueryUI_tablesorter:['jQueryUI'],
+      EasingMenu:['jQuery'],
+      Joint:{
+    	  deps:['Raphael','json2'],
+    	  exports:'Joint'
+      },
+      Joint_dia: ['Joint'],
+      Joint_dia_org: ['Joint_dia'],
+      Joint_dia_uml: ['Joint_dia'],
+      tinymce:['jQuery'],
+    'views/appView': ['Backbone'],
+    'models/Quest':['Backbone']
+  }
+});
+
+require(['views/appView','models/Quest','text!../templates/all.html'],function(appView,Quest,templates){
+	$(document).ready(function() {
+		$('body').append(templates);
+		var quest_model = new Quest();
+		var app_view = new appView({model:quest_model});
+	});
+});
