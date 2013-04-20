@@ -1,2 +1,8 @@
+<button id='btn_new_quest'>Create new ... </button>
 <table>
+	<% if (quests != undefined) { _.each(quests,function(quest) { %>
 		<tr>
+			<td><a href='/editor/<%=quest._id%>'><%=quest.title%></a></td>
+		</tr>
+	<%});}%>
+</table>

@@ -75,6 +75,15 @@ define(['jQueryUI','Backbone','routers/Router','views/Attributes','views/QuestPa
 		addQuestDiagramView: function(page) {
 			var view = new QuestPageDiagramView({model: page, eventagg: eventagg});
 		},
+		render:function() {
+			var pages = this.model.get('pages');
+			if ( pages == undefined )
+				return;
+			var context = this;
+			pages.each(function(page) {
+				context.addQuestDiagramView(page);
+			});
+		},
 		
 		create_new_page: function(ev){
 			var q_type = $(ev.target).data("page-type");

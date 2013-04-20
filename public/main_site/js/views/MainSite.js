@@ -20,7 +20,7 @@ define(['router'], function(router) {
 		if ( !authenticated ) {
 			window.location.hash = 'login';
 		}else {
-			window.location.hash = 'index';
+			window.location = '/home';
 		}
 		Backbone.history.start();
 	};

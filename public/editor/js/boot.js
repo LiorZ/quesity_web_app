@@ -4,6 +4,7 @@ require.config({
     jQuery: '/shared/js/lib/jquery/jquery.1.9.0',
     Underscore: '/shared/js/lib/underscore/underscore',
     Backbone: '/shared/js/lib/backbone/backbone',
+    BackboneLocal: '/shared/js/lib/backbone/backbone.local.attrs',
     jQueryUI: '/shared/js/lib/jquery-ui/jquery-ui-1.10.0.custom',
     JQueryUI_Maps: '/shared/js/lib/jquery-ui/plugins/google-maps/jquery.ui.map.full.min',
     jQueryUI_easing: '/shared/js/lib/jquery-ui/plugins/jquery-easing/jquery.easing.1.3',
@@ -24,6 +25,10 @@ require.config({
       'Backbone': {
           deps: ['Underscore', 'jQuery'],
           exports: 'Backbone'
+      },
+      'BackboneLocal': {
+    	  deps:['Backbone'],
+    	  exports: 'BackboneLocal'
       },
       jQueryUI:['jQuery'],
       jQueryUI_Maps:['jQueryUI'],
@@ -49,7 +54,18 @@ require.config({
 require(['views/appView','models/Quest','text!../templates/all.html'],function(appView,Quest,templates){
 	$(document).ready(function() {
 		$('body').append(templates);
-		var quest_model = new Quest();
-		var app_view = new appView({model:quest_model});
+		var quest_id = $('#quest_id').val();
+		var quest_model = new Quest({_id:quest_id});
+		quest_model.fetch({
+			success: function(){
+				var app_view = new appView({model:quest_model});
+				app_view.render();
+			},
+			error: function(err){
+				alert("Can't load quest!");
+				console.log(err);
+			}
+		})
+		
 	});
 });

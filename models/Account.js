@@ -1,7 +1,7 @@
 
 
 //Account.js
-module.exports = function(mongoose,nodemailer) {
+module.exports = function(mongoose,Quest) {
 	var crypto = require('crypto');
 
 	var AccountSchema = new mongoose.Schema({
@@ -9,7 +9,7 @@ module.exports = function(mongoose,nodemailer) {
 		password: { type:String } ,
 		name: { first: {type:String}, 
 			last: { type:String } },
-		date_registered:{type:Date, 'default':Date.now}
+		date_registered:{type:Date, 'default':Date.now},
 	});
 	
 	var Account = mongoose.model('Account',AccountSchema);
@@ -43,9 +43,37 @@ module.exports = function(mongoose,nodemailer) {
 	};
 	
 	
+	var attach_quests = function(account,succ_callback,error_callback) {
+		Quest.quests_by_account(account._id,function(quests){
+			console.log("Quests: ");
+			if ( quests.length > 0 ){
+				account.quests = quests
+			}else {
+				account.quests = [];
+			}
+			succ_callback(account);
+		},error_callback);
+	}
+	
+	
+	var byId = function(id,succ_callback,err_callback) {
+		
+		Account.findOne({_id:id},function(err,doc){
+			if (err) {
+				err_callback(err);
+			}else {
+				var obj_account = doc.toObject();
+				delete obj_account.password;
+				attach_quests(obj_account,succ_callback,err_callback);
+			}
+		});
+	};
+
 	return {
 		Account:Account,
 		register:register,
-		login:login
+		login:login,
+		byId: byId,
+		attach_quests: attach_quests
 	}
 }

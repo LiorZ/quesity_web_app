@@ -3,6 +3,12 @@
 //Quest.js
 module.exports = function(mongoose) {
 
+	
+	var LinkSchema = new mongoose.Schema({
+		links_to_page: {type:String},
+		parent_page: {type:String},
+		link_type: {type:String}
+	});
 	var QuestPageSchema = new mongoose.Schema({
 		x:{type:Number},
 		y:{type:Number},
@@ -10,14 +16,11 @@ module.exports = function(mongoose) {
 		page_type: {type:String},
 		page_number: {type:Number},
 		page_content:{type:String},
-		links:[Link]
+		links:[LinkSchema],
+		quest_id: {type:String}
 	});
 	
-	var LinkSchema = new mongoose.Schema({
-		links_to_page: {type:String},
-		parent_page: {type:String},
-		link_type: {type:String}
-	});
+
 	
 	var LinkAnswerSchema = new LinkSchema.extend({
 		answer_txt: {type:String}
@@ -39,12 +42,35 @@ module.exports = function(mongoose) {
 	var LinkAnswer = mongoose.model('LinkAnswer',LinkAnswerSchema);
 	var LinkLocation = mongoose.model('LinkLocation',LinkLocationSchema);
 	
+	
+	var pages_by_quest_id = function(q_id, success_callback,error_callback){
+		QuestPage.find({quest_id:q_id},function(err,doc) {
+			if ( err ) { 
+				error_callback(err);
+			}else{
+				success_callback(doc);
+			}
+		});
+	};
+	
+	var new_page = function(data,success_callback,error_callback) {
+		var page = new QuestPage(data);
+		page.save(function(err){
+			if ( err ) {
+				error_callback(err);
+			}else { 
+				success_callback(page);
+			}
+		});
+	}
 	return {
 		QuestPage: QuestPage,
 		QuestPageStall: QuestPageStall,
 		Link: Link,
 		LinkAnswer: LinkAnswer,
-		LinkLocation: LinkLocation
+		LinkLocation: LinkLocation,
+		pages_by_quest_id:pages_by_quest_id,
+		new_page: new_page
 	};
 
 }
