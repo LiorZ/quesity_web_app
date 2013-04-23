@@ -40,7 +40,7 @@ define(['jQueryUI','Backbone','routers/Router','views/Attributes','views/QuestPa
 		},
 		initialize: function() { 
 			var pages = this.model.get('pages');
-			this.listenTo(pages,'add',this.addQuestDiagramView);
+//			this.listenTo(pages,'add',this.addQuestDiagramView); --> moved to success of saving the model upon creation.
 			this.menu_view = new MenuView({pages: pages});
 			this.init_router();
 			Joint.paper("world");
@@ -99,11 +99,16 @@ define(['jQueryUI','Backbone','routers/Router','views/Attributes','views/QuestPa
 				x_coord = (last_page.get('x') + 20 + consts.DIAGRAM_ELEMENT_WIDTH) % window.innerWidth; 
 				y_coord = last_page.get('y');
 			}
-			
-			page.set('x',x_coord);
-			page.set('y',y_coord);
-			
 			pages.add(page);
+			var context = this;
+			page.save(null,{
+				error:function() { 
+					alert("Can't save page, check your connection")
+				},
+				success:function() {
+					context.addQuestDiagramView(page);
+				}
+			});
 			$("#new_page_menu").css('display','none');
 		},
 		

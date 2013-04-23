@@ -1,5 +1,5 @@
-define([],function() {
-	var Hint = Backbone.Model.extend({
+define(['Backbone'],function(Backbone) {
+	var Hint = Backbone.RelationalModel.extend({
 		
 		defaults: {
 			hint_title:'',

@@ -2,14 +2,10 @@ define(['models/QuestPage','models/LinkCollection','models/Mixins'],function(Que
 	var QuestPageStatic = QuestPage.extend({
 		initialize:function(options) {
 			this.constructor.__super__.initialize.apply(this, [options]);
-			this.set('links', new LinkCollection());
+//			this.set('links', new LinkCollection());
 			this.listenTo(this.get('links'),'add',this.handle_add_link);
 		},
 		
-		defaults:
-		 {
-			links: undefined
-		},
 		
 	});
 	_.extend(QuestPageStatic.prototype.defaults, QuestPage.prototype.defaults);

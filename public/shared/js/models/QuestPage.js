@@ -1,15 +1,40 @@
-define(['BackboneLocal','Backbone'],function(Backbone,BackboneLocal) {
+define(['Backbone','models/Link','BackboneRelational'],function(Backbone,Link,BackboneRelational) {
 
-	var QuestPage = BackboneLocal.Model.extend({
+	var QuestPage = Backbone.RelationalModel.extend({
+		idAttribute: "_id",
+
+		relations: [{
+			type: Backbone.HasMany,
+			key: 'links',
+			relatedModel: Link,
+			reverseRelation: {
+				key: 'parent_page',
+				includeInJSON: '_id'
+			}
+		}],
+		
 		initialize: function(options) {
-			
+			this.attach_listeners();
+		},
+		attach_listeners:function() {
+			this.listenTo(this,"change:x",this.save_model);
+		},
+		save_model:function() {
+			this.save(null,{error:function() {
+				alert("Error: Could not save your diagram ");
+			}});
 		},
 		url:function() {
 			if (this.isNew()){
-				return "/quest/"+this.get('quest').get('_id') + '/new_page';
+				return "/quest/"+this.collection.quest.get('_id') + '/new_page';
 			}else { 
-				return "/quest/" + this.get('quest').get('_id')+'/page/'+this.get('_id');
+				return "/quest/" + this.collection.quest.get('_id')+'/page/'+this.get('_id');
 			}
+		},
+		toJSON:function() {
+			var json = Backbone.RelationalModel.prototype.toJSON.apply(this, []);
+			delete json['jointObj'];
+			return json;
 		},
 		defaults: {
 			x:220,

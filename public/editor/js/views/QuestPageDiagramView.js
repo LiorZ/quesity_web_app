@@ -31,8 +31,7 @@ define(['views/Attributes','lib/utils/consts','Joint','Joint_dia','Joint_dia_org
 			});
 			var context = this;
 			jointObj.registerCallback('elementMoved',function(new_loc){
-				context.model.set('x',new_loc.x);
-				context.model.set('y',new_loc.y);
+				context.model.set({x: new_loc.x, y:new_loc.y});
 			});
 			this.model.set("jointObj", jointObj );
 			this.$el = jQuery(jointObj.wrapper.node);

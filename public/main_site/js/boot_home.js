@@ -4,14 +4,23 @@ require.config({
     Underscore: '/shared/js/lib/underscore/underscore',
     BackboneLocal: '/shared/js/lib/backbone/backbone.local.attrs',
     Backbone: '/shared/js/lib/backbone/backbone',
-    models:'/shared/js/models/'
+    models:'/shared/js/models/',
+    BackboneRelational: '/shared/js/lib/backbone/backbone-relational',
   },
 
   shim: {
+	'Underscore': {
+		deps:['jQuery'],
+		exports:'_'
+	},
     'Backbone': {
     	deps: ['Underscore', 'jQuery'],
     	exports:'Backbone'
     } ,
+    'BackboneRelational':{
+    	deps:['Backbone'],
+    	exports: 'BackboneRelational'
+    },
     'BackboneLocal': {
   	  deps:['Backbone'],
   	  exports: 'BackboneLocal'

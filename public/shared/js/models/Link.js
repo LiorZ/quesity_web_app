@@ -1,5 +1,5 @@
-define(['lib/utils/consts'],function(consts) {
-	var Link = Backbone.Model.extend({
+define(['lib/utils/consts','Backbone','BackboneRelational'],function(consts,Backbone,BackboneRelational) {
+	var Link = Backbone.RelationalModel.extend({
 		
 		defaults: {
 			links_to_page: undefined,

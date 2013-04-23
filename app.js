@@ -1,12 +1,16 @@
 var express = require('express');
 var app = express();
 var mongoose = require('mongoose');
+var extend = require('mongoose-schema-extend');
+
 var nodemailer = require('nodemailer');
 var MemoryStore = require('connect').session.MemoryStore;
 var _ = require('underscore');
 var models = {};
 models.Quest = require('./models/Quest')(mongoose);
 models.Account = require('./models/Account')(mongoose,models.Quest);
+models.QuestPage = require('./models/QuestPage')(mongoose,extend);
+
 		app.configure(function(){
 	console.log("Configuring ... ");
 	app.set('view engine', 'jade');
@@ -19,10 +23,30 @@ models.Account = require('./models/Account')(mongoose,models.Quest);
 	mongoose.connect('mongodb://localhost/quesity');
 });
 
-var generic_error = function(err) {
+var generic_error = function(err,res) {
 	console.log(err);
 	res.send(401);
 }
+app.put('/quest/:q_id/page/:page_id',function(req,res) {
+	if ( req.session.loggedIn ) {
+		var account_id = req.session.accountId;
+		var quest_id = req.param('q_id');
+		var page_id = req.param('page_id');
+		models.Quest.validate_quest_to_account(account_id,quest_id,function(model) {
+			if ( model == null || model == undefined ){
+				res.send(401);
+			}else {
+				console.log("Quest "+ quest_id + " belong to account. sending update command ... ");
+				models.QuestPage.update_page(quest_id,req.body,function(page) {
+					console.log("Page updated ..");
+					res.send({_id:page.id});
+				},function(err){generic_error(err,res)});
+			}
+		});
+	}else {
+		res.send(401);
+	}
+});
 app.post('/quest/:q_id/new_page',function(req,res) { 
 	if ( req.session.loggedIn ) {
 		var account_id = req.session.accountId;
@@ -30,7 +54,7 @@ app.post('/quest/:q_id/new_page',function(req,res) {
 		var new_page_callback = function(new_page){
 			res.send({_id: new_page._id});
 		};
-		models.Quest.validate_quest_to_account({accountId:account_id,quest_id:quest_id},function(model) {
+		models.Quest.validate_quest_to_account(account_id,quest_id,function(model) {
 			if ( model == null || model == undefined ){
 				res.send(401);
 			}else {
@@ -40,7 +64,8 @@ app.post('/quest/:q_id/new_page',function(req,res) {
 					page_name:req.param('page_name'),
 					page_type: req.param('page_type'),
 					page_number: req.param('page_number'),
-					page_content:req.param('page_content')
+					page_content:req.param('page_content'),
+					quest_id: quest_id
 				},new_page_callback,generic_error);
 			}
 		},generic_error);
@@ -74,7 +99,13 @@ app.get('/quest/:q_id',function(req,res){
 		models.Quest.validate_quest_to_account(account_id,quest_id,
 				function(quest){
 					console.log("Sending quest: " + quest);
-					res.send(quest);
+					models.QuestPage.pages_by_quest_id(quest_id,function(pages){
+						console.log("Found pages: " + pages);
+						quest_json = quest.toJSON();
+						quest_json.pages = pages || [];
+						console.log("Sending quest with pages: " + JSON.stringify(quest_json));
+						res.send(quest_json);
+					},generic_error)
 				},
 				generic_error
 		);
