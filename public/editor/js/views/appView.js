@@ -1,5 +1,5 @@
-define(['jQueryUI','Backbone','routers/Router','views/Attributes','views/QuestPageDiagramView','lib/utils/consts','views/MenuView','Joint'],
-		function(jQueryUI,Backbone,EditorRouter,Attributes,QuestPageDiagramView,consts,MenuView,Joint) {
+define(['jQueryUI','Backbone','routers/Router','views/ViewAttributes','models/ModelAttributes','views/QuestPageDiagramView','lib/utils/consts','views/MenuView','Joint'],
+		function(jQueryUI,Backbone,EditorRouter,ViewAttributes,ModelAttributes,QuestPageDiagramView,consts,MenuView,Joint) {
 	var eventagg = _.extend({}, Backbone.Events);
 	var AppView = Backbone.View.extend({
 		el: '#container',
@@ -14,8 +14,8 @@ define(['jQueryUI','Backbone','routers/Router','views/Attributes','views/QuestPa
 		},
 
 		show_property_page:function(model) {
-			var template_id = Attributes[model.get('page_type')].view.properties_template;
-			var properties_prototype = Attributes[model.get('page_type')].view.properties_prototype;
+			var template_id = ViewAttributes[model.get('page_type')].view.properties_template;
+			var properties_prototype = ViewAttributes[model.get('page_type')].view.properties_prototype;
 			var prop_page = new properties_prototype({model:model, template:template_id});
 			
 			this.active_property_page = prop_page;
@@ -40,7 +40,7 @@ define(['jQueryUI','Backbone','routers/Router','views/Attributes','views/QuestPa
 		},
 		initialize: function() { 
 			var pages = this.model.get('pages');
-//			this.listenTo(pages,'add',this.addQuestDiagramView); --> moved to success of saving the model upon creation.
+			this.listenTo(pages,'add',this.addQuestDiagramView);
 			this.menu_view = new MenuView({pages: pages});
 			this.init_router();
 			Joint.paper("world");
@@ -88,27 +88,21 @@ define(['jQueryUI','Backbone','routers/Router','views/Attributes','views/QuestPa
 		create_new_page: function(ev){
 			var q_type = $(ev.target).data("page-type");
 			var page_num = (this.model.get('pages').length)+1;
-			var prototype = Attributes[q_type].model.page_prototype;
-			var page = new prototype({page_type:q_type, page_number: page_num});
-			var x_coord = page.get('x');
-			var y_coord = page.get('y');
+			
 			//Get the location of next_page:
 			var pages = this.model.get('pages');
+			var error_callback = function() {
+				alert("Could not add the page. Check your connection and try again")
+			}
 			if ( pages.length > 0 ){
 				var last_page = pages.at(pages.length-1);
-				x_coord = (last_page.get('x') + 20 + consts.DIAGRAM_ELEMENT_WIDTH) % window.innerWidth; 
-				y_coord = last_page.get('y');
+				var x_coord = (last_page.get('x') + 20 + consts.DIAGRAM_ELEMENT_WIDTH) % window.innerWidth; 
+				var y_coord = last_page.get('y');
+				pages.create({x:x_coord,y:y_coord,page_type:q_type,page_number:page_num},{wait:true,error:error_callback});
+			}else {
+				pages.create({page_type:q_type,page_number:page_num},{wait:true,error:error_callback});
 			}
-			pages.add(page);
-			var context = this;
-			page.save(null,{
-				error:function() { 
-					alert("Can't save page, check your connection")
-				},
-				success:function() {
-					context.addQuestDiagramView(page);
-				}
-			});
+			 
 			$("#new_page_menu").css('display','none');
 		},
 		

@@ -11,5 +11,7 @@ define(['models/QuestPage','models/LinkCollection','models/Mixins'],function(Que
 	_.extend(QuestPageStatic.prototype.defaults, QuestPage.prototype.defaults);
 	_.extend(QuestPageStatic.prototype, Mixins.one_child);
 	
+	QuestPage._subModels['static'] = QuestPageStatic;
+
 	return QuestPageStatic;
 });

@@ -1,5 +1,5 @@
-define(['views/Attributes','lib/utils/consts','Joint','Joint_dia','Joint_dia_org','Joint_dia_uml'],
-		function(Attributes,consts,Joint,Joint_dia,Joint_dia_org,Joint_dia_uml){
+define(['views/ViewAttributes','lib/utils/consts','Joint','Joint_dia','Joint_dia_org','Joint_dia_uml'],
+		function(ViewAttributes,consts,Joint,Joint_dia,Joint_dia_org,Joint_dia_uml){
 	
 	
 	var QuestPageDiagramView = Backbone.View.extend({
@@ -12,7 +12,7 @@ define(['views/Attributes','lib/utils/consts','Joint','Joint_dia','Joint_dia_org
 		
 		initialize: function(options){ 
 			this.eventagg = options.eventagg;
-			var relevant_attrs = Attributes[this.model.get('page_type')];
+			var relevant_view_attrs = ViewAttributes[this.model.get('page_type')];
 			var jointObj = Joint.dia.org.Member.create({
 				rect : {
 					x : this.model.get('x'),
@@ -20,11 +20,11 @@ define(['views/Attributes','lib/utils/consts','Joint','Joint_dia','Joint_dia_org
 					width : consts.DIAGRAM_ELEMENT_WIDTH,
 					height : consts.DIAGRAM_ELEMENT_HEIGHT,
 				},
-				name : relevant_attrs.view.type_title,
+				name : relevant_view_attrs.view.type_title,
 				position :this.model.get("page_name"),
-				avatar : relevant_attrs.view.avatar,
+				avatar : relevant_view_attrs.view.avatar,
 				attrs : {
-						fill : relevant_attrs.view.fill,
+						fill : relevant_view_attrs.view.fill,
 						stroke : 'gray'
 					},
 				numbering: this.model.get('page_number'),

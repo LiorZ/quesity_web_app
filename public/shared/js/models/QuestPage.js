@@ -1,5 +1,5 @@
 define(['Backbone','models/Link','BackboneRelational'],function(Backbone,Link,BackboneRelational) {
-
+	
 	var QuestPage = Backbone.RelationalModel.extend({
 		idAttribute: "_id",
 
@@ -12,12 +12,20 @@ define(['Backbone','models/Link','BackboneRelational'],function(Backbone,Link,Ba
 				includeInJSON: '_id'
 			}
 		}],
+//		subModelTypes:{
+//			'location':QuestPageLocation,
+//			'question':'QuestPageQuestion',
+//			'stall':'QuestPageStall',
+//			'static':'QuestPageStatic',
+//			'surprise':'QuestPageSurprise'
+//		},
+		subModelTypeAttribute:'page_type',
 		
 		initialize: function(options) {
-			this.attach_listeners();
+//			this.attach_listeners();
 		},
 		attach_listeners:function() {
-			this.listenTo(this,"change:x",this.save_model);
+			this.listenTo(this,"change:x change:page_name change:page_content",this.save_model);
 		},
 		save_model:function() {
 			this.save(null,{error:function() {

@@ -10,7 +10,14 @@ define(['text!../../templates/home.html','models/Quest'], function(home_template
 		},
 		create_new_quest:function() {
 			var new_quest = new Quest();
-			new_quest.save();
+			new_quest.save(null,{
+				success: function() {
+					window.location='/editor/' + new_quest.get('_id');
+				},
+				error: function() {
+					alert("Could not create new quest. check your connection");
+				}
+			});
 		}
 	});
 	

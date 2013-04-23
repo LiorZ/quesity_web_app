@@ -11,7 +11,9 @@ define(['jQueryUI','EasingMenu'],function(jQueryUI,EasingMenu) {
 		timeoutId:undefined,
 		initialize: function(options) {
 			this.pages = options.pages;
-
+			var context = this;
+			this.pages.each(function(element){context.attachListener(element)}); //Add to existing pages!
+			
 			this.listenTo(this.pages,"add",this.attachListener);
 			this.$("#btn_delete").button( {
 				text: false,	

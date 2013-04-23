@@ -1,14 +1,8 @@
-define(['models/QuestPageStatic','models/QuestPageLocation','models/QuestPageStall','models/QuestPageQuestion','models/QuestPageSurprise',
-        'views/QuestPageStaticPropertiesView','views/QuestPageLocationPropertiesView','views/QuestPageStallPropertiesView',
+define(['views/QuestPageStaticPropertiesView','views/QuestPageLocationPropertiesView','views/QuestPageStallPropertiesView',
         'views/QuestPageQuestionPropertiesView','views/QuestPageQuestionPropertiesView','views/QuestPageSurprisePropertiesView'],
-        function(QuestPageStatic,QuestPageLocation,QuestPageStall,QuestPageQuestion,QuestPageSurprise,QuestPageStaticPropertiesView,
-        		QuestPageLocationPropertiesView,QuestPageStallPropertiesView,QuestPageQuestionPropertiesView,QuestPageQuestionPropertiesView,QuestPageSurprisePropertiesView) {
+        function(QuestPageStaticPropertiesView,QuestPageLocationPropertiesView,QuestPageStallPropertiesView,QuestPageQuestionPropertiesView,QuestPageQuestionPropertiesView,QuestPageSurprisePropertiesView) {
 	var Attributes  = {
 			'static': {
-				model: {
-					page_prototype: QuestPageStatic
-				},
-				
 				view:{
 					avatar : 'img/document_scroll.png',
 					fill: '#99FF99',
@@ -18,11 +12,7 @@ define(['models/QuestPageStatic','models/QuestPageLocation','models/QuestPageSta
 				}
 				
 			},
-			'location': {
-				model: {
-					page_prototype: QuestPageLocation
-				},
-				
+			'location': {			
 				view:{
 					avatar : 'img/location_icon.png',
 					fill: '#BDDFFF',
@@ -30,15 +20,10 @@ define(['models/QuestPageStatic','models/QuestPageLocation','models/QuestPageSta
 					properties_template:'#tmpl_page_location',
 					properties_prototype: QuestPageLocationPropertiesView
 				}
-				
 			},
 			
 			'stall': {
-				model: {
-					page_prototype: QuestPageStall
 
-				},
-				
 				view:{
 					avatar : 'img/stall_icon.png',
 					fill: '#FFFF99',
@@ -49,9 +34,6 @@ define(['models/QuestPageStatic','models/QuestPageLocation','models/QuestPageSta
 				
 			},
 			'question': {
-				model: {
-					page_prototype: QuestPageQuestion
-				},
 				
 				view:{
 					avatar : 'img/question_icon.png',
@@ -64,10 +46,6 @@ define(['models/QuestPageStatic','models/QuestPageLocation','models/QuestPageSta
 			},
 			
 			'surprise': {
-				model: {
-					page_prototype: QuestPageSurprise
-				},
-				
 				view:{
 					avatar : 'img/location_icon.png',
 					fill: '#E5E5E5',

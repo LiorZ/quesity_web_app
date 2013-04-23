@@ -36,6 +36,8 @@ define(['models/QuestPage','models/Hint','models/LinkAnswer'],function(QuestPage
 		
 	});
 	_.extend(QuestPageQuestion.prototype.defaults, QuestPage.prototype.defaults);
+	QuestPage._subModels['question'] = QuestPageQuestion;
+	
 	return QuestPageQuestion;
 
 });

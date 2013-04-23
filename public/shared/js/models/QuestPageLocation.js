@@ -1,4 +1,5 @@
 define(['models/LinkLocation','models/Hint','models/QuestPage'],function(LinkLocation,Hint,QuestPage){
+	
 	var QuestPageLocation = QuestPage.extend({
 		relations: [{
 			type: Backbone.HasMany,
@@ -30,7 +31,7 @@ define(['models/LinkLocation','models/Hint','models/QuestPage'],function(LinkLoc
 		
 	});
 	_.extend(QuestPageLocation.prototype.defaults, QuestPage.prototype.defaults);
-	
+	QuestPage._subModels['location'] = QuestPageLocation;
 	return QuestPageLocation;
 	
 });

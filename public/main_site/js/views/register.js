@@ -22,6 +22,7 @@ define(['text!../../templates/register.html'], function(registerTemplate) {
 			},
 			function(data) {
 				console.log(data);
+				window.location = '/home'
 			});
 		return false;
 	}

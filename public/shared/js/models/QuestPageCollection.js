@@ -1,14 +1,18 @@
-define(['models/QuestPage'],function(QuestPage) {
+define(['models/QuestPage','models/ModelAttributes','models/QuestPageLocation','models/QuestPageQuestion','models/QuestPageStall','models/QuestPageStatic',
+        'models/QuestPageSurprise'],function(QuestPage,Attributes,QuestPageLocation,QuestPageQuestion,QuestPageStall,QuestPageStatic,QuestPageSurprise) {
 	var QuestPageList = Backbone.Collection.extend({
-		model: QuestPage,
+		model: function(attrs, options) {
+		    return Attributes[attrs.type].model.prototype(attrs,options);
+		},
 		arr:[],
 		initialize:function() {
-			this.listenTo(this,'add',this.add_joint_listener);
+			this.listenTo(this,'add',this.add_some_listeners);
 			this.listenTo(this,'remove',this.remove_from_array);
 			this.arr = new Array();
 		},
-		add_joint_listener:function(elem) {
+		add_some_listeners:function(elem) {
 			elem.once("change:jointObj",this.add_joint,this);
+			elem.attach_listeners();
 		},
 		add_joint:function(elem) {
 			if (elem.get('page_type') == 'surprise')
