@@ -11,7 +11,7 @@ define(["jQueryUI"],function(jQueryUI) {
 		render:function(collection) {
 			var model = this.model;
 			var context = this;
-			this.$el.html(this.template(model.toJSON()));
+			this.$el.html(this.template(model.toJSON({shallow:true})));
 			$("body").append(this.$el);
 			var dialog_obj = this.$el.find("#dialog_form");
 			dialog_obj.dialog({

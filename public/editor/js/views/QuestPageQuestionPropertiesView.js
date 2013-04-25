@@ -22,7 +22,7 @@ define(['views/QuestPagePropertiesView','views/EditableTableView','views/LinkEdi
 			});
 			
 			this.answers_section = new EditableTableView({
-				model:this.model.get('answers'),
+				model:this.model.get('links'),
 				templateName:'#tmpl_answers',
 				row_templateName:'#tmpl_one_answer',
 				binding:{
@@ -35,7 +35,7 @@ define(['views/QuestPagePropertiesView','views/EditableTableView','views/LinkEdi
 				dialog_class: LinkEditableRowDialog,
 				row_class: LinkEditableRowView,
 				model_prototype: LinkAnswer,
-				model_prototype_options: {parent_page: this.model}
+				model_prototype_options: {parent_page: this.model,type:'answer'}
 			});
 		},
 		

@@ -14,8 +14,9 @@ define(['models/Link'],function(Link){
 			return label;
 		}
 	});
-	
 	_.extend(LinkLocation.prototype.defaults, Link.prototype.defaults);
+	Link._subModels['location'] = LinkLocation;
+
 	return LinkLocation;
 
 });

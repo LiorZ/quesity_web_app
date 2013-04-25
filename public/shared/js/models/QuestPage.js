@@ -1,4 +1,4 @@
-define(['Backbone','models/Link','BackboneRelational'],function(Backbone,Link,BackboneRelational) {
+define(['Backbone','models/Link','models/LinkCollection','BackboneRelational','models/Hint','models/HintCollection'],function(Backbone,Link,LinkCollection,BackboneRelational,Hint,HintCollection) {
 	
 	var QuestPage = Backbone.RelationalModel.extend({
 		idAttribute: "_id",
@@ -7,11 +7,22 @@ define(['Backbone','models/Link','BackboneRelational'],function(Backbone,Link,Ba
 			type: Backbone.HasMany,
 			key: 'links',
 			relatedModel: Link,
+			collectionType:LinkCollection,
 			reverseRelation: {
 				key: 'parent_page',
-				includeInJSON: '_id'
+				includeInJSON: true
 			}
-		}],
+		},
+		{
+			type: Backbone.HasMany,
+			key: 'hints',
+			relatedModel: Hint,
+			collectionType: HintCollection,
+			includeInJSON: true
+		}
+		],
+//Defined on each of the pages seperately.. 
+		
 //		subModelTypes:{
 //			'location':QuestPageLocation,
 //			'question':'QuestPageQuestion',
@@ -25,7 +36,7 @@ define(['Backbone','models/Link','BackboneRelational'],function(Backbone,Link,Ba
 //			this.attach_listeners();
 		},
 		attach_listeners:function() {
-			this.listenTo(this,"change:x change:page_name change:page_content",this.save_model);
+			this.listenTo(this,"change:x change:page_name change:page_content change:hints add:hints remove:hints change:links add:links remove:links",this.save_model);
 		},
 		save_model:function() {
 			this.save(null,{error:function() {
@@ -63,7 +74,14 @@ define(['Backbone','models/Link','BackboneRelational'],function(Backbone,Link,Ba
 			) } );
 		}
 	});
-		
+	//define link relationship (Can't do it before QuestPage is initialized .. ):
+	
+	Link.prototype.relations.push({
+		type: Backbone.HasOne,
+		key: 'links_to_page',
+		relatedModel: QuestPage,
+		includeInJSON: "_id",
+	});
 	return QuestPage;
 	
 });

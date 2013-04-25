@@ -7,6 +7,7 @@ define(['models/QuestPage','models/QuestPageCollection','Backbone','BackboneRela
 			relatedModel: QuestPage,
 			reverseRelation: {
 				key: 'quest',
+				keySource:'quest_id',
 				includeInJSON: 'quest_id'
 			}
 		}],

@@ -27,6 +27,24 @@ var generic_error = function(err,res) {
 	console.log(err);
 	res.send(401);
 }
+
+app.del('/quest/:q_id/page/:page_id',function(req,res){
+	if ( req.session.loggedIn ) {
+		var account_id = req.session.accountId;
+		var quest_id = req.param('q_id');
+		var page_id = req.param('page_id');
+		models.Quest.validate_quest_to_account(account_id,quest_id,function(model) {
+			if ( model == null || model == undefined ){
+				res.send(401);
+			}else {
+				models.QuestPage.remove_page({page_id:page_id,quest_id:quest_id},function(){res.send(200);},function(err){generic_error(err,res)});
+			}
+		});
+	}else {
+		res.send(401);
+	}
+}) ;
+	
 app.put('/quest/:q_id/page/:page_id',function(req,res) {
 	if ( req.session.loggedIn ) {
 		var account_id = req.session.accountId;

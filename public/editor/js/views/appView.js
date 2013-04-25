@@ -1,5 +1,5 @@
-define(['jQueryUI','Backbone','routers/Router','views/ViewAttributes','models/ModelAttributes','views/QuestPageDiagramView','lib/utils/consts','views/MenuView','Joint'],
-		function(jQueryUI,Backbone,EditorRouter,ViewAttributes,ModelAttributes,QuestPageDiagramView,consts,MenuView,Joint) {
+define(['jQueryUI','Backbone','routers/Router','views/ViewAttributes','models/ModelAttributes','views/QuestPageDiagramView','lib/utils/consts','views/MenuView', 'views/LinkView','Joint'],
+		function(jQueryUI,Backbone,EditorRouter,ViewAttributes,ModelAttributes,QuestPageDiagramView,consts,MenuView,LinkView,Joint) {
 	var eventagg = _.extend({}, Backbone.Events);
 	var AppView = Backbone.View.extend({
 		el: '#container',
@@ -75,14 +75,26 @@ define(['jQueryUI','Backbone','routers/Router','views/ViewAttributes','models/Mo
 		addQuestDiagramView: function(page) {
 			var view = new QuestPageDiagramView({model: page, eventagg: eventagg});
 		},
+		/*
+		 * Renders the diagram upon startup
+		 */
 		render:function() {
 			var pages = this.model.get('pages');
 			if ( pages == undefined )
 				return;
 			var context = this;
+
+			//first, render the pages. Then, render the connections between them.
 			pages.each(function(page) {
 				context.addQuestDiagramView(page);
 			});
+			
+			pages.each(function(page) {
+				var links = page.get('links');
+				links.each(function(link){
+					var link_view = new LinkView({model:link});
+				});
+			})
 		},
 		
 		create_new_page: function(ev){

@@ -5,7 +5,7 @@ define(['views/QuestPagePropertiesView','views/EditableTableView','views/Linkabl
 		initialize: function(options) {
 			this.constructor.__super__.initialize.apply(this, [options])
 			this.location_section = new EditableTableView({
-				model:this.model.get('locations'),
+				model:this.model.get('links'),
 				templateName:'#tmpl_locations',
 				row_templateName:'#tmpl_one_location',
 				binding:{
@@ -23,7 +23,7 @@ define(['views/QuestPagePropertiesView','views/EditableTableView','views/Linkabl
 				dialog_size: {height: '800', width:'600' },
 				row_class: LinkEditableRowView,
 				model_prototype: LinkLocation,
-				model_prototype_options: {parent_page: this.model}
+				model_prototype_options: {parent_page: this.model,type:'location'}
 			});
 			
 			this.hint_section = new EditableTableView({

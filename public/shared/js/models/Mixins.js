@@ -8,6 +8,18 @@ define([],function() {
 						prev_page.destroy();
 					}
 				}
+			},
+			
+			shallow_json: {
+				toJSON:function(options){
+					if ( !options || !options.shallow){
+						return Backbone.RelationalModel.prototype.toJSON.apply(this,[]);
+					}
+					if ( options.shallow ) {
+						return Backbone.Model.prototype.toJSON.apply(this,[]);;
+					}
+					return Backbone.RelationalModel.prototype.toJSON.apply(this,[]);
+				}
 			}
 	};
 	return mixins;

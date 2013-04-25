@@ -10,6 +10,11 @@ module.exports = function(mongoose,extend) {
 		link_type: {type:String}
 	});
 	
+	var HintSchema = new mongoose.Schema({
+		hint_title:{type: String},
+		hint_txt: {type:String}
+	});
+	
 	var QuestPageSchema = new mongoose.Schema({
 		x:{type:Number},
 		y:{type:Number},
@@ -18,10 +23,10 @@ module.exports = function(mongoose,extend) {
 		page_number: {type:Number},
 		page_content:{type:String},
 		links:[LinkSchema],
-		quest_id: {type:String}
+		hints:[HintSchema],
+		quest_id: {type:String, index:true}
 	});
 	
-
 	
 	var LinkAnswerSchema = LinkSchema.extend({
 		answer_txt: {type:String}
@@ -88,6 +93,16 @@ module.exports = function(mongoose,extend) {
 			}
 		});
 	}
+	
+	var remove_page = function(data,success_callback,error_callback){
+		QuestPage.remove({_id:data.page_id, quest_id: data.quest_id}, function(err){
+			if (err) {
+				success_callback();
+			}else {
+				error_callback(err);
+			}
+		});
+	}
 	return {
 		QuestPage: QuestPage,
 		QuestPageStall: QuestPageStall,
@@ -96,7 +111,8 @@ module.exports = function(mongoose,extend) {
 		LinkLocation: LinkLocation,
 		pages_by_quest_id:pages_by_quest_id,
 		new_page: new_page,
-		update_page: update_page
+		update_page: update_page,
+		remove_page:remove_page
 	};
 
 }

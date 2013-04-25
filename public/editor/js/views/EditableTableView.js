@@ -1,4 +1,4 @@
-define(['views/EditableRowView','views/EditableRowDialog'],function(EditableRowView,EditableRowDialog){
+define(['views/EditableRowView','views/EditableRowDialog','models/QuestPage'],function(EditableRowView,EditableRowDialog,QuestPage){
 	var EditableTableView = Backbone.View.extend({
 		template: undefined,
 		rows:[],

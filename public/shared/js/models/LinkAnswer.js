@@ -11,6 +11,7 @@ define(['models/Link'],function(Link){
 		}
 	});
 	_.extend(LinkAnswer.prototype.defaults, Link.prototype.defaults);
+	Link._subModels['answer'] = LinkAnswer;
 	return LinkAnswer;
 });
 	

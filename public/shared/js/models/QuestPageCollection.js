@@ -1,5 +1,6 @@
 define(['models/QuestPage','models/ModelAttributes','models/QuestPageLocation','models/QuestPageQuestion','models/QuestPageStall','models/QuestPageStatic',
         'models/QuestPageSurprise'],function(QuestPage,Attributes,QuestPageLocation,QuestPageQuestion,QuestPageStall,QuestPageStatic,QuestPageSurprise) {
+	
 	var QuestPageList = Backbone.Collection.extend({
 		model: function(attrs, options) {
 		    return Attributes[attrs.type].model.prototype(attrs,options);

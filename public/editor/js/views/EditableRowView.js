@@ -20,13 +20,13 @@ define([],function() {
 		},
 		refresh_data:function() { 
 			if (this.binding){
-				this.$el.html(this.template(this.model.toJSON()));
+				this.$el.html(this.template(this.model.toJSON({shallow:true})));
 			}
 			
 		},
 		
 		render:function() {
-			this.$el.html(this.template(this.model.toJSON()));
+			this.$el.html(this.template(this.model.toJSON({shallow:true})));
 			return this.$el;
 		},
 		

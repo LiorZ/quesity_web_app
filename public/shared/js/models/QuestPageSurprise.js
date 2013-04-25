@@ -3,9 +3,6 @@ define(['models/QuestPageLocation','models/HintCollection','models/LinkLocationC
 	var QuestPageSurprise = QuestPageLocation.extend({
 		initialize:function(options) {
 			this.constructor.__super__.initialize.apply(this, [options]);
-/*			this.set('hints',new HintCollection());
-			this.set('locations',new LinkLocationCollection());
-			this.listenTo(this.get('locations'),'add',this.handle_add_link);*/
 		},
 		
 	});

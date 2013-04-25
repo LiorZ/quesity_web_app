@@ -1,24 +1,5 @@
 define(['models/QuestPage','models/Hint','models/LinkAnswer'],function(QuestPage,Hint,LinkAnswer) {
 	var QuestPageQuestion = QuestPage.extend({
-		
-		relations: [{
-			type: Backbone.HasMany,
-			key: 'answers',
-			relatedModel: LinkAnswer,
-			reverseRelation: {
-				key: 'parent_page',
-				includeInJSON: '_id'
-			}
-		},
-		{
-			type: Backbone.HasMany,
-			key: 'hints',
-			relatedModel: Hint,
-			reverseRelation: {
-				key: 'parent_page',
-				includeInJSON: '_id'
-			}
-		}],
 		initialize:function(options) {
 			this.constructor.__super__.initialize.apply(this, [options]);
 //			this.set('hints',new HintCollection());
