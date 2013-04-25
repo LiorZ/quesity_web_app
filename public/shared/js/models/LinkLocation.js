@@ -1,10 +1,10 @@
-define(['models/Link'],function(Link){
+define(['models/Link','models/globals'],function(Link,globals){
 	var LinkLocation = Link.extend({
 		
 		defaults: {
 			lat:undefined,
 			lng:undefined,
-			txt_street: '',
+			txt_street: undefined,
 			radius:100, //in meters
 			type:'location'
 		},
@@ -15,8 +15,7 @@ define(['models/Link'],function(Link){
 		}
 	});
 	_.extend(LinkLocation.prototype.defaults, Link.prototype.defaults);
-	Link._subModels['location'] = LinkLocation;
-
+	globals.LinkLocation = LinkLocation;
 	return LinkLocation;
 
 });

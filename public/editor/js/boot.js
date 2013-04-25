@@ -56,7 +56,11 @@ require.config({
   }
 });
 
-require(['views/appView','models/Quest','text!../templates/all.html'],function(appView,Quest,templates){
+require(['views/appView','models/Quest','text!../templates/all.html','Backbone','BackboneRelational','models/globals'],
+		function(appView,Quest,templates,Backbone,BackboneRelational,globals){
+	
+	Backbone.Relational.store.addModelScope(globals);
+	
 	$(document).ready(function() {
 		$('body').append(templates);
 		var quest_id = $('#quest_id').val();

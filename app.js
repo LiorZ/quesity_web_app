@@ -9,7 +9,7 @@ var _ = require('underscore');
 var models = {};
 models.Quest = require('./models/Quest')(mongoose);
 models.Account = require('./models/Account')(mongoose,models.Quest);
-models.QuestPage = require('./models/QuestPage')(mongoose,extend);
+models.QuestPage = require('./models/QuestPage')(mongoose,extend,_);
 
 		app.configure(function(){
 	console.log("Configuring ... ");
@@ -35,9 +35,10 @@ app.del('/quest/:q_id/page/:page_id',function(req,res){
 		var page_id = req.param('page_id');
 		models.Quest.validate_quest_to_account(account_id,quest_id,function(model) {
 			if ( model == null || model == undefined ){
+				console.log("From some reason model is null or undefined");
 				res.send(401);
 			}else {
-				models.QuestPage.remove_page({page_id:page_id,quest_id:quest_id},function(){res.send(200);},function(err){generic_error(err,res)});
+				models.QuestPage.remove_page({page_id:page_id,quest_id:quest_id},function(){res.send(200);},function(err){console.log("Generic error is called"); generic_error(err,res)});
 			}
 		});
 	}else {

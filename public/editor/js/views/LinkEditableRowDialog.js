@@ -13,9 +13,9 @@ define(['views/EditableRowDialog','views/LinkView'],function(EditableRowDialog,L
 				// in case we only change the label or something, this unset of the link will cause the old LinkView to be destroyed. Ugly, but for now it works.
 				this.model.set('links_to_page',undefined);
 			}
-			this.model.set("links_to_page",page);
 			EditableRowDialog.prototype.save_object.apply(this, [dialog_obj,collection]);
-			
+			this.model.set("links_to_page",page);
+
 			var view = new LinkView({model: this.model});
 			view.render();
 			

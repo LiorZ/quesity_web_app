@@ -1,4 +1,5 @@
-define(['Backbone','models/Link','models/LinkCollection','BackboneRelational','models/Hint','models/HintCollection'],function(Backbone,Link,LinkCollection,BackboneRelational,Hint,HintCollection) {
+define(['models/globals','Backbone','models/Link','models/LinkCollection','BackboneRelational','models/Hint','models/HintCollection'],
+		function(globals,Backbone,Link,LinkCollection,BackboneRelational,Hint,HintCollection) {
 	
 	var QuestPage = Backbone.RelationalModel.extend({
 		idAttribute: "_id",
@@ -20,23 +21,25 @@ define(['Backbone','models/Link','models/LinkCollection','BackboneRelational','m
 			collectionType: HintCollection,
 			includeInJSON: true
 		}
-		],
-//Defined on each of the pages seperately.. 
 		
-//		subModelTypes:{
-//			'location':QuestPageLocation,
-//			'question':'QuestPageQuestion',
-//			'stall':'QuestPageStall',
-//			'static':'QuestPageStatic',
-//			'surprise':'QuestPageSurprise'
-//		},
+		],
+		
+		subModelTypes:{
+			'location':'QuestPageLocation',
+			'question':'QuestPageQuestion',
+			'stall':'QuestPageStall',
+			'static':'QuestPageStatic',
+			'surprise':'QuestPageSurprise'
+		},
 		subModelTypeAttribute:'page_type',
 		
 		initialize: function(options) {
 //			this.attach_listeners();
 		},
 		attach_listeners:function() {
-			this.listenTo(this,"change:x change:page_name change:page_content change:hints add:hints remove:hints change:links add:links remove:links",this.save_model);
+			this.listenTo(this,"change:x change:page_name change:page_content",this.save_model);
+			this.listenTo(this.get('links'),'add remove',this.save_model);
+			this.listenTo(this.get('hints'),'add remove',this.save_model);
 		},
 		save_model:function() {
 			this.save(null,{error:function() {
@@ -75,13 +78,7 @@ define(['Backbone','models/Link','models/LinkCollection','BackboneRelational','m
 		}
 	});
 	//define link relationship (Can't do it before QuestPage is initialized .. ):
-	
-	Link.prototype.relations.push({
-		type: Backbone.HasOne,
-		key: 'links_to_page',
-		relatedModel: QuestPage,
-		includeInJSON: "_id",
-	});
+	globals.QuestPage = QuestPage;
 	return QuestPage;
 	
 });

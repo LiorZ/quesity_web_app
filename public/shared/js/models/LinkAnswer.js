@@ -1,8 +1,8 @@
-define(['models/Link'],function(Link){
+define(['models/Link','models/globals'],function(Link,globals){
 	var LinkAnswer = Link.extend({
 		
 		defaults: {
-			answer_txt:'',
+			answer_txt:undefined,
 			type:'answer'
 		},
 		get_label:function() {
@@ -11,7 +11,7 @@ define(['models/Link'],function(Link){
 		}
 	});
 	_.extend(LinkAnswer.prototype.defaults, Link.prototype.defaults);
-	Link._subModels['answer'] = LinkAnswer;
+	globals.LinkAnswer = LinkAnswer;
 	return LinkAnswer;
 });
 	

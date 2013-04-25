@@ -5,8 +5,8 @@ define(['Backbone'],function(Backbone) {
 		},
 		idAttribute: "_id",
 		defaults: {
-			hint_title:'',
-			hint_txt:''
+			hint_title:undefined,
+			hint_txt:undefined
 		}
 	});
 	return Hint;

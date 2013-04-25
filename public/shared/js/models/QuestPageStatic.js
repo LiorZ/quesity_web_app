@@ -1,4 +1,4 @@
-define(['models/QuestPage','models/LinkCollection','models/Mixins'],function(QuestPage,LinkCollection,Mixins) {
+define(['models/globals','models/QuestPage','models/LinkCollection','models/Mixins'],function(globals,QuestPage,LinkCollection,Mixins) {
 	var QuestPageStatic = QuestPage.extend({
 		initialize:function(options) {
 			this.constructor.__super__.initialize.apply(this, [options]);
@@ -10,7 +10,7 @@ define(['models/QuestPage','models/LinkCollection','models/Mixins'],function(Que
 	_.extend(QuestPageStatic.prototype.defaults, QuestPage.prototype.defaults);
 	_.extend(QuestPageStatic.prototype, Mixins.one_child);
 	
-	QuestPage._subModels['static'] = QuestPageStatic;
-
+//	QuestPage._subModels['static'] = QuestPageStatic;
+	globals.QuestPageStatic = QuestPageStatic;
 	return QuestPageStatic;
 });

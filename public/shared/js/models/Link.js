@@ -1,6 +1,17 @@
-define(['lib/utils/consts','Backbone','BackboneRelational','models/Mixins'],function(consts,Backbone,BackboneRelational,Mixins) {
+define(['models/globals','lib/utils/consts','Backbone','BackboneRelational','models/Mixins'],function(globals,consts,Backbone,BackboneRelational,Mixins) {
 	var Link = Backbone.RelationalModel.extend({
 		idAttribute: "_id",
+		relations:[{
+			type: Backbone.HasOne,
+			key: 'links_to_page',
+			relatedModel: 'QuestPage',
+			includeInJSON: '_id'
+		}],
+		subModelTypeAttribute:'type',
+		subModelTypes:{
+			'answer':'LinkAnswer',
+			'location':'LinkLocation'
+		},
 		sync:function() {
 			return false;
 		},
@@ -21,6 +32,7 @@ define(['lib/utils/consts','Backbone','BackboneRelational','models/Mixins'],func
 		}
 	});
 	_.extend(Link.prototype,Mixins.shallow_json);
+	globals.Link = Link;
 	return Link;
 });
 
