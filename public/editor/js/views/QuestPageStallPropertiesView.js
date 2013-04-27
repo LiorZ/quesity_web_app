@@ -31,6 +31,7 @@ define(['views/QuestPagePropertiesView','views/EditableRowDialog','views/Editabl
 		add_time_delay_label:function() {
 			var tmpl = _.template( $('#tmpl_time_label').html() );
 			$("#time_delay").html(tmpl(this.model.toJSON()));
+			this.model.save_model();
 		},
 		
 		open_set_time_dlg: function() {
@@ -39,6 +40,7 @@ define(['views/QuestPagePropertiesView','views/EditableRowDialog','views/Editabl
 				model: this.model,
 				binding: {'#time_delay_spinner':'stall_time'},
 				dialog_size:{height:300, width:350},
+				edit_mode: true
 			});
 			dlg.render();
 			$("#time_delay_spinner").spinner();

@@ -7,7 +7,7 @@ define(['models/globals','models/QuestPage','models/Mixins','models/LinkCollecti
 		
 		defaults:
 		 {
-			stall_time: undefined, //in seconds
+			stall_time: 0, //in seconds
 		},
 		
 	});

@@ -31,7 +31,7 @@ module.exports = function(mongoose,extend,_) {
 		links:[LinkSchema],
 		hints:[HintSchema],
 		quest_id: {type:String, index:true}
-	});
+	},{ collection : 'pages', discriminatorKey : 'page_type' });
 	
 //Can't allow schema inheritance, so this is useless for now...
 //	var LinkAnswerSchema = LinkSchema.extend({
@@ -50,7 +50,7 @@ module.exports = function(mongoose,extend,_) {
 	});
 	
 	var QuestPage = mongoose.model('QuestPage',QuestPageSchema);
-	var QuestPageStall = mongoose.model('QuestPageStall',QuestPageStallSchema);
+	var QuestPageStall = mongoose.model('stall',QuestPageStallSchema);
 	var Link = mongoose.model('regular',LinkSchema);
 //	var LinkAnswer = mongoose.model('answer',LinkAnswerSchema);
 //	var LinkLocation = mongoose.model('location',LinkLocationSchema);
@@ -59,6 +59,14 @@ module.exports = function(mongoose,extend,_) {
 //			'location':LinkLocation
 //	};
 	
+	
+	var SchemaRouter = {
+			'stall':QuestPageStall,
+			'location':QuestPage,
+			'question':QuestPage,
+			'surprise':QuestPage,
+			'static':QuestPage
+	}
 	var pages_by_quest_id = function(q_id, success_callback,error_callback){
 		QuestPage.find({quest_id:q_id},function(err,doc) {
 			if ( err ) { 
@@ -94,8 +102,7 @@ module.exports = function(mongoose,extend,_) {
 	}
 	
 	var new_page = function(data,success_callback,error_callback) {
-		var links = data.links;
-		var page = new QuestPage(data);
+		var page = new SchemaRouter[data.page_type](data);
 		page.save(function(err){
 			if ( err ) {
 				error_callback(err);
