@@ -55,11 +55,21 @@
 <script type='text/template' id='tmpl_one_location'>
 <td><a href='#' id='lnk_edit_row'><%= txt_street %></a></td>
 <td><span id='lbl_radius'><%= radius %></span></td>
+<%if ( links_to_page ) {%> 
+
 <td><a href='#'><a href='#page/<%= links_to_page.get('page_number') %>' id='lnk_links_to_page'><%= links_to_page.get('page_number') %> - <%=links_to_page.get('page_name')%></a></a></td>
+<% } else { %>
+	<td>N/A</td>
+<%}%> 
 <td><button id='btn_delete_row' class='btn_delete_hint'>X</button></td>
 </script>
 <script type='text/template' id='tmpl_one_link'>
+	<%if ( links_to_page ) {%> 
+
 	<td><a href='#' id='lnk_edit_row'><a href='#page/<%= links_to_page.get('page_number') %>' id='lnk_links_to_page'><%= links_to_page.get('page_number') %> - <%=links_to_page.get('page_name')%></a></a></td>
+	<% } else {%>
+	<td>N/A</td>
+	<%}%>
 	<td><button id='btn_delete_row' class='btn_delete_hint'>X</button></td>
 </script>
 
@@ -174,9 +184,9 @@
   <form>
   <fieldset>
     <label for="txt_hint_title">Title:</label>
-  	<input type="text" name="txt_hint_title" id="txt_hint_title" class="text ui-widget-content ui-corner-all" value="<%=hint_title%>"/>
+  	<input type="text" name="txt_hint_title" id="txt_hint_title" class="text ui-widget-content ui-corner-all" value="<%=data.hint_title || ''%>"/>
     <label for="txt_hint">Hint:</label>
-    <textarea type="text" name="txt_hint" id="txt_hint" class="text ui-widget-content ui-corner-all"><%=hint_txt%></textarea>
+    <textarea type="text" name="txt_hint" id="txt_hint" class="text ui-widget-content ui-corner-all"><%=data.hint_txt || ''%></textarea>
   </fieldset>
   </form>
 </div>
@@ -188,9 +198,9 @@
   <form>
   <fieldset>
     <label for="txt_hint_title">Answer:</label>
-  	<input type="text" name="txt_answer" id="txt_answer" class="text ui-widget-content ui-corner-all"  value='<%=answer_txt%>' />
+  	<input type="text" name="txt_answer" id="txt_answer" class="text ui-widget-content ui-corner-all"  value='<%=data.answer_txt || ''%>' />
     <label for="next_page_link">This answer links to page:</label>
-	<%= _.template($('#tmpl_select_link').html())({'parent_page':parent_page, 'links_to_page':links_to_page}) %>
+	<%= _.template($('#tmpl_select_link').html())({'parent_page':data.parent_page, 'links_to_page':data.links_to_page}) %>
 
 
   </fieldset>
@@ -208,11 +218,11 @@
 <script type='text/template' id='tmpl_add_location_dialog'>
 <div id="dialog_form" title="Choose Location for linked page">
 <div id='map_container'></div>
-	<%= _.template($('#tmpl_select_link').html())({'parent_page':parent_page, 'links_to_page':links_to_page}) %>
-<input type='hidden' id='txt_lat' value="<%=lat %>"/>
-<input type='hidden' id='txt_lng' value="<%= lng %>"/>
-<input type='hidden' id='txt_radius' value="<%= radius %>"/>
-<input type='hidden' id='txt_street' value="<%= txt_street%>" />
+	<%= _.template($('#tmpl_select_link').html())({'parent_page':data.parent_page, 'links_to_page':data.links_to_page}) %>
+<input type='hidden' id='txt_lat' value="<%=data.lat || '' %>"/>
+<input type='hidden' id='txt_lng' value="<%= data.lng || ''%>"/>
+<input type='hidden' id='txt_radius' value="<%= data.radius || '' %>"/>
+<input type='hidden' id='txt_street' value="<%= data.txt_street || ''%>" />
 </div>
 </script>
 <script type='text/template' id=tmpl_set_link_dialog>
@@ -223,10 +233,10 @@
     <label for="next_page_link">Set the next page:</label>
 
   	<select id='next_page_link' name='next_page_link'>
-	<% parent_page.get_linkable_pages().each( function(page) { %>
+	<% data.parent_page.get_linkable_pages().each( function(page) { %>
 		<option value='<%= page.get('page_number')%>'  
 		<% 
-		var links = parent_page.get('links');
+		var links = data.parent_page.get('links');
 		if ( links.length >0 ) {
 			var only_page = links.at(0).get('links_to_page'); 
 			if ( only_page == page ) { %>

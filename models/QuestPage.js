@@ -17,8 +17,8 @@ module.exports = function(mongoose,extend,_) {
 	},{ collection : 'links', discriminatorKey : 'type' });
 	
 	var HintSchema = new mongoose.Schema({
-		hint_title:{type: String},
-		hint_txt: {type:String}
+		hint_title:{type: String, unique:false},
+		hint_txt: {type:String, unique:false}
 	});
 	
 	var QuestPageSchema = new mongoose.Schema({

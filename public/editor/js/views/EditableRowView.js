@@ -34,7 +34,9 @@ define([],function() {
 			var edit_view = new this.dialog_class({model:this.model,
 				binding:this.dialog_binding, 
 				dialog_template: this.dialog_template,
-				dialog_size: this.dialog_size});
+				dialog_size: this.dialog_size,
+				edit_mode: true
+			});
 			edit_view.render(false);
 		},
 		delete_row_view:function() {

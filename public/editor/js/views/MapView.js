@@ -66,8 +66,6 @@ define(['JQueryUI_Maps','lib/utils/consts'],function(JQueryUI_Maps,consts) {
 		},
 		create_new:function(lat,lng,radius) {
 			var context = this;
-			console.log(lat);
-			console.log(lng);
 			this.$el.gmap('addShape', 'Circle', { 'strokeColor': "#000000", 'strokeOpacity': 0.5, 
 				'strokeWeight':2, 'fillColor': "#BDDFFF", 'fillOpacity': 0.5, 
 				'center': new google.maps.LatLng(lat,lng), 

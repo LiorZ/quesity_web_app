@@ -5,7 +5,13 @@ define(['views/LinkEditableRowDialog','views/MapView'],function(LinkEditableRowD
 		},
 		
 		render:function() {
-			LinkEditableRowDialog.prototype.render.apply(this,[this.model.get('parent_page').get('links') ]);
+			var links = {};
+			if ( this.edit_mode ){
+				links = this.model.get('parent_page').get('links');
+			}else {
+				links = this.model.parent.get('links');
+			}
+			LinkEditableRowDialog.prototype.render.apply(this,[links]);
 			var map_view = new MapView({model:this.model});
 			this.$('#map_container').append(map_view.render());
 			map_view.resize();

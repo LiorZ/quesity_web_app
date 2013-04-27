@@ -43,7 +43,7 @@ define(['views/EditableRowView','views/EditableRowDialog','models/QuestPage'],fu
 				dialog_binding: this.dialog_binding,
 				dialog_template: this.dialog_template,
 				dialog_class: this.dialog_class,
-				dialog_size: this.dialog_size
+				dialog_size: this.dialog_size,
 			});
 			this.rows.push(row_view);
 			var element = row_view.render();
@@ -69,21 +69,22 @@ define(['views/EditableRowView','views/EditableRowDialog','models/QuestPage'],fu
 			return this.$el;
 		},
 		create_new_row:function() {
-			var new_row;
-			if (this.model_prototype_options)
-				new_row = new this.model_prototype(this.model_prototype_options);
-			else
-				new_row = new this.model_prototype();
-			this.add_row_dialog(new_row);
+//			var new_row;
+//			if (this.model_prototype_options)
+//				new_row = new this.model_prototype(this.model_prototype_options);
+//			else
+//				new_row = new this.model_prototype();
+			this.add_row_dialog();
 		},
-		add_row_dialog: function(new_model) {
+		add_row_dialog: function() {
 			var dialog = new this.dialog_class({
-				model:new_model,
+				model:this.model,
 				binding: this.dialog_binding, 
 				dialog_template:this.dialog_template, 
+				model_prototype_options: this.model_prototype_options,
 				dialog_class: this.dialog_class,
-				dialog_size: this.dialog_size
-
+				dialog_size: this.dialog_size,
+				edit_mode: false,
 			});
 			dialog.render(this.model);
 		}
