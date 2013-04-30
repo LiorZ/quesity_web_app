@@ -6,6 +6,9 @@ define(['models/QuestPage','models/ModelAttributes','models/QuestPageLocation','
 		    return Attributes[attrs.type].model.prototype(attrs,options);
 		},
 		arr:[],
+		comparator: function(page) {
+			return parseInt(page.get('page_number'));
+		},
 		initialize:function() {
 			this.listenTo(this,'add',this.add_some_listeners);
 			this.listenTo(this,'remove',this.remove_from_array);
@@ -50,6 +53,19 @@ define(['models/QuestPage','models/ModelAttributes','models/QuestPageLocation','
 			/* we keep this array to allow the use of "RegisterForever" of joint which is much more elegant and efficient
 			and elegant than using events..
 			*/
+		},
+		get_next_page_num:function(){
+			var collection = this;
+			var item = this.find(
+					function(page) {
+						return page.get('page_number') != collection.indexOf(page)+1;
+					}
+			);
+			if ( _.isUndefined(item) ) {
+				return collection.length+1;
+			}else{
+				return this.indexOf(item)+1;
+			}
 		}
 		
 	});

@@ -99,7 +99,7 @@ define(['jQueryUI','Backbone','routers/Router','views/ViewAttributes','models/Mo
 		
 		create_new_page: function(ev){
 			var q_type = $(ev.target).data("page-type");
-			var page_num = (this.model.get('pages').length)+1;
+			var page_num = this.model.get('pages').get_next_page_num();
 			
 			//Get the location of next_page:
 			var pages = this.model.get('pages');

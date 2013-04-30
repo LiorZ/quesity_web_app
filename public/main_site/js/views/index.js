@@ -1,4 +1,4 @@
-define(['text!../../templates/index.html'], function(indexTemplate) {
+define(['text!../../templates/index.html','jQueryUI'], function(indexTemplate,jQueryUI) {
   var indexView = Backbone.View.extend({
     el: $('#content'),
     events:{
@@ -6,7 +6,6 @@ define(['text!../../templates/index.html'], function(indexTemplate) {
     },
     render: function() {
     	var template = _.template(indexTemplate);
-    	
     	this.$el.html(indexTemplate);
     },
     action_logoff:function(){

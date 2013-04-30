@@ -6,12 +6,18 @@ require.config({
     Backbone: '/shared/js/lib/backbone/backbone',
     models:'/shared/js/models/',
     BackboneRelational: '/shared/js/lib/backbone/backbone-relational',
+    jQueryUI: '/shared/js/lib/jquery-ui/jquery-ui-1.10.0.custom',
+
   },
 
   shim: {
 	'Underscore': {
 		deps:['jQuery'],
 		exports:'_'
+	},
+	jQueryUI: {
+		deps:['jQuery'],
+		exports:'jQueryUI'
 	},
     'Backbone': {
     	deps: ['Underscore', 'jQuery'],

@@ -81,6 +81,8 @@ module.exports = function(mongoose,extend,_) {
 			if (err){
 				error_callback(err);
 			}else {
+				console.log("new_page ");
+				console.log(new_page);
 				console.log("DOC: " + doc);
 				if ( doc == null ){
 					error_callback("Can't find page .. ");

@@ -44,9 +44,13 @@ define(['models/globals','Backbone','models/Link','models/LinkCollection','Backb
 			this.listenTo(this.get('hints'),'add remove change',this.save_model);
 		},
 		save_model:function() {
-			this.save(null,{error:function() {
-				alert("Error: Could not save your diagram ");
-			}});
+			this.save(null,
+				{
+					error:function() {
+						alert("Error: Could not save your diagram ");
+					},
+					silent:true
+				});
 		},
 		url:function() {
 			if (this.isNew()){

@@ -2,12 +2,10 @@ define(['models/globals','models/QuestPageLocation','models/HintCollection','mod
 		function(globals,QuestPageLocation,HintCollection,LinkLocationCollection,QuestPage) {
 	var QuestPageSurprise = QuestPageLocation.extend({
 		initialize:function(options) {
-			this.constructor.__super__.initialize.apply(this, [options]);
+			QuestPageLocation.prototype.initialize.apply(this, [options]);
 		},
 		
 	});
-//	_.extend(QuestPageSurprise.prototype.defaults, QuestPageLocation.prototype.defaults);
-	QuestPage._subModels['surprise'] = QuestPageSurprise;
 	globals.QuestPageSurprise = QuestPageSurprise;
 	return QuestPageSurprise;
 

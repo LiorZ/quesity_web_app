@@ -6,6 +6,8 @@ define(['text!../../templates/login.html'], function(loginTemplate) {
     },
     render: function() {
       this.$el.html(loginTemplate);
+  	$('input[type="submit"]').button();
+
     },
     
     login_action:function() { 

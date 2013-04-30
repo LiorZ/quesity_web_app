@@ -13,7 +13,6 @@ define(['models/globals','models/QuestPage','models/Mixins','models/LinkCollecti
 	});
 	_.extend(QuestPageStall.prototype.defaults, QuestPage.prototype.defaults);
 	_.extend(QuestPageStall.prototype, Mixins.one_child); //enforce one child
-//	QuestPage._subModels['stall'] = QuestPageStall;
 	globals.QuestPageStall = QuestPageStall;
 	return QuestPageStall;
 });

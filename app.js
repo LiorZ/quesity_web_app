@@ -28,6 +28,16 @@ var generic_error = function(err,res) {
 	res.send(401);
 }
 
+
+app.del('/quest/:q_id',function(req,res) {
+	if ( req.session.loggedIn ) {
+		var account_id = req.session.accountId;
+		var quest_id = req.param('q_id');
+		models.Quest.remove_quest(quest_id,account_id,function(){res.send({_id:quest_id});},function(err){generic_error(err,res);});
+	}else {
+		res.send(401);
+	}
+});
 app.del('/quest/:q_id/page/:page_id',function(req,res){
 	if ( req.session.loggedIn ) {
 		var account_id = req.session.accountId;
@@ -58,7 +68,7 @@ app.put('/quest/:q_id/page/:page_id',function(req,res) {
 				console.log("Quest "+ quest_id + " belong to account. sending update command ... ");
 				models.QuestPage.update_page(quest_id,req.body,function(page) {
 					console.log("Page updated ..");
-					res.send({_id:page.id});
+					res.send(page);
 				},function(err){generic_error(err,res)});
 			}
 		});

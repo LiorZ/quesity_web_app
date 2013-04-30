@@ -1,8 +1,19 @@
-<button id='btn_new_quest'>Create new ... </button>
-<table>
+<h1 class='text_align_center'>Your Quests</h1>
+<div class='center_screen'>
+<table style='width:100%;'>
 	<% if (quests != undefined) { _.each(quests,function(quest) { %>
 		<tr>
 			<td><a href='/editor/<%=quest._id%>'><%=quest.title%></a></td>
+			<td style='text-align:right;'><button name='btn_del_quest' data-quest-id="<%=quest._id%>">X</button></td>
 		</tr>
 	<%});}%>
 </table>
+
+<div id='dlg_create_quest'>
+	<fieldset id="fieldset" class="">
+	  <legend>Quest details</legend>
+	  Name: <input type='text' id='txt_quest_title'/>
+	</fieldset>	
+</div>
+<div class='text_align_center' style='vertical-align:bottom;'><button id='btn_new_quest'>Create new ... </button></div>
+</div>

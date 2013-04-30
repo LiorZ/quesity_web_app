@@ -16,7 +16,7 @@ module.exports = function(mongoose) {
 		new_quest.save(function(err) { if ( err) error_callback(err); else { success_callback(new_quest) }});
 	};
 	
-	quests_by_account = function(accountId,success_callback,error_callback) {
+	var quests_by_account = function(accountId,success_callback,error_callback) {
 		Quest.find({accountId:accountId},function(err,doc) {
 			if (err) {
 				error_callback(err);
@@ -26,11 +26,21 @@ module.exports = function(mongoose) {
 		});
 	};
 	
-	validate_quest_to_account = function(accountId,quest_id,success_callback,error_callback) {
+	var validate_quest_to_account = function(accountId,quest_id,success_callback,error_callback) {
 		Quest.findOne({accountId:accountId, _id:quest_id},function(err,doc) {
 			if (err) {
 				error_callback(err);
 			}else { success_callback(doc) }
+		});
+	}
+	
+	var remove_quest = function(q_id,account_id,success_callback,error_callback) {
+		Quest.remove({accountId:account_id, _id: q_id},function(err){
+			if ( err ){
+				error_callback(err);
+			}else{
+				success_callback();
+			}
 		});
 	}
 	
@@ -39,7 +49,8 @@ module.exports = function(mongoose) {
 		create_new: create_new,
 		quests_by_account: quests_by_account,
 		Schema: QuestSchema,
-		validate_quest_to_account:validate_quest_to_account
+		validate_quest_to_account:validate_quest_to_account,
+		remove_quest:remove_quest
 	};
 
 }
