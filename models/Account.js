@@ -13,27 +13,26 @@ module.exports = function(mongoose,Quest) {
 	});
 	
 	var Account = mongoose.model('Account',AccountSchema);
-	var registerCallback = function(err) {
-		if (err) { 
-			return console.log(err);
-		}
-		return true;
-	};
-	var register = function(email,password,firstName,lastName) { 
+	var register = function(data,callbacks) { 
 		var shaSum = crypto.createHash('sha256');
-		shaSum.update(password);
-		console.log("Registering " + email);
+		shaSum.update(data.password);
 		
 		var user = new Account({ 
-			email: email,
+			email: data.email,
 			name: {
-				first: firstName,
-				last: lastName
+				first: data.first_name,
+				last: data.last_name
 			},
 			password: shaSum.digest('hex')
 		});
 		
-		user.save(registerCallback);
+		user.save(function(err){
+			if (err) {
+				callbacks.error(err);
+			}else{
+				callbacks.success(user);
+			}
+		});
 		console.log('Save command was sent');
 	};
 	var login = function(email,password,callback) {

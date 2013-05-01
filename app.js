@@ -153,15 +153,24 @@ app.post('/new_quest',auth_user,function(req,res) {
 
 app.post('/register' , function(req,res) { 
 	console.log("Trying to register ... ");
-
-	var first_name = req.param("firstName",null);
-	var last_name = req.param("lastName",null);
-	var email = req.param("email",null);
-	var password = req.param("password",null);
+	var data = {
+		first_name: req.param("firstName",null),
+		last_name: req.param("lastName",null),
+		email: req.param("email",null),
+		password: req.param("password",null)
+	};
 	
-	models.Account.register(email,password, first_name, last_name);	
+	var success = function(user) {
+		req.session.loggedIn = true;
+		req.session.accountId = user._id;
+		res.send(200);
+	}
+	
+	var error = function (err) {
+		next(new Error("Error registering user!" + err));
+	}
+	models.Account.register(data,{success:success,error:error});	
 	console.log("Registration completed");
-	res.send(200);
 });
 
 app.get('/account/me', 
