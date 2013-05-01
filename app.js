@@ -11,10 +11,12 @@ var command_line_options = process.argv.splice(2);
 
 var options = {
 		production:{
-			db_address: 'mongodb://lior:koko123@alex.mongohq.com:10039/app15419682'
+			db_address: 'mongodb://lior:koko123@alex.mongohq.com:10039/app15419682',
+			port:80
 		},
 		development: {
-			db_addres:'mongodb://localhost/quesity'
+			db_addres:'mongodb://localhost/quesity',
+			port:8000
 		}
 }
 
@@ -234,4 +236,4 @@ app.get('/home',auth_user,function(req,res) {
 	res.render('index.jade',{layout:false, booter:'main_site/js/boot_home'});
 });
 
-app.listen(8000);
+app.listen(options[command_line_options[0]].port);
