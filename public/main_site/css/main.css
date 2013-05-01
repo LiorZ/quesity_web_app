@@ -3,7 +3,6 @@
     top: 50%;
     left: 50%;
     width:30em;
-    height:18em;
     margin-top: -9em; /*set to a negative number 1/2 of your height*/
     margin-left: -15em; /*set to a negative number 1/2 of your width*/
     border: 1px solid #ccc;
@@ -14,4 +13,13 @@
 }
 #submit_div { 
 	margin-top:2em;	
+}
+#btn_profile_div {
+	right:0px;
+	top:0px;
+	position:absolute;
+	font-size: 0.7em;
+}
+#btn_profile_menu {
+	display:none;
 }

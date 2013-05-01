@@ -16,7 +16,6 @@ define(['models/globals','models/QuestPage','models/Hint','models/LinkAnswer'],f
 		
 	});
 	_.extend(QuestPageQuestion.prototype.defaults, QuestPage.prototype.defaults);
-//	QuestPage._subModels['question'] = QuestPageQuestion;
 	globals.QuestPageQuestion = QuestPageQuestion;
 	return QuestPageQuestion;
 

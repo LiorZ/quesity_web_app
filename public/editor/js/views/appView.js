@@ -10,7 +10,8 @@ define(['jQueryUI','Backbone','routers/Router','views/ViewAttributes','models/Mo
 		events: {
 			'click li a': 'create_new_page',
 			'click #world':'exit_property_page', //if a property page is open, a click outside of it exists the page
-			'click #btn_new_page' : 'new_page_menu'
+			'click #btn_new_page' : 'new_page_menu',
+			'click #btn_exit_editor':'exit_editor'
 		},
 
 		show_property_page:function(model) {
@@ -117,6 +118,9 @@ define(['jQueryUI','Backbone','routers/Router','views/ViewAttributes','models/Mo
 			 
 			$("#new_page_menu").css('display','none');
 		},
+		exit_editor: function() {
+			window.location ='/home';
+		}
 		
 	});
 	

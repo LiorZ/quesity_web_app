@@ -9,9 +9,15 @@ var _ = require('underscore');
 var models = {};
 models.Quest = require('./models/Quest')(mongoose);
 models.Account = require('./models/Account')(mongoose,models.Quest);
+
+var generic_error = function(err, req, res, next) {
+	console.log(err);
+	res.send(401);
+}
+
 models.QuestPage = require('./models/QuestPage')(mongoose,extend,_);
 
-		app.configure(function(){
+app.configure(function(){
 	console.log("Configuring ... ");
 	app.set('view engine', 'jade');
 	app.use(express.static(__dirname + '/public'));
@@ -19,136 +25,130 @@ models.QuestPage = require('./models/QuestPage')(mongoose,extend,_);
 	app.use(express.limit('1mb'));
 	app.use(express.cookieParser());
 	app.use(express.session({secret: "Lior&Tomer", store: new MemoryStore()}));
-	
+	app.use(app.router)
+	app.use(generic_error);
 	mongoose.connect('mongodb://localhost/quesity');
 });
 
-var generic_error = function(err,res) {
-	console.log(err);
-	res.send(401);
+var auth_user = function(req,res,next) {
+	if ( req.session.loggedIn ) {
+		next();
+	}else {
+		return next(new Error("Error logging in!"));
+	}
+	
+}
+
+var validate_quest_account = function(req,res,next) {
+	var account_id = req.session.accountId;
+	var quest_id = req.param('q_id');
+	models.Quest.validate_quest_to_account(account_id,quest_id,function(model) {
+		if ( model == null || model == undefined ){
+			next({message:"Can't find Quest!"});
+		}else {
+			req.session.current_quest = model;
+			next();
+		}
+	});
+	
 }
 
 
-app.del('/quest/:q_id',function(req,res) {
-	if ( req.session.loggedIn ) {
-		var account_id = req.session.accountId;
-		var quest_id = req.param('q_id');
-		models.Quest.remove_quest(quest_id,account_id,function(){res.send({_id:quest_id});},function(err){generic_error(err,res);});
-	}else {
-		res.send(401);
-	}
-});
-app.del('/quest/:q_id/page/:page_id',function(req,res){
-	if ( req.session.loggedIn ) {
-		var account_id = req.session.accountId;
-		var quest_id = req.param('q_id');
-		var page_id = req.param('page_id');
-		models.Quest.validate_quest_to_account(account_id,quest_id,function(model) {
-			if ( model == null || model == undefined ){
-				console.log("From some reason model is null or undefined");
-				res.send(401);
-			}else {
-				models.QuestPage.remove_page({page_id:page_id,quest_id:quest_id},function(){res.send(200);},function(err){console.log("Generic error is called"); generic_error(err,res)});
+app.del('/quest/:q_id',auth_user, function(req,res) {
+	var account_id = req.session.accountId;
+	var quest_id = req.param('q_id');
+	console.log("Trying to delete quest");
+	models.Quest.remove_quest(quest_id,account_id,
+			function(){
+				console.log("Deleting succeeded");
+				res.send({_id:quest_id});
+			},
+			function(err){
+				next(new Error("Can't delete quest! " + err));
 			}
+	);
+});
+app.del('/quest/:q_id/page/:page_id',auth_user,validate_quest_account,function(req,res){
+	var quest_id = req.param('q_id');
+	var page_id = req.param('page_id');
+	models.QuestPage.remove_page({page_id:page_id,quest_id:quest_id},
+		function(){
+			res.send(200);
+		},
+		function(err){
+			next({message:"Can't remove page!", raw:err});
 		});
-	}else {
-		res.send(401);
-	}
 }) ;
 	
-app.put('/quest/:q_id/page/:page_id',function(req,res) {
-	if ( req.session.loggedIn ) {
-		var account_id = req.session.accountId;
+app.put('/quest/:q_id/page/:page_id',auth_user,validate_quest_account,function(req,res) {
 		var quest_id = req.param('q_id');
-		var page_id = req.param('page_id');
-		models.Quest.validate_quest_to_account(account_id,quest_id,function(model) {
-			if ( model == null || model == undefined ){
-				res.send(401);
-			}else {
-				console.log("Quest "+ quest_id + " belong to account. sending update command ... ");
-				models.QuestPage.update_page(quest_id,req.body,function(page) {
-					console.log("Page updated ..");
-					res.send(page);
-				},function(err){generic_error(err,res)});
-			}
+		models.QuestPage.update_page(quest_id,req.body,function(page) {
+			console.log("Page updated ..");
+			res.send(page);
+		},function(err){
+			next({message:"Can't update page!",raw:err});
 		});
-	}else {
-		res.send(401);
-	}
 });
-app.post('/quest/:q_id/new_page',function(req,res) { 
-	if ( req.session.loggedIn ) {
-		var account_id = req.session.accountId;
+
+app.post('/quest/:q_id/new_page',auth_user,validate_quest_account,function(req,res) { 
 		var quest_id = req.param('q_id');
 		var new_page_callback = function(new_page){
 			res.send({_id: new_page._id});
 		};
-		models.Quest.validate_quest_to_account(account_id,quest_id,function(model) {
-			if ( model == null || model == undefined ){
-				res.send(401);
-			}else {
-				models.QuestPage.new_page({
-					x:req.param('x'),
-					y:req.param('y'),
-					page_name:req.param('page_name'),
-					page_type: req.param('page_type'),
-					page_number: req.param('page_number'),
-					page_content:req.param('page_content'),
-					quest_id: quest_id
-				},new_page_callback,generic_error);
-			}
-		},generic_error);
-	}else { 
-		res.send(401);
-	}
+		models.QuestPage.new_page({
+			x:req.param('x'),
+			y:req.param('y'),
+			page_name:req.param('page_name'),
+			page_type: req.param('page_type'),
+			page_number: req.param('page_number'),
+			page_content:req.param('page_content'),
+			quest_id: quest_id
+		},new_page_callback,
+		function(err){
+			next({message:"Can't create new page!",raw:err});
+		});
 	});
 		
-app.get('/editor/:q_id', function(req, res){
-	if ( req.session.loggedIn ) {
-		var account_id = req.session.accountId;
-		var quest_id = req.param('q_id');
-		models.Quest.validate_quest_to_account(account_id,quest_id,function(model) {
-			res.render("editor.jade",{layout:false, quest_id: quest_id});
-		},generic_error);
-	}
-	else{
-		res.redirect('/');
-	}
+app.get('/editor/:q_id', auth_user,validate_quest_account,function(req, res){
+	console.log("Trying editor...");
+	var quest_id = req.param('q_id');
+	res.render("editor.jade",{layout:false, quest_id: quest_id});
 });
-
+app.all('/editor/*',function(req,res) {
+	res.redirect('/');
+});
 app.get('/', function(req, res){
 	res.render("index.jade", {layout:false,booter: 'main_site/js/boot'});
 });
 
-app.get('/quest/:q_id',function(req,res){
-	if ( req.session.loggedIn) {
-		var account_id = req.session.accountId;
-		var quest_id = req.param('q_id');
+app.get('/quest/:q_id',auth_user,validate_quest_account,function(req,res){
+
+	var quest_id = req.param('q_id');
+	var quest = req.session.current_quest;
+	models.QuestPage.pages_by_quest_id(quest_id,function(pages){
+		quest_json = quest.toJSON();
+		quest_json.pages = pages || [];
 		
-		models.Quest.validate_quest_to_account(account_id,quest_id,
-				function(quest){
-					console.log("Sending quest: " + quest);
-					models.QuestPage.pages_by_quest_id(quest_id,function(pages){
-						console.log("Found pages: " + pages);
-						quest_json = quest.toJSON();
-						quest_json.pages = pages || [];
-						console.log("Sending quest with pages: " + JSON.stringify(quest_json));
-						res.send(quest_json);
-					},generic_error)
-				},
-				generic_error
-		);
-	}
+		req.session.current_quest = null;
+		
+		res.send(quest_json);
+	},function(err){
+		next({message:"Can't find quest!",raw:err});
+	});
+	
 });
 
-app.post('/new_quest',function(req,res) { 
-	if (req.session.loggedIn) {
-		var account_id = req.session.accountId;
-		var title = req.param('title','');
-		models.Quest.create_new({title:title,accountId:account_id},function(quest){console.log("Created quest " + quest ); res.send({_id:quest._id});}, function(err) { console.log(err); res.send(401); })
-	}else {
-		res.send(401);
-	}
+app.post('/new_quest',auth_user,function(req,res) { 
+	var account_id = req.session.accountId;
+	var title = req.param('title','');
+	models.Quest.create_new({title:title,accountId:account_id},
+			function(quest){
+				console.log("Created quest " + quest ); 
+				res.send({_id:quest._id});
+			}, 
+			function(err) { 
+				next({message:"Can't create new quest!",raw:err});
+			})
 });
 
 app.post('/register' , function(req,res) { 
@@ -171,7 +171,9 @@ app.get('/account/me',
 				models.Account.byId(req.session.accountId, function(account) {
 					res.send(account);
 				},
-				function(err) {console.log(err); res.send(401);}
+				function(err) {
+					next({message:"Can't verify login!",raw:err});
+				}
 				);
 			} else {
 				res.send(401);
@@ -186,13 +188,11 @@ app.post('/login', function(req,res) {
 	
 	
 	if (username == null || password == null || username.length < 1 || password.length < 1 ) {
-		res.send(401);
-		return;
+		next({message:"Can't login!"});
 	}
 	models.Account.login(username,password,function(account){
 		if (!account) {
-			console.log("Login failed");
-			res.send(401);
+			next({message:"Can't find account!"});
 		}else {
 			console.log("Login was successful");
 			req.session.loggedIn = true;
@@ -202,19 +202,14 @@ app.post('/login', function(req,res) {
 	 } );
 });
 
-app.get('/logoff',function(req,res) {
-	if ( req.session.loggedIn ) {
-		req.session.loggedIn = false;
-		req.session.accountId = undefined;
-		res.send(200);
-	}
+app.get('/logoff',auth_user,function(req,res) {
+	req.session.loggedIn = false;
+	req.session.accountId = undefined;
+	res.send(200);
 });
 
-app.get('/home',function(req,res) {
-	if ( req.session.loggedIn ) {
-		res.render('index.jade',{layout:false, booter:'main_site/js/boot_home'});
-	}else { 
-		res.redirect('/');
-	}
+app.get('/home',auth_user,function(req,res) {
+	res.render('index.jade',{layout:false, booter:'main_site/js/boot_home'});
 });
+
 app.listen(8000);

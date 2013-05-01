@@ -1,4 +1,10 @@
 <h1 class='text_align_center'>Your Quests</h1>
+<div id="btn_profile_div">
+<button id='btn_profile'><%=name.first%> <%=name.last%></button>
+	<ul id="btn_profile_menu">
+		<li><a href="#" id='href_logoff'>Logoff</a></li></li>
+	</ul>
+</div>
 <div class='center_screen'>
 <table style='width:100%;'>
 	<% if (quests != undefined) { _.each(quests,function(quest) { %>
