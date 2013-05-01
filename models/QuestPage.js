@@ -65,7 +65,8 @@ module.exports = function(mongoose,extend,_) {
 			'location':QuestPage,
 			'question':QuestPage,
 			'surprise':QuestPage,
-			'static':QuestPage
+			'static':QuestPage,
+			'open_question': QuestPage
 	}
 	var pages_by_quest_id = function(q_id, success_callback,error_callback){
 		QuestPage.find({quest_id:q_id},function(err,doc) {

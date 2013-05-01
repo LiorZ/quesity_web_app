@@ -6,7 +6,7 @@ define(['views/QuestPageStaticPropertiesView','views/QuestPageLocationProperties
 				view:{
 					avatar : 'img/document_scroll.png',
 					fill: '#99FF99',
-					type_title:'Static Page',
+					type_title:'Static',
 					properties_template:'#tmpl_page_static',
 					properties_prototype: QuestPageStaticPropertiesView
 				}
@@ -16,7 +16,7 @@ define(['views/QuestPageStaticPropertiesView','views/QuestPageLocationProperties
 				view:{
 					avatar : 'img/location_icon.png',
 					fill: '#BDDFFF',
-					type_title:'Location Page',
+					type_title:'Location',
 					properties_template:'#tmpl_page_location',
 					properties_prototype: QuestPageLocationPropertiesView
 				}
@@ -27,7 +27,7 @@ define(['views/QuestPageStaticPropertiesView','views/QuestPageLocationProperties
 				view:{
 					avatar : 'img/stall_icon.png',
 					fill: '#FFFF99',
-					type_title:'Stall Page',
+					type_title:'Stall',
 					properties_template:'#tmpl_page_stall',
 					properties_prototype: QuestPageStallPropertiesView
 				}
@@ -38,7 +38,7 @@ define(['views/QuestPageStaticPropertiesView','views/QuestPageLocationProperties
 				view:{
 					avatar : 'img/question_icon.png',
 					fill: '#FFCCCC',
-					type_title:"Question page",
+					type_title:"Multiple choice",
 					properties_template:'#tmpl_page_question',
 					properties_prototype: QuestPageQuestionPropertiesView
 				}
@@ -49,12 +49,23 @@ define(['views/QuestPageStaticPropertiesView','views/QuestPageLocationProperties
 				view:{
 					avatar : 'img/location_icon.png',
 					fill: '#E5E5E5',
-					type_title:"Surprise page",
+					type_title:"Surprise",
 					properties_template:'#tmpl_page_surprise',
 					properties_prototype: QuestPageSurprisePropertiesView
 				}
 				
-			}
+			},
+			'open_question': {
+				
+				view:{
+					avatar : 'img/question_icon.png',
+					fill: '#FFC400',
+					type_title:"Open Question",
+					properties_template:'#tmpl_page_question',
+					properties_prototype: QuestPageQuestionPropertiesView
+				}
+				
+			},
 	}
 	
 	return Attributes;

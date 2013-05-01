@@ -29,6 +29,11 @@ define(['models/QuestPageStatic','models/QuestPageLocation','models/QuestPageSta
 				model: {
 					page_prototype: QuestPageSurprise
 				}
+			},
+			open_question: {
+				model: {
+					page_prototype: QuestPageQuestion
+				}
 			}
 	}
 	
