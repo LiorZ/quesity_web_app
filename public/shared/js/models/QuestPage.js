@@ -3,7 +3,6 @@ define(['models/globals','Backbone','models/Link','models/LinkCollection','Backb
 	
 	var QuestPage = Backbone.RelationalModel.extend({
 		idAttribute: "_id",
-
 		relations: [{
 			type: Backbone.HasMany,
 			key: 'links',
@@ -56,7 +55,8 @@ define(['models/globals','Backbone','models/Link','models/LinkCollection','Backb
 			if (this.isNew()){
 				return "/quest/"+this.collection.quest.get('_id') + '/new_page';
 			}else { 
-				return "/quest/" + this.collection.quest.get('_id')+'/page/'+this.get('_id');
+				var quest_id = this.get('quest').get('_id');
+				return "/quest/" +quest_id+'/page/'+this.get('_id');
 			}
 		},
 		toJSON:function() {

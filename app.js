@@ -15,7 +15,7 @@ var options = {
 			port:process.env.PORT
 		},
 		development: {
-			db_addres:'mongodb://localhost/quesity',
+			db_address:'mongodb://localhost/quesity',
 			port:8000
 		}
 }
@@ -67,7 +67,7 @@ var validate_quest_account = function(req,res,next) {
 }
 
 
-app.del('/quest/:q_id',auth_user, function(req,res) {
+app.del('/quest/:q_id',auth_user, function(req,res,next) {
 	var account_id = req.session.accountId;
 	var quest_id = req.param('q_id');
 	console.log("Trying to delete quest");
@@ -81,7 +81,7 @@ app.del('/quest/:q_id',auth_user, function(req,res) {
 			}
 	);
 });
-app.del('/quest/:q_id/page/:page_id',auth_user,validate_quest_account,function(req,res){
+app.del('/quest/:q_id/page/:page_id',auth_user,validate_quest_account,function(req,res,next){
 	var quest_id = req.param('q_id');
 	var page_id = req.param('page_id');
 	models.QuestPage.remove_page({page_id:page_id,quest_id:quest_id},
@@ -93,17 +93,17 @@ app.del('/quest/:q_id/page/:page_id',auth_user,validate_quest_account,function(r
 		});
 }) ;
 	
-app.put('/quest/:q_id/page/:page_id',auth_user,validate_quest_account,function(req,res) {
+app.put('/quest/:q_id/page/:page_id',auth_user,validate_quest_account,function(req,res,next) {
 		var quest_id = req.param('q_id');
 		models.QuestPage.update_page(quest_id,req.body,function(page) {
 			console.log("Page updated ..");
 			res.send(page);
 		},function(err){
-			next({message:"Can't update page!",raw:err});
+			next(new Error("Can't update page! " + err ));
 		});
 });
 
-app.post('/quest/:q_id/new_page',auth_user,validate_quest_account,function(req,res) { 
+app.post('/quest/:q_id/new_page',auth_user,validate_quest_account,function(req,res,next) { 
 		var quest_id = req.param('q_id');
 		var new_page_callback = function(new_page){
 			res.send({_id: new_page._id});
@@ -134,7 +134,7 @@ app.get('/', function(req, res){
 	res.render("index.jade", {layout:false,booter: 'main_site/js/boot'});
 });
 
-app.get('/quest/:q_id',auth_user,validate_quest_account,function(req,res){
+app.get('/quest/:q_id',auth_user,validate_quest_account,function(req,res,next){
 
 	var quest_id = req.param('q_id');
 	var quest = req.session.current_quest;
@@ -151,7 +151,7 @@ app.get('/quest/:q_id',auth_user,validate_quest_account,function(req,res){
 	
 });
 
-app.post('/new_quest',auth_user,function(req,res) { 
+app.post('/new_quest',auth_user,function(req,res,next) { 
 	var account_id = req.session.accountId;
 	var title = req.param('title','');
 	models.Quest.create_new({title:title,accountId:account_id},
@@ -164,7 +164,7 @@ app.post('/new_quest',auth_user,function(req,res) {
 			})
 });
 
-app.post('/register' , function(req,res) { 
+app.post('/register' , function(req,res,next) { 
 	console.log("Trying to register ... ");
 	var data = {
 		first_name: req.param("firstName",null),
@@ -187,7 +187,7 @@ app.post('/register' , function(req,res) {
 });
 
 app.get('/account/me', 
-		function(req,res) {
+		function(req,res,next) {
 			if (req.session.loggedIn ) {
 				console.log("User is logged in");
 				models.Account.byId(req.session.accountId, function(account) {

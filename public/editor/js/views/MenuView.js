@@ -51,6 +51,7 @@ define(['jQueryUI','EasingMenu'],function(jQueryUI,EasingMenu) {
 		},
 		delete_page: function(e) {
 			console.log("Destroying " + this.model.get('page_name'));
+			this.model.stopListening();
 			this.model.destroy();
 			this.hide_menu(undefined,0);
 		},
