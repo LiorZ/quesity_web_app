@@ -7,6 +7,17 @@ var nodemailer = require('nodemailer');
 var MemoryStore = require('connect').session.MemoryStore;
 var _ = require('underscore');
 var models = {};
+var command_line_options = process.argv.splice(2);
+
+var options = {
+		production:{
+			db_address: 'mongodb://lior:koko123@alex.mongohq.com:10039/app15419682'
+		},
+		development: {
+			db_addres:'mongodb://localhost/quesity'
+		}
+}
+
 models.Quest = require('./models/Quest')(mongoose);
 models.Account = require('./models/Account')(mongoose,models.Quest);
 
@@ -27,7 +38,7 @@ app.configure(function(){
 	app.use(express.session({secret: "Lior&Tomer", store: new MemoryStore()}));
 	app.use(app.router)
 	app.use(generic_error);
-	mongoose.connect('mongodb://localhost/quesity');
+	mongoose.connect(options[command_line_options[0]].db_address);
 });
 
 var auth_user = function(req,res,next) {
@@ -190,7 +201,7 @@ app.get('/account/me',
 			
 });
 
-app.post('/login', function(req,res) { 
+app.post('/login', function(req,res,next) { 
 
 	var username = req.param('email',null);
 	var password = req.param('password',null);
@@ -199,14 +210,16 @@ app.post('/login', function(req,res) {
 	if (username == null || password == null || username.length < 1 || password.length < 1 ) {
 		next({message:"Can't login!"});
 	}
-	models.Account.login(username,password,function(account){
-		if (!account) {
-			next({message:"Can't find account!"});
-		}else {
-			console.log("Login was successful");
+	models.Account.login(username,password,{
+		
+		success:function(account){
+			console.log(account);
 			req.session.loggedIn = true;
 			req.session.accountId = account._id;
 			res.send(200);
+		},
+		error: function(err) {
+			next(new Error("Error while logging in " + err));
 		}
 	 } );
 });

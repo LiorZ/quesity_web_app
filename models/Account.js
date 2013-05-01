@@ -7,9 +7,12 @@ module.exports = function(mongoose,Quest) {
 	var AccountSchema = new mongoose.Schema({
 		email: { type:String, unique: true},
 		password: { type:String } ,
-		name: { first: {type:String}, 
-			last: { type:String } },
+		name: { 
+			first: {type:String}, 
+			last: { type:String } 
+		},
 		date_registered:{type:Date, 'default':Date.now},
+		activated:{type:Boolean, 'default':true}
 	});
 	
 	var Account = mongoose.model('Account',AccountSchema);
@@ -35,10 +38,18 @@ module.exports = function(mongoose,Quest) {
 		});
 		console.log('Save command was sent');
 	};
-	var login = function(email,password,callback) {
+	var login = function(email,password,callbacks) {
 		var shaSum = crypto.createHash('sha256');
 		shaSum.update(password);
-		Account.findOne({email:email,password:shaSum.digest('hex')}, function(err,doc) { console.log(doc); callback( doc ) });
+		Account.findOne({email:email,password:shaSum.digest('hex'),activated:true}, 
+				function(err,doc) 
+				{ 
+					if (err || doc == null) {
+						callbacks.error(err);
+					}else {
+						callbacks.success(doc);
+					}
+				});
 	};
 	
 	
