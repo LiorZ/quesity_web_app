@@ -12,7 +12,7 @@ var command_line_options = process.argv.splice(2);
 var options = {
 		production:{
 			db_address: 'mongodb://lior:koko123@alex.mongohq.com:10039/app15419682',
-			port:80
+			port:process.env.PORT
 		},
 		development: {
 			db_addres:'mongodb://localhost/quesity',
