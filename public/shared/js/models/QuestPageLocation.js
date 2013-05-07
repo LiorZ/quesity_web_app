@@ -10,5 +10,3 @@ define(['models/globals','models/LinkLocation','models/QuestPage'],function(glob
 	return QuestPageLocation;
 	
 });
-
-

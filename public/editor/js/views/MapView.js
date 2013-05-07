@@ -9,7 +9,7 @@ define(['JQueryUI_Maps','lib/utils/consts'],function(JQueryUI_Maps,consts) {
             var lng =  this.model.get('lng');
             
             //TODO: initialize with user current location:
-            var start_lat_lng = new google.maps.LatLng(0.0,0.0 );
+            var start_lat_lng = new google.maps.LatLng(32.077011086405825,34.76827383041382 );
             if ( lat != undefined && lng != undefined ) {
             	start_lat_lng = new google.maps.LatLng(this.model.get('lat'), this.model.get('lng'));
             }
@@ -48,17 +48,6 @@ define(['JQueryUI_Maps','lib/utils/consts'],function(JQueryUI_Maps,consts) {
 		find_location: function(location) {
 			this.$el.gmap('search', {'location': location}, function(results, status) {
 				if ( status === 'OK' ) {
-//					$.each(results[0].address_components, function(i,v) {
-//						if ( v.types[0] == "administrative_area_level_1" || 
-//							 v.types[0] == "administrative_area_level_2" ) {
-//							$('#dialog_form').find('#txt_street').val(v.long_name);
-//						} else if ( v.types[0] == "country") {
-//							$('#dialog_form').find('#txt_street').val(v.long_name);
-//						}
-//						
-//						//TODO: Add a dialog for the user to choose?
-//						return;
-//					});
 					$('#dialog_form').find('#txt_street').val(results[0].formatted_address);
 					
 				}
