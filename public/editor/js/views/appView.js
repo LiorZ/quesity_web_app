@@ -109,7 +109,7 @@ define(['jQueryUI','Backbone','routers/Router','views/ViewAttributes','models/Mo
 			}
 			if ( pages.length > 0 ){
 				var last_page = pages.at(pages.length-1);
-				var x_coord = (last_page.get('x') + 20 + consts.DIAGRAM_ELEMENT_WIDTH) % window.innerWidth; 
+				var x_coord = (last_page.get('x') + 20 + consts.DIAGRAM_ELEMENT_WIDTH) % (window.innerWidth - consts.DIAGRAM_ELEMENT_WIDTH); 
 				var y_coord = last_page.get('y');
 				pages.create({x:x_coord,y:y_coord,page_type:q_type,page_number:page_num},{wait:true,error:error_callback});
 			}else {
