@@ -1,5 +1,5 @@
 {
-    "name": "todo-sandbox",
+    "name": "quesity-server",
     "version": "0.0.1",
     "private": true,
     "dependencies": {
@@ -9,6 +9,10 @@
       "nodemailer": "0.3.20",
       "connect":">=1.9.1",
       "underscore":">=1.4.4",
-      "mongoose-schema-extend":">=0.1"
+      "mongoose-schema-extend":">=0.1",
+      "phantomjs":">=1.9",
+      "chai":">=1.6",
+      "mocha":">=1.9",
+      "nconf":"=0.6.7",
   }
 }

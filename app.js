@@ -2,13 +2,24 @@ var express = require('express');
 var app = express();
 var mongoose = require('mongoose');
 var extend = require('mongoose-schema-extend');
+var nconf = require('nconf');
 
 var nodemailer = require('nodemailer');
 var MemoryStore = require('connect').session.MemoryStore;
 var _ = require('underscore');
 var models = {};
-var command_line_options = process.argv.splice(2);
 
+//What configuration to open:
+nconf.argv()
+.env()
+.file({ file: 'tests/editor/config.json' });
+
+nconf.defaults({
+	mode:'development'
+});
+
+
+console.log("Starting quesity server in " + nconf.get('mode') + " mode ... ");
 var options = {
 		production:{
 			db_address: 'mongodb://lior:koko123@alex.mongohq.com:10039/app15419682',
@@ -17,9 +28,14 @@ var options = {
 		development: {
 			db_address:'mongodb://localhost/quesity',
 			port:8000
+		},
+		
+		test_local:{
+			db_address: 'mongodb://localhost/quesity-test',
+			port:5000
 		}
 }
-
+var configuration = options[nconf.get('mode')];
 models.Quest = require('./models/Quest')(mongoose);
 models.Account = require('./models/Account')(mongoose,models.Quest);
 
@@ -40,7 +56,7 @@ app.configure(function(){
 	app.use(express.session({secret: "Lior&Tomer", store: new MemoryStore()}));
 	app.use(app.router)
 	app.use(generic_error);
-	mongoose.connect(options[command_line_options[0]].db_address);
+	mongoose.connect(configuration.db_address);
 });
 
 var auth_user = function(req,res,next) {
@@ -236,4 +252,4 @@ app.get('/home',auth_user,function(req,res) {
 	res.render('index.jade',{layout:false, booter:'main_site/js/boot_home'});
 });
 
-app.listen(options[command_line_options[0]].port);
+app.listen(configuration.port);

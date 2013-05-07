@@ -56,7 +56,6 @@ define(['views/QuestPageStaticPropertiesView','views/QuestPageLocationProperties
 				
 			},
 			'open_question': {
-				
 				view:{
 					avatar : 'img/question_icon.png',
 					fill: '#FFC400',

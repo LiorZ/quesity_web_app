@@ -38,13 +38,17 @@ define(
 										title : 'New Quest',
 										modal : true,
 										buttons : {
-											OK : function() {
-												var quest_title = $(this).find(
-														'#txt_quest_title')
-														.val();
-												context.create_new_quest({
-													title : quest_title
-												});
+											OK :{
+													id: 'create_quest_ok',
+													text:'OK',
+													click: function() {
+														var quest_title = $(this).find(
+																'#txt_quest_title')
+																.val();
+														context.create_new_quest({
+															title : quest_title
+													});
+												}
 											},
 											Cancel : function() {
 												$(this).dialog('close');
