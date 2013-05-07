@@ -20,7 +20,7 @@ define(['views/QuestPagePropertiesView','views/EditableTableView','views/Linkabl
 				},
 				dialog_template:'#tmpl_add_location_dialog',
 				dialog_class: LinkablePositionEditableRowDialog,
-				dialog_size: {height: '800', width:'600' },
+				dialog_size: {height: '680', width:'600' },
 				row_class: LinkEditableRowView,
 				model_prototype: LinkLocation,
 				model_prototype_options: {parent_page: this.model,type:'location'}
