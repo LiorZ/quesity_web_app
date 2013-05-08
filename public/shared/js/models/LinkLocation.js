@@ -8,12 +8,15 @@ define(['models/Link','models/globals'],function(Link,globals){
 			radius:100, //in meters
 			type:'location'
 		},
-		
+		get_label_attr:function() {
+			return 'txt_street';
+		},
 		get_label:function(){ 
 			var label = Link.prototype.get_label.apply(this,['txt_street']);
 			return label;
 		},
-		initialize:function(){
+		initialize:function(options){
+			Link.prototype.initialize.apply(this, [options]);
 			this.listenTo(this,"change:radius", this.round_radius);
 		},
 		round_radius:function() {

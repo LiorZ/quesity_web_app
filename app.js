@@ -79,9 +79,29 @@ var validate_quest_account = function(req,res,next) {
 			next();
 		}
 	});
-	
 }
 
+var link_from_params = function(req,res,next) {
+	var link = {};
+	var type = req.param('type');
+	if ( type == 'answer'){
+		link.answer_txt = req.param('answer_txt');
+	}else if (type == 'location') {
+		link.lat = req.param('lat');
+		link.lng = req.param('lng');
+		link.txt_street = req.param('txt_street');
+		link.radius = req.param('radius')
+	}
+	_.extend(link,{type:type, links_to_page:req.param('links_to_page')});
+	console.log(link);
+	var isThereUndefined = _.chain(link).values().filter(function(p) { return _.isUndefined(p);}).value();
+	if (isThereUndefined.length > 0){
+		next(new Error("Undefined value in one of the parameters"));
+	}else {
+		req.session.current_link = link;
+		next();
+	}
+}
 
 app.del('/quest/:q_id',auth_user, function(req,res,next) {
 	var account_id = req.session.accountId;
@@ -117,6 +137,55 @@ app.put('/quest/:q_id/page/:page_id',auth_user,validate_quest_account,function(r
 		},function(err){
 			next(new Error("Can't update page! " + err ));
 		});
+});
+
+
+app.post('/quest/:q_id/page/:page_id/new_link',auth_user,validate_quest_account,link_from_params,function(req,res,next) {
+	models.QuestPage.new_link({
+		quest_id:req.param('q_id'),
+		page_id:req.param('page_id'),
+		link:req.session.current_link
+	},{
+		success:function(link) {
+			req.session.current_link = null;
+			res.send(link);
+		},error:function(err){
+			next(new Error(err))
+		}})
+});
+
+app.put('/quest/:q_id/page/:page_id/link/:link_id',auth_user,validate_quest_account,link_from_params,function(req,res,next) {
+	var link_id = req.param('link_id');
+	var link = req.session.current_link;
+	_.extend(link,{_id:link_id});
+	console.log("Updating link: ")
+	console.log(link);
+	models.QuestPage.update_link({
+		quest_id:req.param('q_id'),
+		page_id:req.param('page_id'),
+		link:link
+	},{
+		success:function(link) {
+			req.session.current_link = null;
+			res.send(link);
+		},error:function(err){
+			next(new Error(err))
+		}})
+});
+
+app.del('/quest/:q_id/page/:page_id/link/:link_id',auth_user,validate_quest_account,function(req,res,next) {
+	var link_id = req.param('link_id');
+	models.QuestPage.delete_link({
+		quest_id:req.param('q_id'),
+		page_id:req.param('page_id'),
+		link:{_id:link_id}
+	},{
+		success:function(link) {
+			req.session.current_link = null;
+			res.send(200);
+		},error:function(err){
+			next(new Error(err));
+		}})
 });
 
 app.post('/quest/:q_id/new_page',auth_user,validate_quest_account,function(req,res,next) { 

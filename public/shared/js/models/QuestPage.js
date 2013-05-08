@@ -11,7 +11,7 @@ define(['models/globals','Backbone','models/Link','models/LinkCollection','Backb
 			collectionKey:'parent',
 			reverseRelation: {
 				key: 'parent_page',
-				includeInJSON: true
+				includeInJSON: false
 			}
 		},
 		{
@@ -34,12 +34,9 @@ define(['models/globals','Backbone','models/Link','models/LinkCollection','Backb
 		},
 		subModelTypeAttribute:'page_type',
 		
-		initialize: function(options) {
-//			this.attach_listeners();
-		},
 		attach_listeners:function() {
 			this.listenTo(this,"change:x change:page_name change:page_content",this.save_model);
-			this.listenTo(this.get('links'),'add remove change',this.save_model);
+//			this.listenTo(this.get('links'),'add remove change',this.save_model);
 			this.listenTo(this.get('hints'),'add remove change',this.save_model);
 		},
 		save_model:function() {

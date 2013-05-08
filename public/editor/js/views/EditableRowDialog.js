@@ -61,7 +61,18 @@ define(["jQueryUI"],function(jQueryUI) {
 				this.model.set(row_model);
 				return this.model;
 			}else{
-				var new_row = this.model.create(row_model);
+				var new_row = this.model.create(row_model,{
+					wait:true,
+					success: function(data) {
+						console.log("New row created");
+						console.log(data);
+					},
+					error:function() {
+						console.log("EEEERRRRRRor");
+					}
+				});
+				console.log("OTHER ROW");
+				console.log(new_row)
 				return new_row;
 			}
 			

@@ -36,15 +36,6 @@ define(['views/EditableRowView','views/EditableRowDialog','models/QuestPage'],fu
 			
 		},
 		add_row:function(row){
-			if ( row.isNew() )
-				return;
-//			var existing = _.find(this.rows,function(some_row){
-//				return some_row.model == row
-//			});
-//			if ( ! _.isUndefined(existing) ) {
-//				return;
-//			}
-			
 			var row_view = new this.row_class({
 				model: row,
 				templateName: this.row_templateName,

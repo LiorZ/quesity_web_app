@@ -5,15 +5,45 @@ define(['models/globals','lib/utils/consts','Backbone','BackboneRelational','mod
 			type: Backbone.HasOne,
 			key: 'links_to_page',
 			relatedModel: 'QuestPage',
-			includeInJSON: '_id'
+			includeInJSON: '_id',
+			reverseRelation: {
+				key: 'incoming_links',
+				includeInJSON: false,
+				type:Backbone.HasMany
+			}
 		}],
 		subModelTypeAttribute:'type',
 		subModelTypes:{
 			'answer':'LinkAnswer',
 			'location':'LinkLocation'
 		},
-		sync:function() {
-			return false;
+		
+		initialize:function() {
+			this.listenTo(this,'change',this.save_model);
+		},
+		save_model:function() {
+			this.save(null,
+					{
+						error:function() {
+							alert("Error: Could not save your diagram ");
+						},
+						silent:true
+			});
+		},
+//		sync:function() {
+//			return false;
+//		},
+		url:function() {
+			console.log(this);
+			var page_id = this.get('parent_page').id
+			var quest_id = this.get('parent_page').get('quest').id;
+			var url = '';
+			if (this.isNew()){
+				url = "/quest/"+quest_id+ '/page/'+page_id+'/new_link';
+			}else { 
+				url = "/quest/"+quest_id+ '/page/'+page_id+'/link/'+this.get('_id');
+			}
+			return url;
 		},
 		defaults: {
 			type:'regular',
@@ -29,7 +59,10 @@ define(['models/globals','lib/utils/consts','Backbone','BackboneRelational','mod
 				return txt;
 			}
 			return txt.slice(0,consts.LABEL_LENGTH) + '...';
-		}
+		},
+		get_label_attr:function() {
+			return undefined;
+		},
 	});
 	_.extend(Link.prototype,Mixins.shallow_json);
 	globals.Link = Link;

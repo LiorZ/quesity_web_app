@@ -26,7 +26,6 @@ define(['Joint'],function(Joint) {
 				var context = this;
 				jointObj.registerCallback("justConnected", function(side) {
 					if (side == "end") {
-
 						var page_model = pages.byJointObject(this);
 						if (page_model == undefined)
 							return;
@@ -54,6 +53,11 @@ define(['Joint'],function(Joint) {
 			this.listenTo(model, 'destroy', this.destroy_view); // destroy just the view, avoid long recursion...
 			this.listenTo(links_to_page,'destroy',this.destroy_view_model);
 			this.listenTo(model,"change:links_to_page",this.page_changed_event);
+			var label_attr = this.model.get_label_attr();
+			
+			if (!_.isUndefined(label_attr)){
+				this.listenTo(model,"change:"+label_attr,this.page_changed_event);
+			}
 		},
 		destroy_view_model:function() {
 			this.model.destroy();

@@ -124,6 +124,80 @@ module.exports = function(mongoose,extend,_) {
 			}
 		});
 	}
+	
+	var new_link = function(data,callbacks) {
+		QuestPage.findOne({quest_id:data.quest_id, _id:data.page_id},function(err,doc){
+			if ( err ) {
+				callbacks.error(err);
+			}else {
+				var link = new Link(data.link); 
+				doc.links.push(link);
+				doc.save(function(err) {
+					if (err) {
+						callbacks.error(err);
+					}else{
+						callbacks.success(link);
+					}
+				})
+			}
+		});
+	}
+	var find_link_in_doc = function(doc,link_id) {
+		var link = undefined;
+		_.each(doc.links,function(some_link) {
+			if ( some_link._id.equals(link_id) ){
+				link=some_link;
+			}
+		});
+		return link;
+	}
+	var update_link = function(data,callbacks) {
+		QuestPage.findOne({quest_id:data.quest_id, _id:data.page_id},function(err,doc) {
+			if ( err ) {
+				callbacks.error(err);
+			}else {
+				var link = find_link_in_doc(doc,data.link._id);
+				if (_.isNull(link) || _.isUndefined(link) ) {
+					callbacks.error("Can't locate link");
+					return;
+				}
+				for(var propt in data.link){
+				    link[propt] = data.link[propt];
+				}
+				
+				doc.save(function(err) {
+					if (err) {
+						callbacks.error(err);
+					}else{
+						callbacks.success(link);
+					}
+				})
+				
+			}
+		});
+	};
+	
+	var delete_link = function(data,callbacks) {
+		QuestPage.findOne({quest_id:data.quest_id, _id:data.page_id},function(err,doc) {
+			if ( err ) {
+				callbacks.error(err);
+			}else {
+				var link = find_link_in_doc(doc,data.link._id);
+				if (_.isNull(link) || _.isUndefined(link) ) {
+					callbacks.error("Can't locate link");
+					return;
+				}
+				doc.links.remove(link);
+				doc.save(function(err) {
+					if (err) {
+						callbacks.error(err);
+					}else{
+						callbacks.success();
+					}
+				});
+			}
+		});
+	}
 	return {
 		QuestPage: QuestPage,
 		QuestPageStall: QuestPageStall,
@@ -131,7 +205,10 @@ module.exports = function(mongoose,extend,_) {
 		pages_by_quest_id:pages_by_quest_id,
 		new_page: new_page,
 		update_page: update_page,
-		remove_page:remove_page
+		remove_page:remove_page,
+		new_link:new_link,
+		delete_link:delete_link,
+		update_link:update_link
 	};
 
 }
