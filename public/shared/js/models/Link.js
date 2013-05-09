@@ -22,6 +22,7 @@ define(['models/globals','lib/utils/consts','Backbone','BackboneRelational','mod
 			this.listenTo(this,'change',this.save_model);
 		},
 		save_model:function() {
+			console.log("Saving Link..");
 			this.save(null,
 					{
 						error:function() {

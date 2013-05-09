@@ -182,6 +182,7 @@ app.del('/quest/:q_id/page/:page_id/link/:link_id',auth_user,validate_quest_acco
 	},{
 		success:function(link) {
 			req.session.current_link = null;
+			console.log("Deleting link successful.. " + link_id);
 			res.send(200);
 		},error:function(err){
 			next(new Error(err));

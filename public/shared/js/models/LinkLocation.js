@@ -17,11 +17,11 @@ define(['models/Link','models/globals'],function(Link,globals){
 		},
 		initialize:function(options){
 			Link.prototype.initialize.apply(this, [options]);
-			this.listenTo(this,"change:radius", this.round_radius);
+//			this.listenTo(this,"change:radius", this.round_radius);
 		},
 		round_radius:function() {
 			var current = this.get('radius');
-			this.set('radius',Math.round(current),{silent:true});
+			this.set({radius:Math.round(current)},{silent:true});
 		}
 	});
 	_.extend(LinkLocation.prototype.defaults, Link.prototype.defaults);

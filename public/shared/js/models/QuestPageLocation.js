@@ -5,7 +5,6 @@ define(['models/globals','models/LinkLocation','models/QuestPage'],function(glob
 			QuestPage.prototype.initialize.apply(this, [options]);
 		},
 	});
-	//Lior: Fixes an issue in which a circular dep was needed in order to define the sub models.. ugly, but in the mean time it works.
 	globals.QuestPageLocation = QuestPageLocation;
 	return QuestPageLocation;
 	
