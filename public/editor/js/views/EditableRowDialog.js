@@ -65,14 +65,11 @@ define(["jQueryUI"],function(jQueryUI) {
 					wait:true,
 					success: function(data) {
 						console.log("New row created");
-						console.log(data);
 					},
 					error:function() {
-						console.log("EEEERRRRRRor");
+						alert("Error saving your diagram. Check your connection and try again")
 					}
 				});
-				console.log("OTHER ROW");
-				console.log(new_row)
 				return new_row;
 			}
 			

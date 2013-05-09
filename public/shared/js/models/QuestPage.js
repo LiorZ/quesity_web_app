@@ -20,7 +20,11 @@ define(['models/globals','Backbone','models/Link','models/LinkCollection','Backb
 			relatedModel: Hint,
 			collectionType: HintCollection,
 			includeInJSON: true,
-			collectionKey:'parent'
+			collectionKey:'parent',
+			reverseRelation: {
+				key:'parent_page',
+				includeInJSON: false
+			}
 		}
 		
 		],
@@ -37,7 +41,7 @@ define(['models/globals','Backbone','models/Link','models/LinkCollection','Backb
 		attach_listeners:function() {
 			this.listenTo(this,"change:x change:page_name change:page_content",this.save_model);
 //			this.listenTo(this.get('links'),'add remove change',this.save_model);
-			this.listenTo(this.get('hints'),'add remove change',this.save_model);
+//			this.listenTo(this.get('hints'),'add remove change',this.save_model);
 		},
 		save_model:function() {
 			this.save(null,

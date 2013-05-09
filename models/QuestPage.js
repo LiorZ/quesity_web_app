@@ -52,6 +52,7 @@ module.exports = function(mongoose,extend,_) {
 	var QuestPage = mongoose.model('QuestPage',QuestPageSchema);
 	var QuestPageStall = mongoose.model('stall',QuestPageStallSchema);
 	var Link = mongoose.model('regular',LinkSchema);
+	var Hint = mongoose.model('hint',HintSchema);
 //	var LinkAnswer = mongoose.model('answer',LinkAnswerSchema);
 //	var LinkLocation = mongoose.model('location',LinkLocationSchema);
 //	var LinkMap = {
@@ -124,52 +125,56 @@ module.exports = function(mongoose,extend,_) {
 			}
 		});
 	}
-	
-	var new_link = function(data,callbacks) {
+	var new_array_item = function(data,callbacks,type,array_key,item_key) {
 		QuestPage.findOne({quest_id:data.quest_id, _id:data.page_id},function(err,doc){
 			if ( err ) {
 				callbacks.error(err);
 			}else {
-				var link = new Link(data.link); 
-				doc.links.push(link);
+				var item = new type(data[item_key]); 
+				doc[array_key].push(item);
 				doc.save(function(err) {
 					if (err) {
 						callbacks.error(err);
 					}else{
-						callbacks.success(link);
+						callbacks.success(item);
 					}
 				})
 			}
 		});
 	}
-	var find_link_in_doc = function(doc,link_id) {
-		var link = undefined;
-		_.each(doc.links,function(some_link) {
-			if ( some_link._id.equals(link_id) ){
-				link=some_link;
+	var new_link = function(data,callbacks) {
+		new_array_item(data,callbacks,Link,'links','link');
+	}
+	
+	var find_item_in_array_doc = function(doc,item_id,array_key) {
+		var item = undefined;
+		_.each(doc[array_key],function(some_item) {
+			if ( some_item._id.equals(item_id) ){
+				item=some_item;
 			}
 		});
-		return link;
+		return item;
 	}
-	var update_link = function(data,callbacks) {
+	
+	var update_array_item = function(data,callbacks,array_key,item_key) {
 		QuestPage.findOne({quest_id:data.quest_id, _id:data.page_id},function(err,doc) {
 			if ( err ) {
 				callbacks.error(err);
 			}else {
-				var link = find_link_in_doc(doc,data.link._id);
-				if (_.isNull(link) || _.isUndefined(link) ) {
-					callbacks.error("Can't locate link");
+				var item = find_item_in_array_doc(doc,data[item_key]._id,array_key);
+				if (_.isNull(item) || _.isUndefined(item) ) {
+					callbacks.error("Can't locate " + item_key);
 					return;
 				}
-				for(var propt in data.link){
-				    link[propt] = data.link[propt];
+				for(var propt in data[item_key]){
+				    item[propt] = data[item_key][propt];
 				}
 				
 				doc.save(function(err) {
 					if (err) {
 						callbacks.error(err);
 					}else{
-						callbacks.success(link);
+						callbacks.success(item);
 					}
 				})
 				
@@ -177,17 +182,21 @@ module.exports = function(mongoose,extend,_) {
 		});
 	};
 	
-	var delete_link = function(data,callbacks) {
+	var update_link = function(data,callbacks) {
+		update_array_item(data,callbacks,'links','link');
+	};
+	
+	var delete_array_item = function(data,callbacks,array_key,item_key) {
 		QuestPage.findOne({quest_id:data.quest_id, _id:data.page_id},function(err,doc) {
 			if ( err ) {
 				callbacks.error(err);
 			}else {
-				var link = find_link_in_doc(doc,data.link._id);
-				if (_.isNull(link) || _.isUndefined(link) ) {
+				var item = find_item_in_array_doc(doc,data[item_key]._id,array_key);
+				if (_.isNull(item) || _.isUndefined(item) ) {
 					callbacks.error("Can't locate link");
 					return;
 				}
-				doc.links.remove(link);
+				doc[array_key].remove(item);
 				doc.save(function(err) {
 					if (err) {
 						callbacks.error(err);
@@ -197,6 +206,21 @@ module.exports = function(mongoose,extend,_) {
 				});
 			}
 		});
+	}
+	
+	var delete_link = function(data,callbacks) {
+		delete_array_item(data,callbacks,'links','link');
+	}
+	
+	var new_hint = function(data,callbacks){
+		new_array_item(data,callbacks,Hint,'hints','hint');
+	}
+	var update_hint = function(data,callbacks) {
+		update_array_item(data,callbacks,'hints','hint');
+	}
+	
+	var delete_hint = function(data,callbacks) {
+		delete_array_item(data,callbacks,'hints','hint');
 	}
 	return {
 		QuestPage: QuestPage,
@@ -208,7 +232,10 @@ module.exports = function(mongoose,extend,_) {
 		remove_page:remove_page,
 		new_link:new_link,
 		delete_link:delete_link,
-		update_link:update_link
+		update_link:update_link,
+		new_hint:new_hint,
+		update_hint:update_hint,
+		delete_hint:delete_hint
 	};
 
 }

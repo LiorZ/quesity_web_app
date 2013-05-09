@@ -35,7 +35,6 @@ define(['models/globals','lib/utils/consts','Backbone','BackboneRelational','mod
 //			return false;
 //		},
 		url:function() {
-			console.log(this);
 			var page_id = this.get('parent_page').id
 			var quest_id = this.get('parent_page').get('quest').id;
 			var url = '';

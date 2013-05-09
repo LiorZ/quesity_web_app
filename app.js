@@ -154,6 +154,59 @@ app.post('/quest/:q_id/page/:page_id/new_link',auth_user,validate_quest_account,
 		}})
 });
 
+
+app.post('/quest/:q_id/page/:page_id/new_hint',auth_user,validate_quest_account,function(req,res,next) {
+	console.log("Inserting new hint .. ");
+	models.QuestPage.new_hint({
+		quest_id:req.param('q_id'),
+		page_id:req.param('page_id'),
+		hint:{
+			hint_title: req.param('hint_title'),
+			hint_txt: req.param('hint_txt')
+		}
+	},{
+		success:function(hint) {
+			res.send(hint);
+		},error:function(err){
+			next(new Error(err))
+		}})
+});
+
+app.put('/quest/:q_id/page/:page_id/hint/:hint_id',auth_user,validate_quest_account,function(req,res,next) {
+	console.log("Updating hint ... ");
+	var hint = {
+			_id:req.param('hint_id'),
+			hint_title:req.param('hint_title'),
+			hint_txt:req.param('hint_txt') 
+	}
+	
+	models.QuestPage.update_hint({
+		quest_id:req.param('q_id'),
+		page_id:req.param('page_id'),
+		hint:hint
+	},{
+		success:function(hint) {
+			res.send(hint);
+		},error:function(err){
+			next(new Error(err))
+		}})
+});
+
+app.del('/quest/:q_id/page/:page_id/hint/:hint_id',auth_user,validate_quest_account,function(req,res,next) {
+	console.log("Deleting hint .. ");
+	var hint_id = req.param('hint_id');
+	models.QuestPage.delete_hint({
+		quest_id:req.param('q_id'),
+		page_id:req.param('page_id'),
+		hint:{_id:hint_id}
+	},{
+		success:function(hint) {
+			res.send(200);
+		},error:function(err){
+			next(new Error(err));
+		}});
+});
+
 app.put('/quest/:q_id/page/:page_id/link/:link_id',auth_user,validate_quest_account,link_from_params,function(req,res,next) {
 	var link_id = req.param('link_id');
 	var link = req.session.current_link;
