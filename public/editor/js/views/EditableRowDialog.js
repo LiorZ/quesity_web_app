@@ -59,18 +59,19 @@ define(["jQueryUI"],function(jQueryUI) {
 			var row_model = _.chain(this.model_prototype_options).extend(creation_options).extend(more_options||{}).value();
 			if (this.edit_mode){
 				this.model.set(row_model);
-				return this.model;
+				more_options.callback( this.model);
 			}else{
-				var new_row = this.model.create(row_model,{
+				this.model.create(row_model,{
 					wait:true,
 					success: function(data) {
 						console.log("New row created");
+						if (!_.isUndefined(more_options.callback))
+							more_options.callback(data);
 					},
 					error:function() {
 						alert("Error saving your diagram. Check your connection and try again")
 					}
 				});
-				return new_row;
 			}
 			
 		}
