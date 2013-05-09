@@ -12,7 +12,7 @@ models.QuestPage = require('../QuestPage')(mongoose,extend,_);
 // We need a database connection
 mongoose.connect('mongodb://localhost/quesity-test');
 
-
+var dump = {};
 function PageCreator(){
 		this.num = 0;
 		this.pages = [];
@@ -149,7 +149,6 @@ describe('Testing QuestPage module', function() {
     		if (err) {
     			done(err)
     		}else {
-    			console.log(page_creator.pages[0]);
     			models.QuestPage.delete_link({
     				quest_id:quest_id,
     				page_id:doc._id,
@@ -180,20 +179,61 @@ describe('Testing QuestPage module', function() {
     				hint_title:'some hint',
     				hint_txt: 'hint text!'
     			},
-    		quest_id:page_creator[0].quest_id,
-    		page_id:page_creator[0]._id
+    		quest_id:page_creator.pages[0].quest_id,
+    		page_id:page_creator.pages[0]._id
     	
     	},{
     		success:function(hint) {
-    			hint.hint_title.should.be.equal('some_hint');
+    			hint.hint_title.should.be.equal('some hint');
     			hint._id.should.not.be.equal(null);
+    			dump.hint_id = hint._id;
     			done();
     		},
     		error: function(err){
     			done(err)
     		}
     	});
-    	}
+    });
+    
+    it("Updating the hint on page 1 ... ", function(done) {
+    	models.QuestPage.update_hint({
+    		hint:{hint_title:'Different title', _id:dump.hint_id},
+    		quest_id:page_creator.pages[0].quest_id,
+    		page_id:page_creator.pages[0]._id
+    	},
+    	{
+    			success:function(hint) {
+    				hint._id.should.be.equal(dump.hint_id);
+    				hint.hint_title.should.be.equal('Different title');
+    				hint.hint_txt.should.be.equal('hint text!');
+    				done();
+    			},
+    			error:function(err){
+    				done(err);
+    			}
+    	})
+    });
+    
+    it("Deleting hint on page 1" , function(done) {
+    	models.QuestPage.delete_hint({
+    		hint:{_id:dump.hint_id},
+    		quest_id:page_creator.pages[0].quest_id,
+    		page_id:page_creator.pages[0]._id
+    	},
+    	{
+    			success:function() {
+    				models.QuestPage.QuestPage.findOne({_id:page_creator.pages[0]._id},function(err,doc) {
+    					if (err) {
+    						done(err);
+    					}
+    					doc.hints.length.should.be.equal(0);
+    					done();
+    				})
+    			},
+    			error:function(err){
+    				done(err);
+    			}
+    	})
     });
     
 
