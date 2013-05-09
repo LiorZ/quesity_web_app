@@ -8,6 +8,22 @@ define(['models/Link','models/globals'],function(Link,globals){
 			radius:100, //in meters
 			type:'location'
 		},
+		//Overriding the set function in order to round the radius.
+		set: function(key, value, options) {
+		    if (_.isObject(key) || key == null) {
+		        attrs = key;
+		        options = value;
+		    } else {
+		        attrs = {};
+		        attrs[key] = value;
+		    }
+
+		    if (!_.isUndefined(attrs.radius)) {
+		    	attrs.radius = Math.round(attrs.radius);
+		    }
+
+		    return Link.prototype.set.call(this, attrs, options);
+		},
 		get_label_attr:function() {
 			return 'txt_street';
 		},
