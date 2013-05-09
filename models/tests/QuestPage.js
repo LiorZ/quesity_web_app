@@ -149,6 +149,7 @@ describe('Testing QuestPage module', function() {
     		if (err) {
     			done(err)
     		}else {
+    			console.log(page_creator.pages[0]);
     			models.QuestPage.delete_link({
     				quest_id:quest_id,
     				page_id:doc._id,
@@ -170,6 +171,29 @@ describe('Testing QuestPage module', function() {
     			});
     		}
     	})
+    });
+    
+    it("Creating a new hint in page 1 ... " , function(done) {
+    	models.QuestPage.new_hint({
+    		hint:
+    			{
+    				hint_title:'some hint',
+    				hint_txt: 'hint text!'
+    			},
+    		quest_id:page_creator[0].quest_id,
+    		page_id:page_creator[0]._id
+    	
+    	},{
+    		success:function(hint) {
+    			hint.hint_title.should.be.equal('some_hint');
+    			hint._id.should.not.be.equal(null);
+    			done();
+    		},
+    		error: function(err){
+    			done(err)
+    		}
+    	});
+    	}
     });
     
 
