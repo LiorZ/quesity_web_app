@@ -55,7 +55,7 @@ define(['Joint'],function(Joint) {
 			this.listenTo(model,"change:links_to_page",this.page_changed_event);
 			var props_to_listen = this.model.get_link_view_properties_to_listen();
 			
-			if (!_.isUndefined(props_to_listen) || props_to_listen.length > 0){
+			if (!_.isUndefined(props_to_listen) && props_to_listen.length > 0){
 				var listen_str = _.chain(props_to_listen).map(function(item){ return "change:" + item;}).toArray().value().join(" ");
 				this.listenTo(model,listen_str,this.page_changed_event);
 			}
