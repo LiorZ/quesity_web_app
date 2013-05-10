@@ -17,5 +17,8 @@
       "should":"=1.2.2",
       "requirejs":">=2.1.5",
       "almond":"=0.2.5"
+  },
+  "scripts": {
+  	"postinstall" : "make install"
   }
 }

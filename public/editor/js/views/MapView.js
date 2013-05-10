@@ -17,7 +17,7 @@ define(['JQueryUI_Maps','lib/utils/consts'],function(JQueryUI_Maps,consts) {
 		},
 		
 		render:function() {
-			this.$el.css({width:'500', height:'500'});
+			this.$el.css({width:'500', height:'400'});
             var context = this;
             
             var lat = this.model.get('lat');

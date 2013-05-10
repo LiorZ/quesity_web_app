@@ -1,1 +1,1 @@
-web: `node_modules/requirejs/bin/r.js -o app.build.js; cp -rf node_modules dist/.; cd dist; node app.js --mode production`
+web: node dist/app.js --mode production
