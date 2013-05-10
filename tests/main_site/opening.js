@@ -25,7 +25,7 @@ casper.start('http://localhost:5000/', function() {
         });
     },function then() {
     	this.test.assertExists('h1','login was successful')
-    	this.test.assertEquals(this.getElementInfo('h1').html,'Your Quests');
+    	this.test.assertEquals(this.getElementInfo('h1').html,'My Quests');
     	this.test.assertExists('button#btn_new_quest','Create quest button secured');
     });
 });
