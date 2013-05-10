@@ -53,10 +53,11 @@ define(['Joint'],function(Joint) {
 			this.listenTo(model, 'destroy', this.destroy_view); // destroy just the view, avoid long recursion...
 			this.listenTo(links_to_page,'destroy',this.destroy_view_model);
 			this.listenTo(model,"change:links_to_page",this.page_changed_event);
-			var label_attr = this.model.get_label_attr();
+			var props_to_listen = this.model.get_link_view_properties_to_listen();
 			
-			if (!_.isUndefined(label_attr)){
-				this.listenTo(model,"change:"+label_attr,this.page_changed_event);
+			if (!_.isUndefined(props_to_listen) || props_to_listen.length > 0){
+				var listen_str = _.chain(props_to_listen).map(function(item){ return "change:" + item;}).toArray().value().join(" ");
+				this.listenTo(model,listen_str,this.page_changed_event);
 			}
 		},
 		destroy_view_model:function() {

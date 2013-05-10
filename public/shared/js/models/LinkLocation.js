@@ -24,8 +24,8 @@ define(['models/Link','models/globals'],function(Link,globals){
 
 		    return Link.prototype.set.call(this, attrs, options);
 		},
-		get_label_attr:function() {
-			return 'txt_street';
+		get_link_view_properties_to_listen: function() {
+			return ['lat','radius'];
 		},
 		get_label:function(){ 
 			var label = Link.prototype.get_label.apply(this,['txt_street']);

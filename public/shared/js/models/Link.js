@@ -60,9 +60,9 @@ define(['models/globals','lib/utils/consts','Backbone','BackboneRelational','mod
 			}
 			return txt.slice(0,consts.LABEL_LENGTH) + '...';
 		},
-		get_label_attr:function() {
-			return undefined;
-		},
+		get_link_view_properties_to_listen: function() {
+			return undefined
+		}
 	});
 	_.extend(Link.prototype,Mixins.shallow_json);
 	globals.Link = Link;
