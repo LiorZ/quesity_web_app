@@ -59,6 +59,14 @@ app.configure(function(){
 	mongoose.connect(configuration.db_address);
 });
 
+
+//Load Development app extensions:
+app = require('./dev_functions')(app,models);
+
+//if ( nconf.get('mode') == 'development' ){
+//	
+//}
+
 var auth_user = function(req,res,next) {
 	if ( req.session.loggedIn ) {
 		next();

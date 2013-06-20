@@ -219,6 +219,49 @@ module.exports = function(mongoose,extend,_) {
 		update_array_item(data,callbacks,'hints','hint');
 	}
 	
+	var get_first_page = function(data,callbacks) {
+		var quest_id = data.quest_id;
+		var linked_pages = {};
+		QuestPage.find({quest_id: quest_id}, function(err,doc) {
+			if ( err ) {
+				callbacks.error(err);
+			}else {
+				var pages = {};
+				_.each(doc,function(page) {
+					if ( page.page_type == 'surprise'){
+						return;
+					}
+					pages[page._id] = page;
+					if (page.links.length > 0) {
+						_.each(page.links,function(link) {
+							linked_pages[link.links_to_page] = 1;
+						})
+					}
+				});
+				
+				var first_pages = _.omit(pages,_.keys(linked_pages));
+				if ( _.keys(first_pages).length > 1 ) {
+					console.log("More than 1 first page!!");
+				}else if ( _.keys(first_pages) == 0 ) {
+					callbacks.error("Can't find any first pages.");
+					return;
+				}
+				callbacks.success(_.values(first_pages)[0]);
+			}
+		});
+	} 
+	
+	
+	var page_by_id = function(data,callbacks) {
+		QuestPage.findOne({quest_id: data.quest_id, _id:data.page_id}, function(err,doc) {
+			if (err || doc == null || _.isEmpty(doc)) {
+				var msg = err || "Page not found";
+				callbacks.error(msg);
+			}else {
+				callbacks.success(doc); 
+			}
+		});
+	}
 	var delete_hint = function(data,callbacks) {
 		delete_array_item(data,callbacks,'hints','hint');
 	}
@@ -235,7 +278,9 @@ module.exports = function(mongoose,extend,_) {
 		update_link:update_link,
 		new_hint:new_hint,
 		update_hint:update_hint,
-		delete_hint:delete_hint
+		delete_hint:delete_hint,
+		get_first_page: get_first_page,
+		page_by_id: page_by_id
 	};
 
 }
