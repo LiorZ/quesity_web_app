@@ -41,7 +41,7 @@ module.exports = function(mongoose,Quest) {
 	var login = function(email,password,callbacks) {
 		var shaSum = crypto.createHash('sha256');
 		shaSum.update(password);
-		Account.findOne({email:email,password:shaSum.digest('hex'),activated:true}, 
+		Account.findOne({email:email,password:shaSum.digest('hex'),activated:true},{password:0}, 
 				function(err,doc) 
 				{ 
 					if (err || doc == null) {

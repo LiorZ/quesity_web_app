@@ -294,6 +294,7 @@ app.get('/quest/:q_id',auth_user,validate_quest_account,function(req,res,next){
 		res.send(quest_json);
 	},function(err){
 		next({message:"Can't find quest!",raw:err});
+		return;
 	});
 	
 });
@@ -308,6 +309,7 @@ app.post('/new_quest',auth_user,function(req,res,next) {
 			}, 
 			function(err) { 
 				next({message:"Can't create new quest!",raw:err});
+				return;
 			})
 });
 
@@ -328,6 +330,7 @@ app.post('/register' , function(req,res,next) {
 	
 	var error = function (err) {
 		next(new Error("Error registering user!" + err));
+		return;
 	}
 	models.Account.register(data,{success:success,error:error});	
 	console.log("Registration completed");
@@ -342,6 +345,7 @@ app.get('/account/me',
 				},
 				function(err) {
 					next({message:"Can't verify login!",raw:err});
+					return;
 				}
 				);
 			} else {
@@ -354,10 +358,10 @@ app.post('/login', function(req,res,next) {
 
 	var username = req.param('email',null);
 	var password = req.param('password',null);
-	
-	
+	console.log("Trying to log in with : " + username + " And " + password );
 	if (username == null || password == null || username.length < 1 || password.length < 1 ) {
 		next({message:"Can't login!"});
+		return;
 	}
 	models.Account.login(username,password,{
 		
@@ -365,7 +369,8 @@ app.post('/login', function(req,res,next) {
 			console.log(account);
 			req.session.loggedIn = true;
 			req.session.accountId = account._id;
-			res.send(200);
+			//Remove the password:
+			res.send(_.omit(account,"password"));
 		},
 		error: function(err) {
 			next(new Error("Error while logging in " + err));
