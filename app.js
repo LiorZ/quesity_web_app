@@ -38,7 +38,7 @@ var options = {
 var configuration = options[nconf.get('mode')];
 models.Quest = require('./models/Quest')(mongoose);
 models.Account = require('./models/Account')(mongoose,models.Quest);
-
+models.Event = require('./models/Event')(mongoose, models.Quest,models.Account);
 var generic_error = function(err, req, res, next) {
 	console.log(err);
 	res.send(401);
@@ -61,20 +61,21 @@ app.configure(function(){
 
 
 //Load Development app extensions:
-app = require('./dev_functions')(app,models);
 
 //if ( nconf.get('mode') == 'development' ){
 //	
 //}
 
-var auth_user = function(req,res,next) {
-	if ( req.session.loggedIn ) {
-		next();
-	}else {
-		return next(new Error("Error logging in!"));
-	}
-	
-}
+//var auth_user = function(req,res,next) {
+//	if ( req.session.loggedIn ) {
+//		next();
+//	}else {
+//		return next(new Error("Error logging in!"));
+//	}
+//	
+//}
+var auth = require('./authentication')(app,models);
+app = require('./dev_functions')(app,models,auth);
 
 var validate_quest_account = function(req,res,next) {
 	var account_id = req.session.accountId;
@@ -111,7 +112,7 @@ var link_from_params = function(req,res,next) {
 	}
 }
 
-app.del('/quest/:q_id',auth_user, function(req,res,next) {
+app.del('/quest/:q_id',auth.auth_user, function(req,res,next) {
 	var account_id = req.session.accountId;
 	var quest_id = req.param('q_id');
 	console.log("Trying to delete quest");
@@ -125,7 +126,7 @@ app.del('/quest/:q_id',auth_user, function(req,res,next) {
 			}
 	);
 });
-app.del('/quest/:q_id/page/:page_id',auth_user,validate_quest_account,function(req,res,next){
+app.del('/quest/:q_id/page/:page_id',auth.auth_user,validate_quest_account,function(req,res,next){
 	var quest_id = req.param('q_id');
 	var page_id = req.param('page_id');
 	models.QuestPage.remove_page({page_id:page_id,quest_id:quest_id},
@@ -137,7 +138,7 @@ app.del('/quest/:q_id/page/:page_id',auth_user,validate_quest_account,function(r
 		});
 }) ;
 	
-app.put('/quest/:q_id/page/:page_id',auth_user,validate_quest_account,function(req,res,next) {
+app.put('/quest/:q_id/page/:page_id',auth.auth_user,validate_quest_account,function(req,res,next) {
 		var quest_id = req.param('q_id');
 		models.QuestPage.update_page(quest_id,req.body,function(page) {
 			console.log("Page updated ..");
@@ -148,7 +149,7 @@ app.put('/quest/:q_id/page/:page_id',auth_user,validate_quest_account,function(r
 });
 
 
-app.post('/quest/:q_id/page/:page_id/new_link',auth_user,validate_quest_account,link_from_params,function(req,res,next) {
+app.post('/quest/:q_id/page/:page_id/new_link',auth.auth_user,validate_quest_account,link_from_params,function(req,res,next) {
 	models.QuestPage.new_link({
 		quest_id:req.param('q_id'),
 		page_id:req.param('page_id'),
@@ -163,7 +164,7 @@ app.post('/quest/:q_id/page/:page_id/new_link',auth_user,validate_quest_account,
 });
 
 
-app.post('/quest/:q_id/page/:page_id/new_hint',auth_user,validate_quest_account,function(req,res,next) {
+app.post('/quest/:q_id/page/:page_id/new_hint',auth.auth_user,validate_quest_account,function(req,res,next) {
 	console.log("Inserting new hint .. ");
 	models.QuestPage.new_hint({
 		quest_id:req.param('q_id'),
@@ -180,7 +181,7 @@ app.post('/quest/:q_id/page/:page_id/new_hint',auth_user,validate_quest_account,
 		}})
 });
 
-app.put('/quest/:q_id/page/:page_id/hint/:hint_id',auth_user,validate_quest_account,function(req,res,next) {
+app.put('/quest/:q_id/page/:page_id/hint/:hint_id',auth.auth_user,validate_quest_account,function(req,res,next) {
 	console.log("Updating hint ... ");
 	var hint = {
 			_id:req.param('hint_id'),
@@ -200,7 +201,7 @@ app.put('/quest/:q_id/page/:page_id/hint/:hint_id',auth_user,validate_quest_acco
 		}})
 });
 
-app.del('/quest/:q_id/page/:page_id/hint/:hint_id',auth_user,validate_quest_account,function(req,res,next) {
+app.del('/quest/:q_id/page/:page_id/hint/:hint_id',auth.auth_user,validate_quest_account,function(req,res,next) {
 	console.log("Deleting hint .. ");
 	var hint_id = req.param('hint_id');
 	models.QuestPage.delete_hint({
@@ -215,7 +216,7 @@ app.del('/quest/:q_id/page/:page_id/hint/:hint_id',auth_user,validate_quest_acco
 		}});
 });
 
-app.put('/quest/:q_id/page/:page_id/link/:link_id',auth_user,validate_quest_account,link_from_params,function(req,res,next) {
+app.put('/quest/:q_id/page/:page_id/link/:link_id',auth.auth_user,validate_quest_account,link_from_params,function(req,res,next) {
 	var link_id = req.param('link_id');
 	var link = req.session.current_link;
 	_.extend(link,{_id:link_id});
@@ -234,7 +235,7 @@ app.put('/quest/:q_id/page/:page_id/link/:link_id',auth_user,validate_quest_acco
 		}})
 });
 
-app.del('/quest/:q_id/page/:page_id/link/:link_id',auth_user,validate_quest_account,function(req,res,next) {
+app.del('/quest/:q_id/page/:page_id/link/:link_id',auth.auth_user,validate_quest_account,function(req,res,next) {
 	var link_id = req.param('link_id');
 	models.QuestPage.delete_link({
 		quest_id:req.param('q_id'),
@@ -250,7 +251,7 @@ app.del('/quest/:q_id/page/:page_id/link/:link_id',auth_user,validate_quest_acco
 		}})
 });
 
-app.post('/quest/:q_id/new_page',auth_user,validate_quest_account,function(req,res,next) { 
+app.post('/quest/:q_id/new_page',auth.auth_user,validate_quest_account,function(req,res,next) { 
 		var quest_id = req.param('q_id');
 		var new_page_callback = function(new_page){
 			res.send({_id: new_page._id});
@@ -269,7 +270,7 @@ app.post('/quest/:q_id/new_page',auth_user,validate_quest_account,function(req,r
 		});
 	});
 		
-app.get('/editor/:q_id', auth_user,validate_quest_account,function(req, res){
+app.get('/editor/:q_id', auth.auth_user,validate_quest_account,function(req, res){
 	console.log("Trying editor...");
 	var quest_id = req.param('q_id');
 	res.render("editor.jade",{layout:false, quest_id: quest_id});
@@ -281,7 +282,7 @@ app.get('/', function(req, res){
 	res.render("index.jade", {layout:false,booter: 'main_site/js/boot'});
 });
 
-app.get('/quest/:q_id',auth_user,validate_quest_account,function(req,res,next){
+app.get('/quest/:q_id',auth.auth_user,validate_quest_account,function(req,res,next){
 
 	var quest_id = req.param('q_id');
 	var quest = req.session.current_quest;
@@ -299,7 +300,7 @@ app.get('/quest/:q_id',auth_user,validate_quest_account,function(req,res,next){
 	
 });
 
-app.post('/new_quest',auth_user,function(req,res,next) { 
+app.post('/new_quest',auth.auth_user,function(req,res,next) { 
 	var account_id = req.session.accountId;
 	var title = req.param('title','');
 	models.Quest.create_new({title:title,accountId:account_id},
@@ -378,13 +379,15 @@ app.post('/login', function(req,res,next) {
 	 } );
 });
 
-app.get('/logoff',auth_user,function(req,res) {
+app.get('/logoff',auth.auth_user,function(req,res) {
+	var account_id = req.session.accountId;
+	console.log("logging off account id: " + account_id);
 	req.session.loggedIn = false;
 	req.session.accountId = undefined;
 	res.send(200);
 });
 
-app.get('/home',auth_user,function(req,res) {
+app.get('/home',auth.auth_user,function(req,res) {
 	res.render('index.jade',{layout:false, booter:'main_site/js/boot_home'});
 });
 

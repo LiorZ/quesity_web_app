@@ -1,5 +1,4 @@
-module.exports = function(app,models) {
-	
+module.exports = function(app,models,auth) {
 	app.get('/all_quests', function(req,res,next) {
 		console.log("Requesting all quests...");
 		models.Quest.Quest.find({},function(err,doc) {
@@ -39,6 +38,57 @@ module.exports = function(app,models) {
 			}
 		});
 	});
+	
+	app.post('/app/events/new_event', auth.auth_user, function(req,res,next){
+		var new_event =req.body;
+		if ( new_event == undefined ) {
+			next(new Error("new event is undefined"))
+			return;
+		}
+		var account_id = req.session.accountId;
+		if ( account_id != new_event.creator._id ) {
+			next(new Error("creator id != session account id"))
+		}
+		/**
+		 * 		title: { type:String } ,
+		creator_id: {type:mongoose.Schema.ObjectId},
+		date_created:{type:Date, 'default':Date.now},
+		due:{type:Date},
+		quest_id: {type:mongoose.Schema.ObjectId},
+		participants: [mongoose.Schema.ObjectId],
+		active:{type:Boolean, 'default':true}
+		 */
+		console.log(new_event);
+		var processed = {
+			title: new_event.title,
+			creator: new_event.creator._id,
+			quest:new_event.quest._id,
+		};
+		models.Event.create_new(processed,{
+			success:function(event) {
+				res.send(event);
+			},
+			error: function(err){
+				next(err);
+			}
+		})
+	});
+	
+	app.get('/app/events/all_events',auth.auth_user,function(req,res,next){
+		
+		var account_id = req.session.accountId;
+		if ( account_id == undefined || account_id == null ) {
+			next(new Error("Cant verify account"));
+		}
+		models.Event.all_events({
+			success:function(events) {
+				res.send(events);
+			},
+			error:function(err){
+				next(err);
+			}
+		});
+	})
 	
 	return app;
 }
