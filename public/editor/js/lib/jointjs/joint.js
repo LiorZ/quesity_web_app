@@ -1344,12 +1344,8 @@ Joint.paper = function paper(){
         	dX = event.pageX - event.pageX * scale_factor;
         	dY = event.pageY - event.pageY * scale_factor;
     	    
-            console.log("dX: " +dX + " dY: " + dY);
-            
 	        viewBox.X += dX;
 	        viewBox.Y += dY;
-	        
-	        console.log (" viewBox.X: " + viewBox.X + " viewBox.Y: " + viewBox.Y);
 	        paper.setViewBox(viewBox.X,viewBox.Y,paper.viewBoxWidth,paper.viewBoxHeight);
 	        
     	}
