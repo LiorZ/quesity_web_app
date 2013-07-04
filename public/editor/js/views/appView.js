@@ -7,6 +7,7 @@ define(['jQueryUI','Backbone','routers/Router','views/ViewAttributes','models/Mo
 		active_property_page:undefined,
 		page_count:0,
 		pages:undefined,
+		paperObj:undefined,
 		events: {
 			'click li a': 'create_new_page',
 			'click #world':'exit_property_page', //if a property page is open, a click outside of it exists the page
@@ -44,7 +45,7 @@ define(['jQueryUI','Backbone','routers/Router','views/ViewAttributes','models/Mo
 			this.listenTo(pages,'add',this.addQuestDiagramView);
 			this.menu_view = new MenuView({pages: pages});
 			this.init_router();
-			Joint.paper("world");
+			this.paperObj = Joint.paper("world");
 
 			$( "button" ).button();
 		},
@@ -75,6 +76,19 @@ define(['jQueryUI','Backbone','routers/Router','views/ViewAttributes','models/Mo
 		
 		addQuestDiagramView: function(page) {
 			var view = new QuestPageDiagramView({model: page, eventagg: eventagg});
+		},
+		
+		
+		/*
+		 * Returns a position for the new page , in the middle of the editor, takes into account translate and zoom..
+		 */
+		getPosForNewPage: function() {
+			var newPos = {
+					x: (this.paperObj.viewBoxWidth/2+this.paperObj.viewBox.X),
+					y: (this.paperObj.viewBoxHeight/2+this.paperObj.viewBox.Y)
+			};
+			
+			return newPos;
 		},
 		/*
 		 * Renders the diagram upon startup
@@ -107,10 +121,10 @@ define(['jQueryUI','Backbone','routers/Router','views/ViewAttributes','models/Mo
 			var error_callback = function() {
 				alert("Could not add the page. Check your connection and try again")
 			}
+			var pos = this.getPosForNewPage();
 			if ( pages.length > 0 ){
-				var last_page = pages.at(pages.length-1);
-				var x_coord = (last_page.get('x') + 20 + consts.DIAGRAM_ELEMENT_WIDTH) % (window.innerWidth - consts.DIAGRAM_ELEMENT_WIDTH); 
-				var y_coord = last_page.get('y');
+				var x_coord = pos.x;
+				var y_coord = pos.y;
 				pages.create({x:x_coord,y:y_coord,page_type:q_type,page_number:page_num},{wait:true,error:error_callback});
 			}else {
 				pages.create({page_type:q_type,page_number:page_num},{wait:true,error:error_callback});

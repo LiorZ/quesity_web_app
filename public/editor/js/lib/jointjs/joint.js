@@ -1318,16 +1318,18 @@ Joint.paper = function paper(){
     	var paper = this._paper;
     	paper.viewBoxWidth = paper.width;
     	paper.viewBoxHeight = paper.height;
+    	
     	var oX = 0, oY = 0, oWidth = paper.viewBoxWidth, oHeight = paper.viewBoxHeight;
-    	var viewBox = this._paper.setViewBox(0,0,paper.width,paper.height);
+    	paper.viewBox = this._paper.setViewBox(0,0,paper.width,paper.height);
     	
     	var translate_dX = 0;
     	var translate_dY = 0;
     	
-    	var startX = 0, startY =0;
-    	viewBox.X = oX;
+    	var startX = 0, startY = 0;
         var mousedown = false;
-    	viewBox.Y = oY;
+
+    	paper.viewBox.X = oX;
+    	paper.viewBox.Y = oY;
     	var handle = function(delta,event) {
             x = paper.viewBoxWidth / paper.width;
             y = paper.viewBoxHeight / paper.height;
@@ -1344,9 +1346,9 @@ Joint.paper = function paper(){
         	dX = event.pageX - event.pageX * scale_factor;
         	dY = event.pageY - event.pageY * scale_factor;
     	    
-	        viewBox.X += dX;
-	        viewBox.Y += dY;
-	        paper.setViewBox(viewBox.X,viewBox.Y,paper.viewBoxWidth,paper.viewBoxHeight);
+	        paper.viewBox.X += dX;
+	        paper.viewBox.Y += dY;
+	        paper.setViewBox(paper.viewBox.X,paper.viewBox.Y,paper.viewBoxWidth,paper.viewBoxHeight);
 	        
     	}
 	    var wheel = function(event) {
@@ -1402,14 +1404,14 @@ Joint.paper = function paper(){
             translate_dX *= x; 
             translate_dY *= y; 
             
-            paper.setViewBox(viewBox.X + translate_dX, viewBox.Y + translate_dY, paper.viewBoxWidth, paper.viewBoxHeight);
+            paper.setViewBox(paper.viewBox.X + translate_dX, paper.viewBox.Y + translate_dY, paper.viewBoxWidth, paper.viewBoxHeight);
 
         };
         
         paper.canvas.onmouseup = function(e) {
             if ( mousedown == false ) return; 
-              viewBox.X += translate_dX; 
-              viewBox.Y += translate_dY; 
+              paper.viewBox.X += translate_dX; 
+              paper.viewBox.Y += translate_dY; 
             mousedown = false; 
             
         }

@@ -448,20 +448,6 @@ Element.prototype = {
      * @param {Number} dy Offset in y-axis.
      */
     translate: function(dx, dy){
-    	// save translation
-    	this.properties.dx += dx;
-    	this.properties.dy += dy;
-    	// translate wrapper, all inner and toolbox
-    	this.wrapper.translate(dx, dy);
-    	this.shadow && this.shadow.translate(dx, dy);
-    	for (var i = this.inner.length - 1; i >= 0; --i){
-    	    this.inner[i].translate(dx, dy);
-    	}
-    	this.translateToolbox(dx, dy);
-            this.paper.safari();
-        },
-/*
-    translate: function(dx, dy){
 	// save translation
 	scaleFactorWidth = (this.paper.viewBoxWidth/this.paper.width);
 	scaleFactorHeight = (this.paper.viewBoxHeight/this.paper.height);
@@ -479,7 +465,6 @@ Element.prototype = {
 	this.translateToolbox(new_dx, new_dy);
         this.paper.safari();
     },
-*/
    /**
      * Add wrapper.
      * @methodOf Joint.dia.Element#
@@ -945,7 +930,9 @@ Element.mouseUp = function(e){
 	
     }
     if ( dia._currentDrag )
-    	dia._currentDrag.callback('elementMoved',dia._currentDrag,[{x:dia._currentDrag.wrapperPos().x, y: dia._currentDrag.wrapperPos().y}]);
+//    	dia._currentDrag.callback('elementMoved',dia._currentDrag,[{x:dia._currentDrag.wrapperPos().x, y: dia._currentDrag.wrapperPos().y}]);
+    	//LIORZ: Switched the notification from the wrapper position to the bb, the wrapper from some reason isn't updated, couldn't find why, probably related to the new raphaeljs version.
+    	dia._currentDrag.callback('elementMoved',dia._currentDrag,[{x:dia._currentDrag.getBBox().x, y: dia._currentDrag.getBBox().y}]);
     dia._currentDrag = false;
     dia._currentZoom = false;
 };
