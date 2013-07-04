@@ -1,6 +1,7 @@
 #menu {
-	position: relative;
+	position: absolute;
 	left:-580;
+	z-index: 100;
 }
 
 #new_page_menu{
@@ -25,6 +26,7 @@
 		display: inline-block;
 		display:none;
 		position:absolute;
+		z-index: 100;
 	}
 #page_number{ 
   border-radius: 55em;
@@ -52,6 +54,7 @@ data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAIUlEQVQYV2
 	background-color:rgba(189,223,255,0.8);
 	position: fixed;
 	padding: 20px;
+	margin-bottom:1%;
 }
 #page_symbol {
 	position: absolute;
@@ -83,4 +86,6 @@ data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAIUlEQVQYV2
 }
 #world {
 	height:100%;
+	position:relative;
+	width:100%;
 }
