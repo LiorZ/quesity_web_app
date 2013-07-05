@@ -8,6 +8,8 @@ define(['views/ViewAttributes','lib/utils/consts','Joint','Joint_dia','Joint_dia
 		events: {
 			"mouseenter":"show_menu",
 			"mouseleave":"hide_menu",
+			"mousedown":"hide_menu_now",
+			"mouseup":"show_menu_now"
 		},
 		
 		initialize: function(options){ 
@@ -35,12 +37,29 @@ define(['views/ViewAttributes','lib/utils/consts','Joint','Joint_dia','Joint_dia
 			});
 			this.model.set("jointObj", jointObj );
 			this.$el = jQuery(jointObj.wrapper.node);
+			this.add_events_to_inner(jointObj);
 			
 			//listens to:
 			this.listenTo(this.model,'destroy',this.delete_page);
 			this.listenTo(this.model,'change:page_name',this.update_page_name);
 		},
 		
+		/**
+		 * This method fixes #2 in github issues, where mouse events didn't propogate to inner nodes. Now menu behaves well :)
+		 * @param jointObj
+		 */
+		add_events_to_inner:function(jointObj) {
+			var context = this;
+			for(var i=0; i<jointObj.inner.length;++i ) {
+				var inner = jointObj.inner[i];
+				$(inner[0]).mousedown(function(e){
+					context.hide_menu_now(e);
+				});
+				$(inner[0]).mouseup(function(e) {
+					context.show_menu_now(e);
+				});
+			}
+		},
 		update_page_name:function() {
 			var jointObj = this.model.get('jointObj');
 			var raw_name = this.model.get('page_name');
@@ -58,12 +77,24 @@ define(['views/ViewAttributes','lib/utils/consts','Joint','Joint_dia','Joint_dia
 			jointObj.liquidate();
 			this.remove();
 		},
-		show_menu: function(e){
+		show_menu_shared:function() {
 			var jointObj = this.model.get("jointObj");
 			var pos = this.$el.offset();
 			var width = jointObj.origBBox.width;
 			var height = jointObj.origBBox.height;
-			this.model.trigger("show_menu",this.model,pos,width,height)
+			this.model.trigger("show_menu",this.model,pos,width,height);
+		},
+		show_menu: function(e){
+			if ( e.which == 1 ) {
+				return;
+			}
+			this.show_menu_shared();
+		},
+		hide_menu_now:function(e) {
+			this.model.trigger("hide_menu",this.model,0);
+		},
+		show_menu_now:function(e) {
+			this.show_menu_shared();
 		},
 		hide_menu: function(e){
 			var posX = e.clientX;

@@ -64,6 +64,7 @@ define(['jQueryUI','EasingMenu'],function(jQueryUI,EasingMenu) {
 						"display":"inline"
 					}
 			);
+			var menu = this.$el;
 			var menuObj = this;
 			this.timeoutId = setTimeout(function(){
 				menu.css('display','none');
