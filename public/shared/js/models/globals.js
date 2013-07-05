@@ -1,4 +1,7 @@
 define([],function(){
-	var globals = {};
+	var globals = {
+			PREV_LOCATION: undefined,
+			PREV_LOCATION_ZOOM: undefined
+	};
 	return globals;
 });

@@ -6,6 +6,7 @@ define([],function(){
 	consts.DEFAULT_LOCATION_RADIUS = 50;
 	consts.DIAGRAM_ELEMENT_WIDTH = 180;
 	consts.DIAGRAM_ELEMENT_HEIGHT = 60;
+	consts.MAP_VIEW_DEF_ZOOM = 15;
 	return consts;
 	
 });

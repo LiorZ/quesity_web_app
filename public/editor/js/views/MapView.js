@@ -1,4 +1,4 @@
-define(['JQueryUI_Maps','lib/utils/consts'],function(JQueryUI_Maps,consts) {
+define(['JQueryUI_Maps','lib/utils/consts','models/globals'],function(JQueryUI_Maps,consts,globals) {
 	MapView = Backbone.View.extend({
 		id:'map_view',
 		initialize:function(){
@@ -9,7 +9,11 @@ define(['JQueryUI_Maps','lib/utils/consts'],function(JQueryUI_Maps,consts) {
             var lng =  this.model.get('lng');
             
             //TODO: initialize with user current location:
+            var prev_location = globals.PREV_LOCATION;
             var start_lat_lng = new google.maps.LatLng(32.077011086405825,34.76827383041382 );
+            if (!_.isUndefined(prev_location)) {
+            	start_lat_lng = new google.maps.LatLng(prev_location.lat, prev_location.lng);
+            }
             if ( lat != undefined && lng != undefined ) {
             	start_lat_lng = new google.maps.LatLng(this.model.get('lat'), this.model.get('lng'));
             }
@@ -24,12 +28,20 @@ define(['JQueryUI_Maps','lib/utils/consts'],function(JQueryUI_Maps,consts) {
             var lng =  this.model.get('lng');
             
             var start_lat_lng = this.get_proper_center_pos();
-			this.$el.gmap({'center': start_lat_lng, 'zoom': 15}).bind('init', function(event, map) { 
+            var zoom = _.isUndefined(globals.PREV_LOCATION_ZOOM)?consts.MAP_VIEW_DEF_ZOOM:globals.PREV_LOCATION_ZOOM;
+			this.$el.gmap({'center': start_lat_lng, 'zoom': zoom}).bind('init', function(event, map) { 
 				$(map).click( function(event) {
 					context.handle_click(event);
 				});
 				
+			})
+
+			var map = this.$el.gmap('get', 'map');
+			$(map).addEventListener('zoom_changed', function(event) {
+				globals.PREV_LOCATION_ZOOM = map.zoom;
 			});
+			
+			
 			if (  lat != undefined && lng != undefined && this.model.get('radius') != undefined  
 					&& this.model.get('txt_street') != undefined ) {
 				this.create_new(this.model.get('lat'), this.model.get('lng'),this.model.get('radius'));
@@ -66,6 +78,12 @@ define(['JQueryUI_Maps','lib/utils/consts'],function(JQueryUI_Maps,consts) {
 			$('#dialog_form').find('#txt_lat').val(lat);
 			$('#dialog_form').find('#txt_lng').val(lng);
 			$('#dialog_form').find('#txt_radius').val(radius);
+			
+			//Keep values for display next time we open the MapView
+			globals.PREV_LOCATION ={
+					lat: lat,
+					lng:lng
+			}
 		},
 		
 		get_circle:function() {
