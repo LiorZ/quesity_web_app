@@ -9,12 +9,17 @@ define(
 							'click button[name="btn_del_quest"]' : 'delete_quest',
 							'mouseenter #btn_profile': 'display_profile_menu',
 							'mouseleave #btn_profile_div': 'hide_profile_menu',
-							'click #href_logoff': 'do_logoff'
+							'click #href_logoff': 'do_logoff',
 						},
 						do_logoff:function() {
 							$.get('/logoff',function(data) {
 								window.location = '/';
 							}).fail(function(){alert("Error Logging out!")});
+						},
+						
+						cancel_submission_on_enter:function(e) {
+							console.log("D");
+							return false;
 						},
 						
 						display_profile_menu:function() {
@@ -54,7 +59,14 @@ define(
 												$(this).dialog('close');
 											}
 										}
-									})
+									});
+							
+							//Cancel the submission when pressing enter: 
+							$('#dlg_create_quest input').keypress(function(e){
+								if ( e.keyCode == $.ui.keyCode.ENTER ) {
+									return false;
+								}
+							})
 						},
 						create_new_quest : function(data) {
 							var new_quest = new Quest({
