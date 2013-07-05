@@ -43,7 +43,9 @@ define(['views/QuestPagePropertiesView','views/EditableRowDialog','views/Editabl
 				edit_mode: true
 			});
 			dlg.render();
-			$("#time_delay_spinner").spinner();
+			$("#time_delay_spinner").spinner({
+				min:0
+			});
 		}
 	});
 	
