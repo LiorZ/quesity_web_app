@@ -46,14 +46,15 @@ define(['jQueryUI','EasingMenu'],function(jQueryUI,EasingMenu) {
 		},
 		
 		show_properties_page:function() {
+			this.hide_menu(undefined,0);
 			var page_number = this.model.get("page_number");
 			window.location.hash = "page/"+page_number;
 		},
 		delete_page: function(e) {
+			this.hide_menu(undefined,0);
 			console.log("Destroying " + this.model.get('page_name'));
 			this.model.stopListening();
 			this.model.destroy();
-			this.hide_menu(undefined,0);
 		},
 		show_menu: function(model,pos,width,height) {
 			clearTimeout(this.timeoutId);
