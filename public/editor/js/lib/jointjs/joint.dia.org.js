@@ -86,6 +86,8 @@ org.Member = Element.extend({
     getNameElement: function() {
 	var p = this.properties,
 	    bb = this.wrapper.getBBox(),
+	    
+//	    var text = svg.input.text(parent, x, y, "text with \nno line \nbreaks", settings);
 	    t = this.paper.text(bb.x + bb.width/2, bb.y + bb.height/2, p.name).attr(p.nameAttrs || {}),
 	    tbb = t.getBBox();
 	t.translate(bb.x - tbb.x + p.labelOffsetX, bb.y - tbb.y + tbb.height*2 + p.labelOffsetY);

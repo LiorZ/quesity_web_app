@@ -136,13 +136,13 @@
 </script>
 
 <script type='text/template' id='tmpl_select_link'>
-  	<select id='next_page_link' name='next_page_link'>
+  	<select id='next_page_link' name='next_page_link' style="width:90%;">
 	<% parent_page.get_linkable_pages().each( function(page) { %>
-		<option value='<%= page.get('page_number')%>'    
+		<option data-page-id='<%=page.id%>' data-page-type='<%=page.get("page_type")%>' value='<%= page.get('page_number')%>'    
 	<% if (page == links_to_page) { %>
 	SELECTED
 	<% } %>
-
+	
 		>
 
 <%=page.get('page_number') %> - <%=page.get('page_name') %>
@@ -232,9 +232,9 @@
   <fieldset>
     <label for="next_page_link">Set the next page:</label>
 
-  	<select id='next_page_link' name='next_page_link'>
+  	<select  id='next_page_link' name='next_page_link' style="width:90%;">
 	<% data.parent_page.get_linkable_pages().each( function(page) { %>
-		<option value='<%= page.get('page_number')%>'  
+		<option data-page-id='<%=page.id%>' data-page-type='<%=page.get("page_type")%>' value='<%= page.get('page_number')%>'  
 		<% 
 		var links = data.parent_page.get('links');
 		if ( links.length >0 ) {

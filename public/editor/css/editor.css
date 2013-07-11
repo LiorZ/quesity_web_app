@@ -89,3 +89,9 @@ data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAIUlEQVQYV2
 	position:relative;
 	width:100%;
 }
+
+.select_box_image {
+	height:32px;
+	width:32px;
+	vertical-align:middle;
+}

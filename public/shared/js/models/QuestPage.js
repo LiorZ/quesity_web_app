@@ -82,6 +82,13 @@ define(['models/globals','Backbone','models/Link','models/LinkCollection','Backb
 					page != me && 
 					page.get('page_type') != 'surprise' 
 			) } );
+		},
+		is_connected_to: function(page_id) {
+			var links = this.get('links');
+			if ( links == undefined || links.length == 0 )
+				return false;
+			var has = links.find(function(link) { console.log(link.get('links_to_page').id + ": " + page_id); return link.get('links_to_page').id == page_id });
+			return (!_.isUndefined(has));
 		}
 	});
 	//define link relationship (Can't do it before QuestPage is initialized .. ):

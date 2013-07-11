@@ -18,11 +18,16 @@ require.config({
     Raphael: '/editor/js/lib/jointjs/raphael',
     json2: '/editor/js/lib/jointjs/json2',
     tinymce: '/editor/js/lib/tiny_mce/jquery.tinymce',
-    text: '/shared/js/lib/text/text'
-//    gmaps:'http://maps.google.com/maps/api/js?sensor=true&key=AIzaSyCI3y0xsOOIUye7jrp6HWjnOl1OTrCY4ls'
+    text: '/shared/js/lib/text/text',
+//    "jquery.svg": '/editor/js/lib/jquery.svg/jquery.svg.min',
+//    "jquery.svg.input": '/editor/js/lib/jquery.svg.input/jquery.svg.input.min'
+    select2:'/shared/js/lib/jquery-ui/plugins/select2/select2'
   },
 
   shim: {
+	  'jQuery':{
+		  exports:'jQuery'
+	  },
 	  'Underscore':{
 		  deps: ['jQuery'],
 		  exports: "_"
@@ -37,12 +42,10 @@ require.config({
       },
       jQueryUI:['jQuery'],
       jQueryUI_Maps:['jQueryUI'],
-//      gmaps: {
-//    	  exports: 'google'
-//      },
       jQueryUI_easing:['jQueryUI'],
       jQueryUI_tablesorter:['jQueryUI'],
       EasingMenu:['jQuery'],
+      select2:['jQueryUI'],
       Joint:{
     	  deps:['Raphael','json2'],
     	  exports:'Joint'
@@ -52,7 +55,7 @@ require.config({
       Joint_dia_uml: ['Joint_dia'],
       tinymce:['jQuery'],
     'views/appView': ['Backbone'],
-    'models/Quest':['Backbone']
+    'models/Quest':['Backbone'],
   }
 });
 
