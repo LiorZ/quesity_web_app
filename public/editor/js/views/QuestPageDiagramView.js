@@ -34,7 +34,7 @@ define(['views/ViewAttributes','lib/utils/consts','Joint','Joint_dia','Joint_dia
 			var context = this;
 			jointObj.registerCallback('elementMoved',function(new_loc){
 				context.model.set({x: new_loc.x, y:new_loc.y});
-			});
+			}, context.model.id);
 			this.model.set("jointObj", jointObj );
 			this.$el = jQuery(jointObj.wrapper.node);
 			this.add_events_to_inner(jointObj);
@@ -73,8 +73,10 @@ define(['views/ViewAttributes','lib/utils/consts','Joint','Joint_dia','Joint_dia
 		
 		delete_page: function() {
 			var jointObj = this.model.get("jointObj");
+	        jointObj.unRegisterAllCallbacks();
 			jointObj.shadow.remove();
 			jointObj.liquidate();
+			delete jointObj;
 			this.remove();
 		},
 		show_menu_shared:function() {

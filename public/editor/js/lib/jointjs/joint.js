@@ -485,6 +485,9 @@ Joint.prototype = {
      * @param {StartObject|EndObject} obj
      */
     freeJoint: function(obj){
+    if ( obj.yourself() == undefined ){
+    	return this;
+    }
 	var jar = obj.yourself().joints(),
 	    i = jar.indexOf(this);
 	jar.splice(i, 1);
@@ -1115,6 +1118,12 @@ Joint.prototype = {
 	this._opt.beSmooth = !this._opt.beSmooth;
 	this.update();
 	return this;
+    },
+    
+    setSmoothing:function(val) {
+    	this._opt.beSmooth = val;
+    	this.update();
+    	return this;
     },
     /**
      * Find out whether the connection is smooth or not.

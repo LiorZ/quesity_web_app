@@ -100,10 +100,12 @@ var dia = Joint.dia = {
 		register.splice(idx, 1);
     },
     remove_joint:function(j) {
- 	   j.freeJoint(j.startObject()); 
- 	   j.freeJoint(j.endObject()); 
+    	var start_obj = j.startObject();
+    	var end_obj = j.endObject();
+    	start_obj != undefined && j.freeJoint(j.startObject());
+    	end_obj != undefined && j.freeJoint(j.endObject()); 
  	   j.clean(["connection", "startCap", "endCap", "handleStart", 
- 	"handleEnd", "label"]); 
+ 	"handleEnd", "label"]);
  	   this.unregisterJoint(j); 
      },
 };
@@ -229,7 +231,7 @@ Element.prototype = {
 	    toolbox: false		// enable toolbox?
 	};
 	this._callbacks = {
-			elementMoved: function(new_location){}
+			elementMoved: []
 	}
 
 	this.paper = Joint.paper();
@@ -288,22 +290,45 @@ Element.prototype = {
 	return this;
     },
     
-    
-    
     /**
      * Registers a callback for an element. Can be either of the following:
      * 'elementMoved' - function(new_location) {...} is called when an element has a new location. this points to moved element.
      * @param callback
      * @param func
      */
-    registerCallback: function(callback, func) {
-    	this._callbacks[callback] = func;
+    registerCallback: function(callback, func,identifier) {
+    	var obj = {
+    			func: func,
+    			identifier: identifier
+    	}
+    	console.log("Registering identifier " + identifier + " for callback "+callback);
+    	this._callbacks[callback].push(obj);
     },
     
+    unRegisterCallback: function(callback,identifier) {
+    	var arr = this._callbacks[callback];
+    	for (var i=0; i<arr.length; ++i ) {
+    		if ( arr[i].identifier == identifier ) {
+    			arr[i].func = function() {};
+    			console.log("Unregistering " + identifier);
+    			return;
+    		}
+    	}
+    	
+    	console.log(arr);
+    	
+    },
+    
+    unRegisterAllCallbacks: function(callback) {
+    	this._callbacks[callback] = [];
+    },
     
     callback: function(fnc, scope, args){
-    	this._callbacks[fnc].apply(scope, args);
-            return this;
+    	var func_arr = this._callbacks[fnc];
+    	for (var i=0; i< func_arr.length; ++i){
+    		func_arr[i].func.apply(scope,args);
+    	}
+        return this;
     },
     /**
      * Create a ghost shape which is used when dragging.
