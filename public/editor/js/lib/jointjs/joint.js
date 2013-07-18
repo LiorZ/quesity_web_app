@@ -491,7 +491,10 @@ Joint.prototype = {
     }
 	var jar = obj.yourself().joints(),
 	    i = jar.indexOf(this);
-	jar.splice(i, 1);
+	
+	if ( i >= 0 )
+		jar.splice(i, 1);
+	
 	return this;
     },
     /**

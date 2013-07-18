@@ -76,7 +76,6 @@ define(['Joint'],function(Joint) {
 				if ( model.get('links_to_page') == null ){
 					return;
 				}
-				console.log("Links were changed");
 				context.update_vertices(context.jointObj);
 			});
 			var props_to_listen = this.model.get_link_view_properties_to_listen();
@@ -141,7 +140,7 @@ define(['Joint'],function(Joint) {
 			parent_page != undefined && this.stop_listen_to_moving(parent_page);
 		},
 		destroy_view : function() {
-			Joint.dia.remove_joint(this.jointObj);
+//			Joint.dia.remove_joint(this.jointObj);
 			this.remove();
 		},
 		
