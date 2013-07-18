@@ -315,7 +315,6 @@ Element.prototype = {
     		}
     	}
     	
-    	console.log(arr);
     	
     },
     

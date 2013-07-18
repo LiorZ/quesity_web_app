@@ -69,8 +69,14 @@ define(['Joint'],function(Joint) {
 			this.listenTo(model,"change:links_to_page",this.page_changed_event);
 			var links = parent_page.get('links');
 			this.listenTo(parent_page,'change:links',this.handle_parent_links_changed);
-			this.listenTo(links,'change',function() { 
-				console.log("Links were changed")
+			
+			//Listen to an event in which one of the pages changes its target. Needs to know that in order to reorganize the other connections properly.
+			this.listenTo(links,'change:links_to_page',function(model) {
+				//Handle cases in which the target is destroyed:
+				if ( model.get('links_to_page') == null ){
+					return;
+				}
+				console.log("Links were changed");
 				context.update_vertices(context.jointObj);
 			});
 			var props_to_listen = this.model.get_link_view_properties_to_listen();

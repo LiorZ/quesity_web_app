@@ -8,8 +8,9 @@ define(['models/Link'],function(Link){
 	
 		handle_add:function(model, collection, options) {
 			var self = this;
-			this.listenTo(model,'change:links_to_page',function() {
-				self.trigger('change');
+			//intended for reorganizing the linkviews
+			this.listenTo(model,'change:links_to_page',function(model, options) {
+				self.trigger('change:links_to_page',model);
 			});
 		},
 		handle_remove: function(model, collection, options) {

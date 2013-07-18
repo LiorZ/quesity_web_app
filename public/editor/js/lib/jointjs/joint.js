@@ -485,6 +485,7 @@ Joint.prototype = {
      * @param {StartObject|EndObject} obj
      */
     freeJoint: function(obj){
+//    console.log("Freeing joint " + this._opt.label[0] + " From " + obj.wholeShape.properties.numbering);
     if ( obj.yourself() == undefined ){
     	return this;
     }
@@ -499,7 +500,7 @@ Joint.prototype = {
      * @param {RaphaelObject} obj
      */
     addJoint: function(obj){
-	var joints = obj.joints();;
+	var joints = obj.joints();
 	// push the Joint object into obj.joints array
 	// but only if obj.joints already doesn't have that Joint object
 	if (joints.indexOf(this) === -1) joints.push(this);
