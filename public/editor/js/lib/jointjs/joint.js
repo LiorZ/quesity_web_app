@@ -533,41 +533,43 @@ Joint.prototype = {
      * MouseDown event callback when on connection.
      * @private
      * @param {Event} e
+     * 
+     * LIORZ: Canceling breaking connections.
      */
     connectionMouseDown: function(e){
-	Joint.currentJoint = this;	// keep global reference to me
-	var mousePos = Joint.getMousePosition(e, this.paper.canvas);
-
-	// if the mouse position is nearby a connection vertex
-	// do not create a new one but move the selected one instead
-	for (var i = 0, len = this._opt.vertices.length; i < len; i++){
-	    var v = this._opt.vertices[i];
-	    if (line(v, mousePos).squaredLength() < this._nearbyVertexSqrDist){
-		this._conVerticesCurrentIndex = i;
-		this.state = this.CONNECTIONWIRING;
-		return;
-	    }
-	}
-
-	// new vertices can be added CORRECTLY only at the end
-	// or at the start of the connection
-	// -> @todo
-	var sbbCenter = rect(this.startObject().getBBox()).center(),
-	    ebbCenter = rect(this.endObject().getBBox()).center(),
-	    // squared lengths of the lines from the center of
-	    // start/end object bbox to the mouse position
-	    smLineSqrLen = line(sbbCenter, mousePos).squaredLength(),
-	    emLineSqrLen = line(ebbCenter, mousePos).squaredLength();
-	if (smLineSqrLen < emLineSqrLen){
-	    // new vertex is added to the beginning of the vertex array
-	    this._conVerticesCurrentIndex = 0;
-	    this._opt.vertices.unshift(mousePos);
-	} else {
-	    // new vertex is added to the end of the vertex array
-	    this._conVerticesCurrentIndex = this._opt.vertices.push(mousePos) - 1;
-	}
-	this.state = this.CONNECTIONWIRING;
-	this.callback("justBroken", this, [mousePos]);
+//	Joint.currentJoint = this;	// keep global reference to me
+//	var mousePos = Joint.getMousePosition(e, this.paper.canvas);
+//
+//	// if the mouse position is nearby a connection vertex
+//	// do not create a new one but move the selected one instead
+//	for (var i = 0, len = this._opt.vertices.length; i < len; i++){
+//	    var v = this._opt.vertices[i];
+//	    if (line(v, mousePos).squaredLength() < this._nearbyVertexSqrDist){
+//		this._conVerticesCurrentIndex = i;
+//		this.state = this.CONNECTIONWIRING;
+//		return;
+//	    }
+//	}
+//
+//	// new vertices can be added CORRECTLY only at the end
+//	// or at the start of the connection
+//	// -> @todo
+//	var sbbCenter = rect(this.startObject().getBBox()).center(),
+//	    ebbCenter = rect(this.endObject().getBBox()).center(),
+//	    // squared lengths of the lines from the center of
+//	    // start/end object bbox to the mouse position
+//	    smLineSqrLen = line(sbbCenter, mousePos).squaredLength(),
+//	    emLineSqrLen = line(ebbCenter, mousePos).squaredLength();
+//	if (smLineSqrLen < emLineSqrLen){
+//	    // new vertex is added to the beginning of the vertex array
+//	    this._conVerticesCurrentIndex = 0;
+//	    this._opt.vertices.unshift(mousePos);
+//	} else {
+//	    // new vertex is added to the end of the vertex array
+//	    this._conVerticesCurrentIndex = this._opt.vertices.push(mousePos) - 1;
+//	}
+//	this.state = this.CONNECTIONWIRING;
+//	this.callback("justBroken", this, [mousePos]);
     },
     capDragging: function(e){
 	// move dummy object
