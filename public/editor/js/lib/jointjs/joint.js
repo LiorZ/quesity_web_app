@@ -1399,7 +1399,9 @@ Joint.paper = function paper(){
     	this._paper.canvas.onmousewheel = wheel;
     	
     	paper.canvas.onmousedown = function(e){
-            
+            //LIORZ: Drag mouse only with middle mouse button.
+    		if ( e.button != 1 ) 
+            	return;
             if (paper.getElementByPoint( e.pageX, e.pageY ) != null) {return;}
             mousedown = true;
             startX = e.pageX; 
