@@ -1413,6 +1413,7 @@ Joint.paper = function paper(){
         
         paper.canvas.onmousemove = function(e){
             if (mousedown == false) {return;}
+            if ( e.button != 1 ) return;
             translate_dX = startX - e.pageX;
             translate_dY = startY - e.pageY;
             var x = paper.viewBoxWidth / paper.width; 
@@ -1426,7 +1427,8 @@ Joint.paper = function paper(){
         };
         
         paper.canvas.onmouseup = function(e) {
-            if ( mousedown == false ) return; 
+            if ( mousedown == false ) return;
+            if ( e.button != 1 ) return;
               paper.viewBox.X += translate_dX; 
               paper.viewBox.Y += translate_dY; 
             mousedown = false; 
