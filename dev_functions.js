@@ -1,5 +1,4 @@
-module.exports = function(app,models) {
-	
+module.exports = function(app,models,auth) {
 	app.get('/all_quests', function(req,res,next) {
 		console.log("Requesting all quests...");
 		models.Quest.Quest.find({},function(err,doc) {
