@@ -38,7 +38,6 @@ var options = {
 var configuration = options[nconf.get('mode')];
 models.Quest = require('./models/Quest')(mongoose);
 models.Account = require('./models/Account')(mongoose,models.Quest);
-models.Event = require('./models/Event')(mongoose, models.Quest,models.Account);
 var generic_error = function(err, req, res, next) {
 	console.log(err);
 	res.send(401);
