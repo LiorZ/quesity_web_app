@@ -16,7 +16,10 @@
       "nconf":"=0.6.7",
       "should":"=1.2.2",
       "requirejs":">=2.1.5",
-      "almond":"=0.2.5"
+      "almond":"=0.2.5",
+      "superagent":"0.15.4",
+      "pow-mongoose-fixtures":"=0.3",
+      "async":"=0.2.9"
   },
   "scripts": {
   	"postinstall" : "make install"

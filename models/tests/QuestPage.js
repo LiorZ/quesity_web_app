@@ -1,16 +1,11 @@
-var mocha = require('mocha');
-var should = require('should')
 var mongoose = require('mongoose');
-var models = {};
-models.Quest = require('../Quest')(mongoose);
-models.Account = require('../Account')(mongoose,models.Quest);
+var models = require('../models')(mongoose);
 var _ = require('underscore');
 var extend = require('mongoose-schema-extend');
 
-models.QuestPage = require('../QuestPage')(mongoose,extend,_);
 
 // We need a database connection
-mongoose.connect('mongodb://localhost/quesity-test');
+//mongoose.connect('mongodb://localhost/quesity-test');
 
 var dump = {};
 function PageCreator(){
@@ -57,15 +52,38 @@ function PageCreator(){
 		}
 };
 var page_creator = new PageCreator();
-	
+
 describe('Testing QuestPage module', function() {
+	
 	var quest_id;
+	
+
+	before(function (done) {
+	    mongoose.createConnection('mongodb://localhost/quesity-test');
+	    models.Account.register({
+			email:'test@test', 
+			password:'password',
+			name: { first: "test", last:"test"}
+	},{
+		success: function(doc){
+			current_user = doc;
+		    done();
+		},
+		error: function(err){
+			console.log(err);
+			done();
+		}
+	  
+	});
+	});
+	
 	describe('Finding the test account and creating a quest..', function() {
 		var account_id;
 		it('Finding the test account ... ', function( done ) { // Async test, the lone argument is the complete callback
+			
 		     models.Account.Account.findOne({email:'test@test'},function(err,doc){
-		    	 if (err) {
-		    		 done(err);
+		    	 if (err || doc == null) {
+		    		 throw new Error("Can't find test account");
 		    	 }else {
 		    		 doc.email.should.be.equal("test@test");
 		    		 account_id = doc._id
@@ -83,7 +101,7 @@ describe('Testing QuestPage module', function() {
     		quest_id = doc._id; 
     		done(); 
     	}, 
-    	function(err) {done(err)});
+    	function(err) {});
     });
     
     it("Creating a new question page" ,function(done) {

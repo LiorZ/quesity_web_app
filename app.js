@@ -321,6 +321,14 @@ app.post('/register' , function(req,res,next) {
 		email: req.param("email",null),
 		password: req.param("password",null)
 	};
+	_.chain(data).values().each(function(val) { 
+		if ( _.isNull(val) ){
+			console.log("DDDDD");
+			next("All values must be filled!");
+			return;
+		}
+	}).value();
+	
 	
 	var success = function(user) {
 		req.session.loggedIn = true;

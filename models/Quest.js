@@ -7,6 +7,7 @@ module.exports = function(mongoose) {
 		title: { type:String } ,
 		accountId: {type:mongoose.Schema.ObjectId},
 		date_created:{type:Date, 'default':Date.now},
+		is_published:{type:Boolean, 'default': false}
 	});
 	
 	var Quest = mongoose.model('Quest',QuestSchema);

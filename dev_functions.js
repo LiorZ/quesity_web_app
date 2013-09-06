@@ -10,6 +10,18 @@ module.exports = function(app,models,auth) {
 		});
 	});
 	
+	app.get('/my_quests', function(req,res,next) {
+		var account_id = req.session.accountId;
+		models.Account.get_quests_playing(account_id,{
+			success: function(quests) {
+				res.send(quests);
+			},
+			error: function(err) {
+				next(new Error("Error finding quests for this user"));
+			}
+		})
+	});
+	
 	app.get('/app/:q_id/first_page',function(req,res,next) {
 		var quest_id = req.param('q_id');
 		console.log("Finding first page of " + quest_id);
