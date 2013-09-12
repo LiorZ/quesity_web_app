@@ -100,13 +100,19 @@ var dia = Joint.dia = {
 		register.splice(idx, 1);
     },
     remove_joint:function(j) {
-    	var start_obj = j.startObject();
-    	var end_obj = j.endObject();
-    	start_obj != undefined && j.freeJoint(j.startObject());
-    	end_obj != undefined && j.freeJoint(j.endObject()); 
- 	   j.clean(["connection", "startCap", "endCap", "handleStart", 
- 	"handleEnd", "label"]);
- 	   this.unregisterJoint(j); 
+    	if ( j.dom.connection != undefined) {
+	       var con_len = j.dom.connection.length;
+	       for ( var i=0; i<con_len; ++i ) {
+	    	   j.dom.connection[i].unmouseover(j.mouse_over_handler);
+	       }
+    	}
+       clearTimeout(j._opt.handle.timeoutId);
+	   j.freeJoint(j.startObject()); 
+	   j.freeJoint(j.endObject()); 
+	   j.clean(["connection", "startCap", "endCap", "handleStart", "handleEnd", "label"]);
+	   this.unregisterJoint(j);
+	   j.unregister(this);
+	   delete j;
      },
 };
 

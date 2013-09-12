@@ -140,7 +140,7 @@ define(['Joint'],function(Joint) {
 			parent_page != undefined && this.stop_listen_to_moving(parent_page);
 		},
 		destroy_view : function() {
-//			Joint.dia.remove_joint(this.jointObj);
+			Joint.dia.remove_joint(this.jointObj);
 			this.remove();
 		},
 		
