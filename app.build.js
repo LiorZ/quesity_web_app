@@ -1,7 +1,7 @@
 ({
    appDir: "public/",
    baseUrl: "public/",
-   dir: "public_deployed",
+   dir: "dist/public",
 //   modules: [
 //        {
 //            name: './node_modules/almond/almond',
