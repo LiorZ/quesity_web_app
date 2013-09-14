@@ -1,13 +1,13 @@
 ({
-   appDir: ".",
-   baseUrl: "./",
-   dir: "dist",
-   modules: [
-        {
-            name: './node_modules/almond/almond',
-            include:'app',
-        }
-    ],
+   appDir: "public/",
+   baseUrl: "public/",
+   dir: "public_deployed",
+//   modules: [
+//        {
+//            name: './node_modules/almond/almond',
+//            include:'app',
+//        }
+//    ],
     paths: {
        // libraries path
       "jade": "empty:"

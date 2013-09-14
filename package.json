@@ -21,8 +21,5 @@
         "should": "=1.2.2",
         "superagent": "0.15.4",
         "pow-mongoose-fixtures": "=0.3"
-    },
-    "scripts": {
-        "postinstall": "make install"
     }
 }
