@@ -1,1 +1,1 @@
-web: node dist/app.js --mode production
+web: node app.js --mode production
