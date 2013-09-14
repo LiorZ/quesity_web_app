@@ -1,9 +1,12 @@
 var mongoose = require('mongoose');
-var models = require('../models')(mongoose);
+var models = require('../../models/models')(mongoose);
 var fakery = require('mongoose-fakery');
 before(function (done) {
-    mongoose.connect('mongodb://localhost/quesity-test');
-    done();
+	mongoose.connect('mongodb://localhost/quesity-test', function(err) { if (err) { console.log(err); } else { done(); } } );    
+});
+
+after(function(done) {
+	mongoose.disconnect(function() {done();})
 });
 
 var create_new_user = function(done,user) {

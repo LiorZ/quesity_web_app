@@ -1,6 +1,6 @@
 var request = require('superagent');
 var mongoose = require('mongoose');
-var models = require('../../models/models')(mongoose)
+var models = require('../../models/models')(mongoose);
 var url = "http://localhost:5000";
 var fixtures = require('pow-mongoose-fixtures');
 var async = require('async');
@@ -55,7 +55,7 @@ describe("Running API Server Tests" , function() {
 		 db = mongoose.connect('mongodb://localhost/quesity-test', function(err) { if (err) { console.log(err); } else { done(); } } );
 	});
 	before(function(done) {
-			fixtures.load(__dirname + '/fixtures',db, function(err) {
+			fixtures.load('../fixtures/',db, function(err) {
 				if (!err) {
 					done();
 				}

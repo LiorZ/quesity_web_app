@@ -4,7 +4,9 @@ deploy:
 	r.js -o app.build.js
 	rsync -av . dist/. --exclude=dist --exclude=.git --exclude=tests --exclude=node_modules --exclude=public
 test-mongoose:
-	node_modules/mocha/bin/mocha --require should -R spec models/tests/
+	node_modules/mocha/bin/mocha --require should -R spec tests/mongoose
 	
 test-api: 
+	node app.js --mode test_local &
 	node_modules/mocha/bin/mocha --require should -R spec tests/server/
+	killall node

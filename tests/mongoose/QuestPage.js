@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-var models = require('../models')(mongoose);
+var models = require('../../models/models')(mongoose);
 var _ = require('underscore');
 var extend = require('mongoose-schema-extend');
 
@@ -52,14 +52,18 @@ function PageCreator(){
 		}
 };
 var page_creator = new PageCreator();
+after(function(done) {
+	mongoose.disconnect(function() {done();})
+});
 
 describe('Testing QuestPage module', function() {
 	
 	var quest_id;
-	
+	before(function(done) {
+		mongoose.createConnection('mongodb://localhost/quesity-test', function(err) { if (err) { console.log(err); } else { done(); } } );
+	});
 
 	before(function (done) {
-	    mongoose.createConnection('mongodb://localhost/quesity-test');
 	    models.Account.register({
 			email:'test@test', 
 			password:'password',
