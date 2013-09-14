@@ -1,4 +1,6 @@
-install:
+deploy:
+	rm -rf dist
+	mkdir dist
 	r.js -o app.build.js
 	rsync -av . dist/. --exclude=dist --exclude=.git --exclude=tests --exclude=node_modules
 	rm -rf dist/public
