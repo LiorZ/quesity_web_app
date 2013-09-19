@@ -18,7 +18,6 @@ define(
 						},
 						
 						cancel_submission_on_enter:function(e) {
-							console.log("D");
 							return false;
 						},
 						

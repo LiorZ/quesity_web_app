@@ -1,11 +1,7 @@
-module.exports = function(app,models) {
-	var auth_user = function(req,res,next) {
-		if ( req.session.loggedIn ) {
-			next();
-		}else {
-			return next(new Error("Error logging in!"));
-		}
-		
+module.exports = function(passport) {
+	var auth_user = function (req, res, next) {
+		  if (req.isAuthenticated()) { return next(); }
+		  res.redirect('/');
 	}
 	return {
 		auth_user: auth_user

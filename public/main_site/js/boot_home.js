@@ -40,7 +40,9 @@ require(['views/HomeView','models/Account'], function(HomeView,Account) {
 	console.log("Initializing ...");
 	var new_account = new Account();
 	new_account.fetch({success:function() {
-		var home_view = new HomeView({model:new_account});
-		home_view.render();
+		new_account.get('quests').fetch({success: function() {
+			var home_view = new HomeView({model:new_account});
+			home_view.render();
+		}});
 	}});
 });

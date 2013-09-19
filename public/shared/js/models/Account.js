@@ -1,4 +1,4 @@
-define(['Backbone','BackboneRelational','models/Quest'],function(Backbone,BackboneRelational,Quest) {
+define(['Backbone','BackboneRelational','models/Quest','models/QuestCollection'],function(Backbone,BackboneRelational,Quest,QuestCollection) {
 	var Account = Backbone.RelationalModel.extend({
 		url:'/account/me',
 		relations: [
@@ -7,6 +7,7 @@ define(['Backbone','BackboneRelational','models/Quest'],function(Backbone,Backbo
 				key: 'quests',
 				relatedModel: Quest,
 				autoFetch: false,
+				collectionType:QuestCollection,
 				reverseRelation: {
 					key: 'accountId',
 					includeInJSON: 'id'

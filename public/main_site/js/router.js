@@ -1,3 +1,5 @@
+//DEPRECATED
+
 define(['views/index','views/register','views/login'], 
 function(IndexView, RegisterView, LoginView) {
 	var MainSiteRouter = Backbone.Router.extend({

@@ -1,3 +1,5 @@
+//DEPRECATED
+
 define(['text!../../templates/register.html'], function(registerTemplate) {
   var registerView = Backbone.View.extend({
 	el: $('#content'),
