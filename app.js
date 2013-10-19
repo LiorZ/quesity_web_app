@@ -5,12 +5,17 @@ var extend = require('mongoose-schema-extend');
 var nconf = require('nconf');
 var passport = require('passport')  , 
 util = require('util'), 
-FacebookStrategy = require('passport-facebook').Strategy;
+FacebookStrategy = require('passport-facebook').Strategy,
+FacebookTokenStrategy = require('passport-facebook-token').Strategy;
 
 var nodemailer = require('nodemailer');
 var MemoryStore = require('connect').session.MemoryStore;
 var _ = require('underscore');
 var models = {};
+
+//CONSTS:
+var FACEBOOK_APP_SECRET='a3a3f2dfc55658a2c3ae3b706e7e8ac8';
+var FACEBOOK_APP_ID='211673598896341';
 
 //What configuration to open:
 nconf.argv()
@@ -58,28 +63,41 @@ passport.serializeUser(function(user, done) {
 	  });
 	});
 
+	var passport_user_handler = function(accessToken, refreshToken, obj, done) {
+	    // asynchronous verification, for effect...
+	    process.nextTick(function () {
+	    	var profile = obj._json;
+	    	console.log(profile);
+	    	models.Account.Account.findOrCreate({email:profile.email}, {
+	    		name: { first: profile.first_name, last: profile.last_name },
+	    		facebook_profile_link: profile.link,
+	    		gender:profile.gender,
+	    		location:profile.location.name,
+	    		birthday:profile.birthday,
+	    		facebook_raw_data:obj._raw
+	    	},function(err, user, created) {
+	    		user.last_login = new Date();
+	    		user.save(function(err) {
+	    			done(err,user);
+	    		})
+	    	})
+	    });
+	  }
+	
 passport.use(new FacebookStrategy({
-    clientID: '211673598896341',
-    clientSecret: 'a3a3f2dfc55658a2c3ae3b706e7e8ac8',
+    clientID: FACEBOOK_APP_ID,
+    clientSecret: FACEBOOK_APP_SECRET,
     callbackURL: "http://localhost:8000/login/facebook/callback",
+  },passport_user_handler
+  
+));
+
+passport.use(new FacebookTokenStrategy({
+    clientID: FACEBOOK_APP_ID,
+    clientSecret: FACEBOOK_APP_SECRET
   },
-  function(accessToken, refreshToken, obj, done) {
-    // asynchronous verification, for effect...
-    process.nextTick(function () {
-    	var profile = obj._json;
-    	models.Account.Account.findOrCreate({email:profile.email}, {
-    		name: { first: profile.first_name, last: profile.last_name },
-    		facebook_profile_link: profile.link,
-    		gender:profile.gender,
-    		location:profile.location.name,
-    		birthday:profile.birthday,
-    		facebook_raw_data:obj._raw
-    	},function(err, user, created) {
-    		console.log(user);
-    		done(err,user);
-    	})
-    });
-  }
+  passport_user_handler
+  
 ));
 
 
@@ -95,24 +113,12 @@ app.configure(function(){
     app.use(passport.initialize());
     app.use(passport.session());
 	app.use(app.router);
+	
+	console.log("Connecting to database at address: " + configuration.db_address);
 	mongoose.connect(configuration.db_address);
 });
 
 
-//Load Development app extensions:
-
-//if ( nconf.get('mode') == 'development' ){
-//	
-//}
-
-//var auth_user = function(req,res,next) {
-//	if ( req.session.loggedIn ) {
-//		next();
-//	}else {
-//		return next(new Error("Error logging in!"));
-//	}
-//	
-//}
 var auth = require('./authentication')(passport);
 app = require('./dev_functions')(app,models,auth);
 
@@ -410,10 +416,18 @@ app.get('/login/facebook', passport.authenticate('facebook', {scope: ['email','u
 
 app.get('/login/facebook/callback',  passport.authenticate('facebook', { failureRedirect: '/' }),
   function(req, res) {
-	console.log(req.user);
     res.redirect('/home');
   });		
 
+app.post('/register/facebook', passport.authenticate('facebook-token', {scope: ['email','user_location', 'user_birthday']}),
+		function(req,res,next) {
+			if ( req.user != undefined){
+				res.send(req.user);
+			}else {
+				next();
+			}
+		}
+);
 app.post('/login', function(req,res,next) { 
 
 	var username = req.param('email',null);

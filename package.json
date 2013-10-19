@@ -15,6 +15,7 @@
         "almond": "=0.2.5",
         "async": "=0.2.9",
         "passport-facebook":"latest",
+        "passport-facebook-token":"latest",
         "passport":"latest",
         "mongoose-findorcreate":"latest"
     },

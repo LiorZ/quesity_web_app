@@ -31,7 +31,7 @@ module.exports = function(mongoose,extend,_) {
 		links:[LinkSchema],
 		hints:[HintSchema],
 		quest_id: {type:String, index:true}
-	},{ collection : 'pages', discriminatorKey : 'page_type' });
+	},{ collection : 'questpages', discriminatorKey : 'page_type' });
 	
 //Can't allow schema inheritance, so this is useless for now...
 //	var LinkAnswerSchema = LinkSchema.extend({
