@@ -1,3 +1,9 @@
+/*
+ * TODO:
+ * 1) add tag auto-complete
+ * 2) add model validation
+ */
+
 define(['models/Quest','Backbone','text!../../../templates/quest_settings_dialog.html'],
 		function(Quest,Backbone,quest_dialog_template) {
 	var QuestSettingsView = Backbone.View.extend({

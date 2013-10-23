@@ -1,8 +1,8 @@
 define(['JQueryUI_Maps','lib/utils/consts','models/globals'],function(JQueryUI_Maps,consts,globals) {
 	MapView = Backbone.View.extend({
 		id:'map_view',
-		initialize:function(){
-			
+		initialize:function(options){
+			this.dialog_id = options.dialog_id || '#dialog_form';
 		},
 		get_proper_center_pos:function() {
             var lat = this.model.get('lat');
@@ -58,9 +58,10 @@ define(['JQueryUI_Maps','lib/utils/consts','models/globals'],function(JQueryUI_M
 		},
 		
 		find_location: function(location) {
+			var context = this;
 			this.$el.gmap('search', {'location': location}, function(results, status) {
 				if ( status === 'OK' ) {
-					$('#dialog_form').find('#txt_street').val(results[0].formatted_address);
+					$(context.dialog_id).find('#txt_street').val(results[0].formatted_address);
 					
 				}
 			});
@@ -75,9 +76,9 @@ define(['JQueryUI_Maps','lib/utils/consts','models/globals'],function(JQueryUI_M
 		},
 		
 		update_txt_fields: function(lat,lng,radius) {
-			$('#dialog_form').find('#txt_lat').val(lat);
-			$('#dialog_form').find('#txt_lng').val(lng);
-			$('#dialog_form').find('#txt_radius').val(radius);
+			$(this.dialog_id).find('#txt_lat').val(lat);
+			$(this.dialog_id).find('#txt_lng').val(lng);
+			$(this.dialog_id).find('#txt_radius').val(radius);
 			
 			//Keep values for display next time we open the MapView
 			globals.PREV_LOCATION ={
@@ -103,7 +104,7 @@ define(['JQueryUI_Maps','lib/utils/consts','models/globals'],function(JQueryUI_M
 			var circle = this.get_circle();
 			if ( circle == undefined )
 				return;
-			$('#dialog_form').find('#txt_radius').val(circle.getRadius());
+			$(this.dialog_id).find('#txt_radius').val(circle.getRadius());
 		},
 		update_center:function() {
 			var circle = this.get_circle();
@@ -111,8 +112,8 @@ define(['JQueryUI_Maps','lib/utils/consts','models/globals'],function(JQueryUI_M
 				return;
 			var lat = parseFloat(circle.getCenter().lat());
 			var lng = parseFloat(circle.getCenter().lng());
-			$('#dialog_form').find('#txt_lat').val(lat);
-			$('#dialog_form').find('#txt_lng').val(lng);
+			$(this.dialog_id).find('#txt_lat').val(lat);
+			$(this.dialog_id).find('#txt_lng').val(lng);
 			this.find_location(new google.maps.LatLng(lat,lng));
 		},
 		handle_click:function(e){
