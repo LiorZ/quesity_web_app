@@ -111,7 +111,7 @@ var link_from_params = function(req,res,next) {
 	}
 }
 
-app.del('/quest/:q_id',auth.auth_user, function(req,res,next) {
+app.del('/quest/:q_id',auth.auth_user, validate_quest_account,function(req,res,next) {
 	var account_id = req.session.accountId;
 	var quest_id = req.param('q_id');
 	console.log("Trying to delete quest");
@@ -125,6 +125,23 @@ app.del('/quest/:q_id',auth.auth_user, function(req,res,next) {
 			}
 	);
 });
+
+app.put('/quest/:q_id', auth.auth_user,validate_quest_account, function(req,res,next) {
+	var quest_id = req.param('q_id');
+//	var quest_json = req.body;
+	var quest_json = _.omit(req.body,'_id');
+	quest_json.tags = _.uniq(quest_json.tags);
+	console.log("Updating quest!");
+	console.log(quest_json);
+	models.Quest.Quest.findOneAndUpdate({_id: quest_id},quest_json, function(err,doc) {
+		if ( err ) {
+			next({message: "Error updating page",raw:err })
+		}else {
+			res.send(doc);
+		}
+	});
+});
+
 app.del('/quest/:q_id/page/:page_id',auth.auth_user,validate_quest_account,function(req,res,next){
 	var quest_id = req.param('q_id');
 	var page_id = req.param('page_id');
@@ -301,14 +318,17 @@ app.get('/quest/:q_id',auth.auth_user,validate_quest_account,function(req,res,ne
 
 app.post('/new_quest',auth.auth_user,function(req,res,next) { 
 	var account_id = req.session.accountId;
-	var title = req.param('title','');
-	models.Quest.create_new({title:title,accountId:account_id},
+	var quest_data = req.body;
+	// validate quest_data!
+	quest_data.accountId = quest_data.accountId || account_id;
+	console.log("Creating quest");
+	console.log(quest_data);
+	models.Quest.create_new(quest_data,
 			function(quest){
 				console.log("Created quest " + quest ); 
 				res.send({_id:quest._id});
 			}, 
 			function(err) { 
-				next({message:"Can't create new quest!",raw:err});
 				return;
 			})
 });

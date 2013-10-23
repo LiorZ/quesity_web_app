@@ -8,5 +8,6 @@ test-mongoose:
 	
 test-api: 
 	node app.js --mode test_local &
+	sleep 3
 	node_modules/mocha/bin/mocha --require should -R spec tests/server/
 	killall node

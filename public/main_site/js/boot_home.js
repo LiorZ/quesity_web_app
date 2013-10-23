@@ -5,9 +5,10 @@ require.config({
     BackboneLocal: '/shared/js/lib/backbone/backbone.local.attrs',
     Backbone: '/shared/js/lib/backbone/backbone',
     models:'/shared/js/models/',
+    views:'/main_site/js/views/',
     BackboneRelational: '/shared/js/lib/backbone/backbone-relational',
     jQueryUI: '/shared/js/lib/jquery-ui/jquery-ui-1.10.0.custom',
-
+    tagit: '/shared/js/lib/jquery-ui/plugins/tagit/tag-it'
   },
 
   shim: {
@@ -31,12 +32,16 @@ require.config({
   	  deps:['Backbone'],
   	  exports: 'BackboneLocal'
     },
+    tagit: {
+    	deps:['jQueryUI'],
+    	exports:'tagit'
+    },
     'views/HomeView': ['Backbone'],
     'models/Account':['Backbone'],
   }
 });
 
-require(['views/HomeView','models/Account'], function(HomeView,Account) {
+require(['views/HomeView','models/Account','tagit'], function(HomeView,Account) {
 	console.log("Initializing ...");
 	var new_account = new Account();
 	new_account.fetch({success:function() {

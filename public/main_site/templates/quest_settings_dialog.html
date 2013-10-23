@@ -1,0 +1,82 @@
+<style type="text/css" media="screen">
+	
+	#tabs .ui-tabs-panel {
+    height:450px;
+    overflow: auto;
+   }
+    #tactics input, #tactics label {
+    	display:block;
+    }
+    
+	.ui-spinner {
+		margin-bottom:20px;
+		margin-top:10px;
+	}
+	.form_field {
+		margin-top:10px;
+	}
+</style>
+
+<div id='dlg_create_quest'>
+	
+	
+	<div id="tabs" style="padding-top:10px;">
+	  <ul>
+	    <li><a href="#general_information">General Information</a></li>
+	    <li><a href="#properties">Properties</a></li>
+	    <li><a href="#tactics">Tactics</a></li>
+	  </ul>
+	  <div id="general_information">
+		<label for="title" class='form_field'>Title</label><br/>
+		<input type="text" class='form_field' name="title" id="title" style='width:30em;' value="<%=title%>"/>
+		<br/>
+		<label for="description" class='form_field'>Description</label><br/>
+		<textarea name="description" style='width:30em; height:20em;'  class='form_field' id='description'><%=description%></textarea>
+		
+	  </div>
+	  <div id="properties">
+	  	<fieldset id="" class="">
+			<legend>Starting Location</legend>
+	  	<div id='location_fields' >
+	  		<div style='float:left;'>
+		  		<label for='txt_street' class='form_field' >Street</label>
+				<input type="text" name="street" id="txt_street" class='form_field' value="<%= starting_location.street %>"/>
+				<label for='txt_radius' class='form_field'>Radius</label>
+				<input type="text" name="radius" id="txt_radius" class='form_field' style='width:4em;' value="<%=starting_location.radius%>"/>
+				<input type="hidden" name='txt_lat' id='txt_lat' value="<%=starting_location.lat%>"/>
+				<input type="hidden" name='txt_lng' id='txt_lng' value="<%=starting_location.lng%>"/>
+			</div>
+			<button id='btn_open_map' style='margin-left:30px; vertical-align:middle; display:inline-block;'>Open Map</button>
+	  	</div>
+	  	</fieldset>
+	  	<br/>
+	  	<fieldset id="tag_fieldset" class="">
+			<legend>Tags</legend>
+		  	<ul id='tags'>
+		  		<% _.each(tags,function(tag) { %>
+		  			<li><%=tag%></li>
+		  		<%});%>
+		  	</ul>
+	  	</fieldset>
+	  </div>
+	  <div id="tactics">
+	  <fieldset>
+		<legend>Tactics</legend>
+		<label for='allowed_hints'>Number of hints the player is allowed to take during the quest:</label>
+		<input type='text' name='allowed_hints' class='form_field' id='allowed_hints' value="<%=allowed_hints%>"/><br/>
+		<label for="allowed_public_questions">Number of public questions the player is allowed to ask during the quest</label> 
+		<input type='text' name='allowed_public_questions' class='form_field' id='allowed_public_questions' value="<%=allowed_public_questions%>"/><br/>
+		<label for="allowed_location_finders">Number of location hints the player is allowed to take during the quest</label>
+		<input type='text' name='allowed_location_finders' class='form_field' id='allowed_location_finders' value="<%=allowed_location_finders%>"/><br/>
+	  </fieldset>
+	  </div>
+	</div>
+	
+	
+	<!-- <form id='frm_create_quest'>
+		<fieldset id="fieldset" class="">
+		  <legend>Quest details</legend>
+		  Name: <input type='text' id='txt_quest_title' name='txt_quest_title'/>
+		</fieldset>	
+	</form> -->
+</div>

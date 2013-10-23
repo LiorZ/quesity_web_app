@@ -10,7 +10,9 @@ var general_request = function(url,method,res_handler,data,cookies) {
 	if ( method == 'get' ){
 		temp_req = request.get(url);
 	}else if ( method == 'post' ) {
-		temp_req = request.post(url)
+		temp_req = request.post(url);
+	}else if ( method == 'put' ) {
+		temp_req = request.put(url);
 	}
 	if ( cookies ) {
 		temp_req=temp_req.set('Cookie',cookies);
@@ -34,6 +36,10 @@ var registration_func = function(res_handler,data) {
 
 var quest_creation_func = function(res_handler,data,cookie) {
 	general_request(url+'/new_quest','post',res_handler,data,cookie);
+}
+
+var quest_update_func = function(res_handler,data,cookie) {
+	general_request(url+'/quest/'+data._id,'put',res_handler,data,cookie);
 }
 
 var fetch_quest_func = function(res_handler,quest_id,cookie) {
@@ -183,6 +189,33 @@ describe("Testing quest related functionality", function() {
 			fetch_quest_func(res_handler,quest_id,login_cookie);
 		});
 		
+		
+		it("Update quest settings" , function(done) {
+//			quest_update_func = function(res,handler,data,cookie)
+			var res_handler = function(res) {
+				var new_quest = res.body;
+				res.ok.should.eql(true);
+				console.log(new_quest);
+				new_quest.tags.length.should.eql(3);
+				done();
+			}
+			var json = {
+					title:"Quest title",
+					_id: quest_id,
+					date_created: new Date(),
+					description:"Just a description",
+					starting_location:{ 
+						lat:32.1,
+						lng:32.1,
+						street:"Sichanit 3, Kiryat Ekron, Israel",
+					},
+					allowed_hints: { type:Number },
+					tags:["Tel Aviv","Koko","Loco","Tel Aviv"]
+			};
+			quest_update_func(res_handler,json,login_cookie);
+		});
+		
+		
 		describe("Testing Quest Pages functionality", function() {
 
 			var get_a_dummy_page = function(type,number,q_id) {
@@ -211,7 +244,6 @@ describe("Testing quest related functionality", function() {
 				page_creation_func(res_handler,static_page,login_cookie);
 				
 			});
-			
 			it("Fetch the created page", function(done) {
 				var res_handler = function(res) {
 					res.ok.should.eql(true);

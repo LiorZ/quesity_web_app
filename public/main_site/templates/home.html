@@ -1,3 +1,5 @@
+<link href="/shared/js/lib/jquery-ui/plugins/tagit/jquery.tagit.css" rel="stylesheet" type="text/css">
+
 <h1 class='text_align_center'>My Quests</h1>
 <div id="btn_profile_div">
 <button id='btn_profile'><%=name.first%> <%=name.last%></button>
@@ -6,22 +8,14 @@
 	</ul>
 </div>
 <div class='center_screen'>
-<table style='width:100%;'>
+<table style='width:100%;' id='tbl_quests'>
 	<% if (quests != undefined) { _.each(quests,function(quest) { %>
 		<tr>
 			<td><a href='/editor/<%=quest._id%>'><%=quest.title%></a></td>
+			<td style='text-align:right;'><button name='btn_edit' data-quest-id="<%=quest._id%>" style='height:2em;'></button></td>
 			<td style='text-align:right;'><button name='btn_del_quest' data-quest-id="<%=quest._id%>">X</button></td>
 		</tr>
 	<%});}%>
 </table>
-
-<div id='dlg_create_quest'>
-	<form id='frm_create_quest'>
-		<fieldset id="fieldset" class="">
-		  <legend>Quest details</legend>
-		  Name: <input type='text' id='txt_quest_title' name='txt_quest_title'/>
-		</fieldset>	
-	</form>
-</div>
 <div class='text_align_center' style='vertical-align:bottom;'><button id='btn_new_quest'>Create new ... </button></div>
 </div>
