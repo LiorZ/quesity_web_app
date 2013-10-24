@@ -4,7 +4,7 @@
  * 2) add model validation
  */
 
-define(['models/Quest','Backbone','text!../../../templates/quest_settings_dialog.html','editor_views/MapView'],
+define(['models/Quest','Backbone','text!shared_templates/quest_settings_dialog.html','editor_views/MapView'],
 		function(Quest,Backbone,quest_dialog_template) {
 	var QuestSettingsView = Backbone.View.extend({
 		events: {
@@ -65,6 +65,7 @@ define(['models/Quest','Backbone','text!../../../templates/quest_settings_dialog
 			this.$el.find('button[name="btn_edit"]').button({ icons: {primary: 'ui-icon-pencil'}});
 			this.$el.find('#tabs').tabs();
 			this.$el.find('#tags').tagit();
+			this.init_gallery();
 			this.$el.find('#allowed_hints, #allowed_public_questions, #allowed_location_finders, #txt_radius').spinner();
 			var context = this;
 			var dialog_obj = this.$el.find('#dlg_create_quest');
@@ -145,6 +146,106 @@ define(['models/Quest','Backbone','text!../../../templates/quest_settings_dialog
 								}
 							});
 		},
+		
+		init_gallery:function() {
+			this.$el.find('.ad-gallery').adGallery({
+				  loader_image: '/shared/js/lib/jquery-ui/plugins/ADGallery/loader.gif',
+				  // Width of the image, set to false and it will 
+				  // read the CSS width
+				  width: 400, 
+				  // Height of the image, set to false and it 
+				  // will read the CSS height
+				  height: 200,
+				  thumbs_wrapper:true,
+				  thumbs_wrapper_width:400,
+				  // Opacity that the thumbs fades to/from, (1 removes fade effect)
+				  // Note that this effect combined with other effects might be 
+				  // resource intensive and make animations lag
+				  thumb_opacity: 0.7,
+				  // Which image should be displayed at first? 0 is the first image  
+				  start_at_index: 0, 
+				  // Whether or not the url hash should be updated to the current image
+				  update_window_hash: false, 
+				  // Either false or a jQuery object, if you want the image descriptions
+				  // to be placed somewhere else than on top of the image
+				  description_wrapper: false,
+				  // Should first image just be displayed, or animated in?
+				  animate_first_image: false,
+				  // Which ever effect is used to switch images, how long should it take?  
+				  animation_speed: 400, 
+				  // Can you navigate by clicking on the left/right on the image?
+				  display_next_and_prev: true, 
+				  // Are you allowed to scroll the thumb list?
+				  display_back_and_forward: true, 
+				  // If 0, it jumps the width of the container
+				  scroll_jump: 0, 
+				  slideshow: {
+				    enable: true,
+				    autostart: true,
+				    speed: 5000,
+				    start_label: 'Start',
+				    stop_label: 'Stop',
+				    // Should the slideshow stop if the user scrolls the thumb list?
+				    stop_on_scroll: true, 
+				    // Wrap around the countdown
+				    countdown_prefix: '(', 
+				    countdown_sufix: ')',
+				    onStart: function() {
+				      // Do something wild when the slideshow starts
+				    },
+				    onStop: function() {
+				      // Do something wild when the slideshow stops
+				    }
+				  },
+				  // or 'slide-vert', 'resize', 'fade', 'none' or false
+				  effect: 'slide-hori', 
+				  // Move to next/previous image with keyboard arrows?
+				  enable_keyboard_move: true, 
+				  // If set to false, you can't go from the last image to the first, and vice versa
+				  cycle: true, 
+				  // All hooks has the AdGallery objects as 'this' reference
+				  hooks: {
+				    // If you don't want AD Gallery to handle how the description
+				    // should be displayed, add your own hook. The passed image
+				    // image object contains all you need
+				    displayDescription: function(image) {
+//				      alert(image.title +" - "+ image.desc);
+				    }
+				  },
+				  // All callbacks has the AdGallery objects as 'this' reference
+				  callbacks: {
+				    // Executes right after the internal init, can be used to choose which images
+				    // you want to preload
+				    init: function() {
+				      // preloadAll uses recursion to preload each image right after one another
+				      this.preloadAll();
+				    },
+				    // This gets fired right after the new_image is fully visible
+				    afterImageVisible: function() {
+				      // For example, preload the next image
+				      var context = this;
+//				      this.loading(true);
+				      this.preloadImage(this.current_index + 1,
+				        function() {
+//				          context.loading(false);
+				        }
+				      );
+
+				      // Want slide effect for every other image?
+				      if(this.current_index % 2 == 0) {
+				        this.settings.effect = 'slide-hori';
+				      } else {
+				        this.settings.effect = 'fade';
+				      }
+				    },
+				    // This gets fired right before old_image is about to go away, and new_image
+				    // is about to come in
+				    beforeImageVisible: function(new_image, old_image) {
+				      // Do something wild!
+				    }
+				  }
+				});
+		}
 	});
 	
 	return QuestSettingsView;

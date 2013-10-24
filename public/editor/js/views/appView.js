@@ -1,5 +1,6 @@
-define(['jQueryUI','Backbone','routers/Router','views/ViewAttributes','models/ModelAttributes','views/QuestPageDiagramView','lib/utils/consts','views/MenuView', 'views/LinkView','Joint'],
-		function(jQueryUI,Backbone,EditorRouter,ViewAttributes,ModelAttributes,QuestPageDiagramView,consts,MenuView,LinkView,Joint) {
+define(['jQueryUI','Backbone','routers/Router','views/ViewAttributes','models/ModelAttributes','views/QuestPageDiagramView','lib/utils/consts','views/MenuView', 'views/LinkView','Joint'
+        ,'shared_views/QuestSettingsView'],
+		function(jQueryUI,Backbone,EditorRouter,ViewAttributes,ModelAttributes,QuestPageDiagramView,consts,MenuView,LinkView,Joint,QuestSettingsView) {
 	var eventagg = _.extend({}, Backbone.Events);
 	var AppView = Backbone.View.extend({
 		el: '#container',
@@ -7,14 +8,21 @@ define(['jQueryUI','Backbone','routers/Router','views/ViewAttributes','models/Mo
 		active_property_page:undefined,
 		page_count:0,
 		pages:undefined,
+		settings_view:undefined,
 		paperObj:undefined,
 		events: {
 			'click li a': 'create_new_page',
 			'click #world':'exit_property_page', //if a property page is open, a click outside of it exists the page
 			'click #btn_new_page' : 'new_page_menu',
-			'click #btn_exit_editor':'exit_editor'
+			'click #btn_exit_editor':'exit_editor',
+			'click #btn_settings':'open_settings'
 		},
 
+		open_settings:function() {
+			this.settings_view = new QuestSettingsView({model:this.model,should_open_editor:false});
+			this.settings_view.render();
+		},
+		
 		show_property_page:function(model) {
 			var template_id = ViewAttributes[model.get('page_type')].view.properties_template;
 			var properties_prototype = ViewAttributes[model.get('page_type')].view.properties_prototype;

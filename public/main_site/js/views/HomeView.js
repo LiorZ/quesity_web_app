@@ -1,5 +1,5 @@
 define(
-		[ 'text!../../../templates/home.html', 'models/Quest', 'jQueryUI','views/QuestSettingsView' ],
+		[ 'text!../../../templates/home.html', 'models/Quest', 'jQueryUI','shared_views/QuestSettingsView' ],
 		function(home_template, Quest,jq,QuestSettingsView) {
 			var HomeView = Backbone.View
 					.extend({
@@ -96,11 +96,12 @@ define(
 							if (!sure)
 								return;
 
-							var quest_id = $(ev.target).parent('button').attr(
+							var quest_id = $(ev.target).attr(
 									'data-quest-id');
 							var quest = Quest.findOrCreate(quest_id, {
 								create : false
 							});
+							console.log("Trying to delete " + quest_id);
 							if (_.isNull(quest) || _.isUndefined(quest)) {
 								alert("Can't delete quest!");
 								return;

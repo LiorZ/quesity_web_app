@@ -10,6 +10,7 @@ require.config({
     JQueryUI_Maps: '/shared/js/lib/jquery-ui/plugins/google-maps/jquery.ui.map.full.min',
     jQueryUI_easing: '/shared/js/lib/jquery-ui/plugins/jquery-easing/jquery.easing.1.3',
     jQueryUI_tablesorter: '/shared/js/lib/jquery-ui/plugins/tablesorter/jquery.tablesorter',
+    tagit: '/shared/js/lib/jquery-ui/plugins/tagit/tag-it',
     EasingMenu: '/editor/js/lib/behavior/EasingMenu',
     Joint: '/editor/js/lib/jointjs/joint',
     Joint_dia:'/editor/js/lib/jointjs/joint.dia',
@@ -19,7 +20,9 @@ require.config({
     json2: '/editor/js/lib/jointjs/json2',
     tinymce: '/editor/js/lib/tiny_mce/jquery.tinymce',
     text: '/shared/js/lib/text/text',
-    select2:'/shared/js/lib/jquery-ui/plugins/select2/select2'
+    select2:'/shared/js/lib/jquery-ui/plugins/select2/select2',
+    shared_templates:'/shared/templates',
+    shared_views:'/shared/js/views'
   },
 
   shim: {
@@ -48,6 +51,10 @@ require.config({
     	  deps:['Raphael','json2'],
     	  exports:'Joint'
       },
+      tagit: {
+      	deps:['jQueryUI'],
+      	exports:'tagit'
+      },
       Joint_dia: ['Joint'],
       Joint_dia_org: ['Joint_dia'],
       Joint_dia_uml: ['Joint_dia'],
@@ -57,7 +64,7 @@ require.config({
   }
 });
 
-require(['views/appView','models/Quest','text!../templates/all.html','Backbone','BackboneRelational','models/globals'],
+require(['views/appView','models/Quest','text!../templates/all.html','Backbone','BackboneRelational','models/globals','tagit'],
 		function(appView,Quest,templates,Backbone,BackboneRelational,globals){
 	
 	Backbone.Relational.store.addModelScope(globals);
