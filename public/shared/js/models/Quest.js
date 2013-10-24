@@ -1,9 +1,9 @@
 define(['models/QuestPage','models/QuestPageCollection','Backbone','BackboneRelational'],function(QuestPage,QuestPageCollection,Backbone,BackboneRelational) {
 	var StartingLocation = Backbone.RelationalModel.extend({
 		defaults:{
-			lat:0,
-			lng:0,
-			radius:10,
+			lat:undefined,
+			lng:undefined,
+			radius:20,
 			street:''
 		}
 	});

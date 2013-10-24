@@ -8,7 +8,9 @@ require.config({
     views:'/main_site/js/views/',
     BackboneRelational: '/shared/js/lib/backbone/backbone-relational',
     jQueryUI: '/shared/js/lib/jquery-ui/jquery-ui-1.10.0.custom',
-    tagit: '/shared/js/lib/jquery-ui/plugins/tagit/tag-it'
+    tagit: '/shared/js/lib/jquery-ui/plugins/tagit/tag-it',
+    editor_views:'/editor/js/views/',
+    JQueryUI_Maps: '/shared/js/lib/jquery-ui/plugins/google-maps/jquery.ui.map.full.min',
   },
 
   shim: {
@@ -20,6 +22,7 @@ require.config({
 		deps:['jQuery'],
 		exports:'jQueryUI'
 	},
+	JQueryUI_Maps:['jQueryUI'],
     'Backbone': {
     	deps: ['Underscore', 'jQuery'],
     	exports:'Backbone'

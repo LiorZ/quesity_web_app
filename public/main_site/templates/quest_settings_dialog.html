@@ -1,4 +1,7 @@
-<style type="text/css" media="screen">
+
+<div id='dlg_create_quest'>
+	
+	<style type="text/css" media="screen">
 	
 	#tabs .ui-tabs-panel {
     height:450px;
@@ -11,15 +14,12 @@
 	.ui-spinner {
 		margin-bottom:20px;
 		margin-top:10px;
+		width:5em;
 	}
 	.form_field {
 		margin-top:10px;
 	}
 </style>
-
-<div id='dlg_create_quest'>
-	
-	
 	<div id="tabs" style="padding-top:10px;">
 	  <ul>
 	    <li><a href="#general_information">General Information</a></li>
@@ -40,7 +40,7 @@
 	  	<div id='location_fields' >
 	  		<div style='float:left;'>
 		  		<label for='txt_street' class='form_field' >Street</label>
-				<input type="text" name="street" id="txt_street" class='form_field' value="<%= starting_location.street %>"/>
+				<input type="text" name="street" id="txt_street" class='form_field' readonly=true value="<%= starting_location.street %>"/>
 				<label for='txt_radius' class='form_field'>Radius</label>
 				<input type="text" name="radius" id="txt_radius" class='form_field' style='width:4em;' value="<%=starting_location.radius%>"/>
 				<input type="hidden" name='txt_lat' id='txt_lat' value="<%=starting_location.lat%>"/>
@@ -64,9 +64,9 @@
 		<legend>Tactics</legend>
 		<label for='allowed_hints'>Number of hints the player is allowed to take during the quest:</label>
 		<input type='text' name='allowed_hints' class='form_field' id='allowed_hints' value="<%=allowed_hints%>"/><br/>
-		<label for="allowed_public_questions">Number of public questions the player is allowed to ask during the quest</label> 
+		<label for="allowed_public_questions">Number of public questions the player is allowed to ask during the quest:</label> 
 		<input type='text' name='allowed_public_questions' class='form_field' id='allowed_public_questions' value="<%=allowed_public_questions%>"/><br/>
-		<label for="allowed_location_finders">Number of location hints the player is allowed to take during the quest</label>
+		<label for="allowed_location_finders">Number of location hints the player is allowed to take during the quest:</label>
 		<input type='text' name='allowed_location_finders' class='form_field' id='allowed_location_finders' value="<%=allowed_location_finders%>"/><br/>
 	  </fieldset>
 	  </div>
@@ -79,4 +79,6 @@
 		  Name: <input type='text' id='txt_quest_title' name='txt_quest_title'/>
 		</fieldset>	
 	</form> -->
+	<div id='map_container'></div>
 </div>
+

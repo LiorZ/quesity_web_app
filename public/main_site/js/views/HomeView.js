@@ -26,7 +26,7 @@ define(
 							quest_model.fetch({
 								success: function(model,response,options){
 									context.settings_view = new QuestSettingsView({model:model, should_open_editor:false});
-									context.$el.append(context.settings_view.render());
+									context.settings_view.render();
 								}, 
 								error: function(err) {
 									alert("Error getting quest from server");
@@ -85,100 +85,11 @@ define(
 						render : function() {
 							var tmpl = _.template(home_template);
 							this.$el.append(tmpl(this.model.toJSON()));
-							$('button').button();
-							$('button[name="btn_edit"]').button({ icons: {primary: 'ui-icon-pencil'}});
+							$('button[name="btn_edit"]').button({text:false, icons: {primary: 'ui-icon-pencil'}});
+							$('button[name="btn_del_quest"]').button({text:false,icons:{primary:'ui-icon-trash'}});
 							$('#btn_profile_menu').menu();
-//							var context = this;
-//							$('#tabs').tabs();
-//							$('#tags').tagit();
-//							$('#dlg_create_quest').dialog(
-//									{
-//										autoOpen : false,
-//										title : 'New Quest',
-//										width:800,
-//										modal : true,
-//										draggable:false,
-//										
-//										create: function() { // turn tabs into dialogs
-//											// define the elements we're dealing with
-//											$tabs = $(this).find('.ui-tabs-nav'); $dlg = $(this).parent();
-//											// clone close button from dialog title and put it in the tabs area
-//											$dlg.find('.ui-dialog-titlebar-close').appendTo($tabs);
-//											// make the tabs draggable, give it a class that gracefully adds the move cursor and remove the dialog's original titlebar completely
-//											$dlg.draggable({handle: ".ui-tabs-nav"})
-//												.addClass('ui-draggable')
-//												.find('.ui-dialog-titlebar').remove();
-//											// give dialog styles to the tabs (would like to do this without adding CSS, but couldn't)
-//								 			$dlg.find('.ui-tabs').css('padding', '0px');
-//											// turn off the highlighting of tabs in chrome, add titlebar style to tabs to give close button correct styling
-//											$tabs.addClass('ui-dialog-titlebar')
-//												.find('li, a').css('outline', 'none').mousedown(function(e){ e.stopPropagation(); });
-//											
-//										},
-//										
-//										buttons : {
-//											OK :{
-//													id: 'create_quest_ok',
-//													text:'OK',
-//													click: function() {
-//														
-//														var quest_id = $('#txt_quest_id').val();
-//														var new_quest;
-//														if ( _.isUndefined(quest_id) || quest_id.length == 0 ) {
-//															new_quest = new Quest();
-//														}else {
-//															new_quest = Quest.findOrCreate(quest_id,{create: false});
-//														}
-//														quest_data = {
-//																title: $('#title').val(),
-//																description: $('#description').val(),
-//																allowed_hints: $('#allowed_hints').val(),
-//																allowed_public_questions: $('#allowed_public_questions').val(),
-//																allowed_location_finders: $('#allowed_location_finders').val(),
-//																starting_location: {
-//																	street: $('#txt_street').val(),
-//																	radius: $('#txt_radius').val(),
-//																	lat:$('#txt_lat').val(),
-//																	lng:$('txt_lng').val()
-//																},
-//																tags:$("#tags").tagit("assignedTags").join(',')
-//														}
-//														new_quest.set(quest_data);
-//														$(this).dialog('close');
-//														context.create_new_quest(new_quest);
-//														
-//													}
-//											},
-//											Cancel : function() {
-//												$(this).dialog('close');
-//											}
-//										}
-//									});
-
-							//Cancel the submission when pressing enter: 
-//							$('#dlg_create_quest input').keypress(function(e){
-//								if ( e.keyCode == $.ui.keyCode.ENTER ) {
-//									return false;
-//								}
-//							})
+							$('#btn_new_quest').button();
 						},
-//						create_new_quest : function(new_quest) {
-//							var open_editor = new_quest.isNew();
-//							console.log(new_quest.toJSON());
-//							new_quest
-//									.save(
-//											null,
-//											{
-//												success : function() {
-////													if ( open_editor )
-////														window.location = '/editor/'+ new_quest.get('_id');
-//												},
-//												error : function() {
-//													alert("Could not create new quest. check your connection");
-//												}
-//											});
-//						},
-
 						delete_quest : function(ev) {
 							var sure = confirm("Are you sure you want to delete this quest?");
 

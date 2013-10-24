@@ -4,29 +4,76 @@
  * 2) add model validation
  */
 
-define(['models/Quest','Backbone','text!../../../templates/quest_settings_dialog.html'],
+define(['models/Quest','Backbone','text!../../../templates/quest_settings_dialog.html','editor_views/MapView'],
 		function(Quest,Backbone,quest_dialog_template) {
 	var QuestSettingsView = Backbone.View.extend({
-		
+		events: {
+			'click #btn_open_map':'open_map',
+			'change #txt_radius':'change_radius',
+			'spinstop #txt_radius':'change_radius'
+		},
+		id:'#dialog_container',
+		change_radius:function() {
+			var radius = this.$el.find('#txt_radius').val();
+			console.log("Setting radius "+ radius);
+			this.model.get('starting_location').set('radius',radius);
+		},
 		initialize: function(options) {
 			this.title = '' || options.title;
 			this.should_open_editor = options.should_open_editor;
-		},
-		render:function(){
 			var tmpl = _.template(quest_dialog_template);
 			this.$el.html(tmpl(this.model.toJSON()));
+		},
+		open_map:function() {
+			var context = this;
+			var map_view = new MapView({model:context.model.get('starting_location'), dialog_id:'#dlg_create_quest'});
+			$('#map_container').append(map_view.render());
+			$('#map_container').dialog({
+				autoOpen : true,
+				title:'Choose starting location',
+				modal:true,
+				width:550,
+				draggable:true,
+				close:function() {
+					$('#map_container').html('');
+					map_view.remove();
+				},
+				buttons:{ 
+					OK: {
+						text:"OK",
+						click: function() {
+							var starting_location = {
+								street: context.$el.find('#txt_street').val(),
+								radius: context.$el.find('#txt_radius').val(),
+								lat:context.$el.find('#txt_lat').val(),
+								lng:context.$el.find('#txt_lng').val()
+							};
+							context.model.set('starting_location',starting_location);
+							$('#map_container').html('');
+							map_view.remove();
+							$(this).dialog('close');
+						}
+					},
+				}
+			});
+			map_view.resize();
+
+		},
+		
+		render:function(){
 			this.$el.find('button').button();
 			this.$el.find('button[name="btn_edit"]').button({ icons: {primary: 'ui-icon-pencil'}});
 			this.$el.find('#tabs').tabs();
 			this.$el.find('#tags').tagit();
-			this.$el.find('#allowed_hints, #allowed_public_questions, #allowed_location_finders').spinner();
+			this.$el.find('#allowed_hints, #allowed_public_questions, #allowed_location_finders, #txt_radius').spinner();
 			var context = this;
 			var dialog_obj = this.$el.find('#dlg_create_quest');
-			this.$el.find('#dlg_create_quest').dialog(
+			this.$el = this.$el.find('#dlg_create_quest').dialog(
 					{
 						autoOpen : true,
 						title : context.title,
 						width:800,
+						height:650,
 						modal : true,
 						draggable:false,
 						
@@ -46,7 +93,9 @@ define(['models/Quest','Backbone','text!../../../templates/quest_settings_dialog
 								.find('li, a').css('outline', 'none').mousedown(function(e){ e.stopPropagation(); });
 							
 						},
-						
+						close: function(){
+							context.remove();
+						},
 						buttons : {
 							Save :{
 									id: 'create_quest_ok',
@@ -78,7 +127,7 @@ define(['models/Quest','Backbone','text!../../../templates/quest_settings_dialog
 							}
 						}
 					});
-			return this.$el;
+			this.delegateEvents(this.events);
 		},
 		
 		create_new_quest : function() {

@@ -34,7 +34,7 @@ define(['JQueryUI_Maps','lib/utils/consts','models/globals'],function(JQueryUI_M
 					context.handle_click(event);
 				});
 				
-			})
+			});
 
 			var map = this.$el.gmap('get', 'map');
 			$(map).addEventListener('zoom_changed', function(event) {
@@ -43,7 +43,7 @@ define(['JQueryUI_Maps','lib/utils/consts','models/globals'],function(JQueryUI_M
 			
 			
 			if (  lat != undefined && lng != undefined && this.model.get('radius') != undefined  
-					&& this.model.get('txt_street') != undefined ) {
+					&& (this.model.get('txt_street') != undefined || this.model.get('street') != undefined) ) {
 				this.create_new(this.model.get('lat'), this.model.get('lng'),this.model.get('radius'));
 			}
 			
@@ -78,7 +78,7 @@ define(['JQueryUI_Maps','lib/utils/consts','models/globals'],function(JQueryUI_M
 		update_txt_fields: function(lat,lng,radius) {
 			$(this.dialog_id).find('#txt_lat').val(lat);
 			$(this.dialog_id).find('#txt_lng').val(lng);
-			$(this.dialog_id).find('#txt_radius').val(radius);
+			$(this.dialog_id).find('#txt_radius').val(Math.round(radius));
 			
 			//Keep values for display next time we open the MapView
 			globals.PREV_LOCATION ={
@@ -104,7 +104,7 @@ define(['JQueryUI_Maps','lib/utils/consts','models/globals'],function(JQueryUI_M
 			var circle = this.get_circle();
 			if ( circle == undefined )
 				return;
-			$(this.dialog_id).find('#txt_radius').val(circle.getRadius());
+			$(this.dialog_id).find('#txt_radius').val(Math.round(circle.getRadius()));
 		},
 		update_center:function() {
 			var circle = this.get_circle();

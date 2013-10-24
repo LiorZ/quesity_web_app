@@ -19,8 +19,6 @@ require.config({
     json2: '/editor/js/lib/jointjs/json2',
     tinymce: '/editor/js/lib/tiny_mce/jquery.tinymce',
     text: '/shared/js/lib/text/text',
-//    "jquery.svg": '/editor/js/lib/jquery.svg/jquery.svg.min',
-//    "jquery.svg.input": '/editor/js/lib/jquery.svg.input/jquery.svg.input.min'
     select2:'/shared/js/lib/jquery-ui/plugins/select2/select2'
   },
 
