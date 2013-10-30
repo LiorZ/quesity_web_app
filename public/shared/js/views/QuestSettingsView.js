@@ -4,8 +4,8 @@
  * 2) add model validation
  */
 
-define(['models/Quest','Backbone','text!shared_templates/quest_settings_dialog.html','editor_views/MapView','shared_utils/utils'],
-		function(Quest,Backbone,quest_dialog_template,MapView,utils) {
+define(['models/Quest','Backbone','text!shared_templates/quest_settings_dialog.html','editor_views/MapView'],
+		function(Quest,Backbone,quest_dialog_template,MapView) {
 	var QuestSettingsView = Backbone.View.extend({
 		events: {
 			'click #btn_open_map':'open_map',

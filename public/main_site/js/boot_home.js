@@ -13,7 +13,6 @@ require.config({
     editor_views:'/editor/js/views/',
     shared_views:'/shared/js/views/',
     shared_templates:'/shared/templates/',
-    shared_utils:'/shared/js/lib/utils/',
     JQueryUI_Maps: '/shared/js/lib/jquery-ui/plugins/google-maps/jquery.ui.map.full.min',
   },
 
