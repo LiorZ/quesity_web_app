@@ -19,7 +19,8 @@ module.exports = function(mongoose) {
 		allowed_hints: { type:Number },
 		allowed_public_questions: {type:Number, 'default':0},
 		allowed_location_finders: {type:Number, 'default':0},
-		tags:[{type:String,index:true}]
+		tags:[{type:String,index:true}],
+		images:[{type:String}]
 	});
 	
 	QuestSchema.path('tags').set(

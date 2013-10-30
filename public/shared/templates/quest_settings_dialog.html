@@ -29,6 +29,17 @@
 	fieldset {
 		margin-bottom:30px;
 	}
+	
+	#add_image {
+		margin-left:auto;
+		margin-right: auto;
+		text-align:center;
+		margin-bottom:20px;
+	}
+	.ad-thumbs img {
+		width:90px;
+		height:60px;
+	} 
 </style>
 	<div id="tabs" style="padding-top:10px;">
 	  <ul>
@@ -69,13 +80,16 @@
 	  	</fieldset>
 	  	<fieldset id='gallery-fieldset'>
 	  		<legend>Photo gallery</legend>
+<div id='add_image'><label for='txt_image_url'>Add image:</label>
+<input type='text' id='txt_image_url' name='txt_image_url' style="width:350px;"/><button id='btn_add_image' style='margin-left:15px;'>+</button></div>
+
 <div class="ad-gallery">
 				<div class="ad-image-wrapper"></div>
 				<div class="ad-controls"></div>
 				<div class="ad-nav" >
 					<div class="ad-thumbs">
 						<ul class="ad-thumb-list">
-							<li>
+							<!-- <li>
 								<a href="http://coffeescripter.com/code/ad-gallery/images/6.jpg"><img src="http://coffeescripter.com/code/ad-gallery/images/thumbs/t6.jpg" title="Title for 1.jpg" class='image0'></a>
 							</li>
 							<li>
@@ -87,12 +101,18 @@
 							<li>
 								
 								<a href="http://coffeescripter.com/code/ad-gallery/images/3.jpg"><img src="http://coffeescripter.com/code/ad-gallery/images/thumbs/t3.jpg" title="Title for 1.jpg" class='image3'></a>
-							</li>
+							</li> -->
+							<% for(var i=0; i<images.length; ++i) { %>
+								<li>
+									<a href="<%=images[i]%>"><img src="<%=images[i]%>" title="" class='image<%=i%>'></a>
+								</li>
+							<%}%>
 						</ul>
 					</div>
 				</div>
 
 </div>
+
 </fieldset>
 	  	
 	  </div>
@@ -117,5 +137,6 @@
 		</fieldset>	
 	</form> -->
 	<div id='map_container'></div>
+	<button id='btn_del_img' name='btn_del_img' style='display:block; position:absolute; height:2em;'></button>
 </div>
 

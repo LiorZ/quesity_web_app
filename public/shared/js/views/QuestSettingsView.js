@@ -4,15 +4,110 @@
  * 2) add model validation
  */
 
-define(['models/Quest','Backbone','text!shared_templates/quest_settings_dialog.html','editor_views/MapView'],
-		function(Quest,Backbone,quest_dialog_template) {
+define(['models/Quest','Backbone','text!shared_templates/quest_settings_dialog.html','editor_views/MapView','shared_utils/utils'],
+		function(Quest,Backbone,quest_dialog_template,MapView,utils) {
 	var QuestSettingsView = Backbone.View.extend({
 		events: {
 			'click #btn_open_map':'open_map',
 			'change #txt_radius':'change_radius',
-			'spinstop #txt_radius':'change_radius'
+			'spinstop #txt_radius':'change_radius',
+			'click #btn_add_image' :'add_image_to_gallery',
+			'mouseenter .ad-image-wrapper':'show_del_btn',
+			'mouseleave .ad-image-wrapper':'hide_del_btn',
+			'mouseenter #btn_del_img':'clear_hidbtn_timeout',
+			'mouseleave #btn_del_img':'hide_del_btn',
+			'click #btn_del_img':'delete_image_from_gallery',
+		},
+		gallery_timeout_id:-1,
+		orient_del_btn: function(  ) {
+			console.log("orienting...")
+			if ( $('#btn_del_img').is(":visible") ) {
+				console.log("button is visible")
+				this.show_del_btn();
+			} 
+		},
+		delete_image_from_gallery:function() {
+			var context =this;
+			var src = $('.ad-image img').attr('src')
+			if ( _.isUndefined(src) || src.length == 0 ) {
+				alert("Error deleting image");
+				return;
+			}
+			var images = this.model.get('images');
+			var index = _.indexOf(images,src);
+			if ( index < 0  ) {
+				alert("Error deleting image!");
+				return;
+			}
+			this.model.set('images',_.without(images,src));
+			this.model.save(null,{success:function() {
+				context.image_gallery[0].removeImage(index);
+				var images = context.model.get('images');
+				if (images.length > 0 ) {
+					var to_show = index;
+					if ( index == images.length )
+						to_show = index-1;
+					context.image_gallery[0].showImage(to_show);
+				}else {
+					$('.ad-gallery').hide();
+					$('#btn_del_img').hide();
+				}
+			},
+			error: function(){
+				alert("Error deleting image!");	
+			}})
+			
+		},
+		clear_hidebtn_timeout:function() {
+			console.log("clear_hidebtn_timeout");
+			clearTimeout(this.gallery_timeout_id);
+		},
+		hide_del_btn:function(ev) {
+			var context = this;
+			clearTimeout(this.gallery_timeout_id);
+			context.gallery_timeout_id = setTimeout(function(){
+				var button = context.$el.find('button[name="btn_del_img"]')
+				button.hide();	
+			},2000);
+			
+		},
+
+		show_del_btn:function(ev) {
+			if ( this.model.get('images').length == 0 ) {
+				return;
+			}
+			this.clear_hidebtn_timeout();
+			var img = $('.ad-image');
+			var button = this.$el.find('button[name="btn_del_img"]').zIndex(10000);
+			button.show();
+
+			button.position({
+				of: img,
+				my: "left top",
+				at: "left top"
+			});
 		},
 		id:'#dialog_container',
+		
+		add_image_to_gallery: function() {
+			var images = this.model.get('images');
+			var img_address =this.$el.find('#txt_image_url').val();
+			if ( img_address == '' ) {
+				alert("Please enter a valid address");
+				return;
+			}else if ( _.indexOf(images,img_address) >= 0 ) {
+				alert("This image already exists in the gallery");
+				this.$el.find('#txt_image_url').val('');
+				return;
+			}
+			this.$el.find('#txt_image_url').val('');
+			$('.ad-gallery').show();
+			this.image_gallery[0].addImage(img_address,img_address);
+			images.push(img_address);
+			this.image_gallery[0].showImage(images.length - 1);
+			this.model.save();
+		},
+		
 		change_radius:function() {
 			var radius = this.$el.find('#txt_radius').val();
 			console.log("Setting radius "+ radius);
@@ -61,13 +156,18 @@ define(['models/Quest','Backbone','text!shared_templates/quest_settings_dialog.h
 		},
 		
 		render:function(){
+			var context = this;
+
 			this.$el.find('button').button();
 			this.$el.find('button[name="btn_edit"]').button({ icons: {primary: 'ui-icon-pencil'}});
+			this.$el.find('button[name="btn_del_img"]').button({text:false, icons:{primary:'ui-icon-trash'}}).hide().mouseenter(function() {
+				console.log("clear_hidebtn_timeout");
+				clearTimeout(context.gallery_timeout_id);
+			});
 			this.$el.find('#tabs').tabs();
 			this.$el.find('#tags').tagit();
 			this.init_gallery();
 			this.$el.find('#allowed_hints, #allowed_public_questions, #allowed_location_finders, #txt_radius').spinner();
-			var context = this;
 			var dialog_obj = this.$el.find('#dlg_create_quest');
 			this.$el = this.$el.find('#dlg_create_quest').dialog(
 					{
@@ -128,6 +228,12 @@ define(['models/Quest','Backbone','text!shared_templates/quest_settings_dialog.h
 							}
 						}
 					});
+			if ( this.model.get('images').length == 0 ){
+				console.log('Number of images is 0');
+				$('.ad-gallery').hide();
+			}
+			
+			$('#properties').scroll(_.bind(context.orient_del_btn,context));
 			this.delegateEvents(this.events);
 		},
 		
@@ -148,7 +254,8 @@ define(['models/Quest','Backbone','text!shared_templates/quest_settings_dialog.h
 		},
 		
 		init_gallery:function() {
-			this.$el.find('.ad-gallery').adGallery({
+			var context = this;
+			this.image_gallery = this.$el.find('.ad-gallery').adGallery({
 				  loader_image: '/shared/js/lib/jquery-ui/plugins/ADGallery/loader.gif',
 				  // Width of the image, set to false and it will 
 				  // read the CSS width
@@ -180,7 +287,7 @@ define(['models/Quest','Backbone','text!shared_templates/quest_settings_dialog.h
 				  // If 0, it jumps the width of the container
 				  scroll_jump: 0, 
 				  slideshow: {
-				    enable: true,
+				    enable: false,
 				    autostart: true,
 				    speed: 5000,
 				    start_label: 'Start',
@@ -219,17 +326,18 @@ define(['models/Quest','Backbone','text!shared_templates/quest_settings_dialog.h
 				    init: function() {
 				      // preloadAll uses recursion to preload each image right after one another
 				      this.preloadAll();
+
 				    },
 				    // This gets fired right after the new_image is fully visible
 				    afterImageVisible: function() {
 				      // For example, preload the next image
 				      var context = this;
-//				      this.loading(true);
-				      this.preloadImage(this.current_index + 1,
-				        function() {
-//				          context.loading(false);
-				        }
-				      );
+				      this.loading(false);
+//				      this.preloadImage(this.current_index + 1,
+//				        function() {
+////				          context.loading(false);
+//				        }
+//				      );
 
 				      // Want slide effect for every other image?
 				      if(this.current_index % 2 == 0) {
@@ -241,10 +349,14 @@ define(['models/Quest','Backbone','text!shared_templates/quest_settings_dialog.h
 				    // This gets fired right before old_image is about to go away, and new_image
 				    // is about to come in
 				    beforeImageVisible: function(new_image, old_image) {
-				      // Do something wild!
+				      this.loading(false);
 				    }
 				  }
 				});
+
+			this.image_gallery[0].showImage(0,function() {
+				this.loading(false);
+			});
 		}
 	});
 	

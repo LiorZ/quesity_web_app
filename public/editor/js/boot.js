@@ -21,8 +21,8 @@ require.config({
     tinymce: '/editor/js/lib/tiny_mce/jquery.tinymce',
     text: '/shared/js/lib/text/text',
     select2:'/shared/js/lib/jquery-ui/plugins/select2/select2',
-    shared_templates:'/shared/templates',
-    shared_views:'/shared/js/views'
+    shared_templates:'/shared/templates/',
+    shared_views:'/shared/js/views/',
   },
 
   shim: {

@@ -30,6 +30,7 @@ define(['models/QuestPage','models/QuestPageCollection','Backbone','BackboneRela
 			title:'Untitled Quest',
 			description:'',
 			tags:[],
+			images:[],
 			allowed_hints:3,
 			allowed_public_questions:3,
 			allowed_location_finders:3
