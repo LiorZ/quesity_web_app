@@ -8,7 +8,7 @@ module.exports = function(mongoose) {
 		title: { type:String } ,
 		accountId: {type:mongoose.Schema.ObjectId},
 		date_created:{type:Date, 'default':Date.now},
-		is_published:{type:Boolean, 'default': false},
+		is_published:{type:Boolean, 'default': false, index:true},
 		description:{type:String, 'default':''},
 		starting_location: {
 			lat: {type: Number, 'default':0},
