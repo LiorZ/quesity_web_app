@@ -1,4 +1,4 @@
-define(['views/LinkEditableRowDialog','views/MapView'],function(LinkEditableRowDialog,MapView) {
+define(['views/LinkEditableRowDialog','shared_views/MapView'],function(LinkEditableRowDialog,MapView) {
 	var LinkablePositionEditableRowDialog = LinkEditableRowDialog.extend({
 		initialize: function(options) {
 			LinkEditableRowDialog.prototype.initialize.apply(this, [options]);
