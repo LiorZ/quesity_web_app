@@ -23,6 +23,8 @@ require.config({
     select2:'/shared/js/lib/jquery-ui/plugins/select2/select2',
     shared_templates:'/shared/templates/',
     shared_views:'/shared/js/views/',
+    ADGallery:'/shared/js/lib/jquery-ui/plugins/ADGallery/jquery.ad-gallery',
+
   },
 
   shim: {
@@ -55,6 +57,9 @@ require.config({
       	deps:['jQueryUI'],
       	exports:'tagit'
       },
+      ADGallery:{
+      	deps:['jQueryUI']
+      },
       Joint_dia: ['Joint'],
       Joint_dia_org: ['Joint_dia'],
       Joint_dia_uml: ['Joint_dia'],
@@ -64,7 +69,7 @@ require.config({
   }
 });
 
-require(['views/appView','models/Quest','text!../templates/all.html','Backbone','BackboneRelational','models/globals','tagit'],
+require(['views/appView','models/Quest','text!../templates/all.html','Backbone','BackboneRelational','models/globals','tagit','ADGallery'],
 		function(appView,Quest,templates,Backbone,BackboneRelational,globals){
 	
 	Backbone.Relational.store.addModelScope(globals);
