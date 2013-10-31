@@ -11,7 +11,55 @@ define(
 							'mouseenter #btn_profile': 'display_profile_menu',
 							'mouseleave #btn_profile_div': 'hide_profile_menu',
 							'click #href_logoff': 'do_logoff',
-							'click button[name="btn_edit"]':'edit_quest_details'
+							'click button[name="btn_edit"]':'edit_quest_details',
+							'change .btn_del_quest_checkbox' :'toggle_publish'
+						},
+						initialize:function() {
+							var context = this;
+							this.model.get('quests').each(function(quest) { 
+								context.listenTo(quest,'change:is_published',context.publish_listener);
+							});
+							this.listenTo(this.model,'add:quests',function(new_quest) {
+								context.listenTo(new_quest,'change:is_published',context.publish_listener);
+							});
+						},
+						
+						publish_listener: function(model,d,a) {
+							model.save(null,{success:function(){
+								var is_published = model.get('is_published');
+								var button_state = is_published?'ui-icon-pause':'ui-icon-play';
+								$('input[data-quest-id="'+model.id+'"]').button({icons:{primary:button_state}});
+							},
+							error:function() {
+								alert("Error publishing quest!");
+							}});
+
+						},
+						
+						toggle_publish:function(ev) {
+							var is_published = !$(ev.target).is(':checked');
+							verify = function(msg,prev_state) {
+								var answer = confirm(msg);
+								if ( !answer ) {
+									$(ev.target).prop('checked',prev_state);
+									$(ev.target).button('refresh');
+								}
+								return answer;
+							}
+							var quest_id = $(ev.target).attr('data-quest-id');
+							var quest_model = Quest.findOrCreate(quest_id,{create:false});
+							if (!is_published ) {
+	
+								var to_continue = verify("Are you sure you want to publish " + quest_model.get('title') + "?",false);
+								if ( ! to_continue ) return;
+								
+								quest_model.set('is_published',true);
+							}else {
+								var to_continue = verify("Are you sure you want to unpublish "+ quest_model.get('title') + "?",true);
+								if ( ! to_continue )
+									return;
+								quest_model.set('is_published',false);
+							}
 						},
 						edit_quest_details: function(ev) {
 							
@@ -87,8 +135,10 @@ define(
 							this.$el.append(tmpl(this.model.toJSON()));
 							$('button[name="btn_edit"]').button({text:false, icons: {primary: 'ui-icon-pencil'}});
 							$('button[name="btn_del_quest"]').button({text:false,icons:{primary:'ui-icon-trash'}});
+							$('input').filter(function() { return this.name.match('btn_publish_*') && !this.checked } ).button({text:false,icons:{primary:'ui-icon-play'}});
+							$('input').filter(function() { return this.name.match('btn_publish_*') && this.checked } ).button({text:false,icons:{primary:'ui-icon-pause'}});
 							$('#btn_profile_menu').menu();
-							$('#btn_new_quest').button();
+							$('#btn_new_quest, #btn_profile').button();
 						},
 						delete_quest : function(ev) {
 							var sure = confirm("Are you sure you want to delete this quest?");

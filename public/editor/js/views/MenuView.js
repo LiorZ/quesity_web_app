@@ -30,7 +30,6 @@ define(['jQueryUI','EasingMenu'],function(jQueryUI,EasingMenu) {
 			});
 			$("#new_page_menu").menu();
 			var menu_container_start_left = $("#menu").css('left');
-			
 			$("#menu").make_menu({
 				start_loc: {left  : 0}, 
 				start_method: {duration: 1000, method: 'easeInSine'},

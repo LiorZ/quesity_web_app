@@ -15,6 +15,10 @@
 			<td><a href='/editor/<%=quest._id%>'><%=quest.title%></a></td>
 			<td style='text-align:right;'><button name='btn_edit' data-quest-id="<%=quest._id%>" style='height:2em;'></button></td>
 			<td style='text-align:right;'><button name='btn_del_quest' data-quest-id="<%=quest._id%>" style='height:2em;'></button></td>
+			<td style='text-align:right;'><input type='checkbox' name='btn_publish_' <%if (quest.is_published) {%>checked<%}%> data-quest-id="<%=quest._id%>" id ='btn_publish_<%=quest._id%>' style='height:2em;'
+				class='btn_del_quest_checkbox'/>
+				<label for="btn_publish_<%=quest._id%>">Publish</label>
+			</td>
 		</tr>
 	<%});}%>
 </table>

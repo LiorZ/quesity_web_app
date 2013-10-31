@@ -54,7 +54,6 @@ define(['jQueryUI','Backbone','routers/Router','views/ViewAttributes','models/Mo
 			this.menu_view = new MenuView({pages: pages});
 			this.init_router();
 			this.paperObj = Joint.paper("world");
-
 			$( "button" ).button();
 		},
 		init_router:function() {
