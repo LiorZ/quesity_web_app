@@ -19,6 +19,7 @@ define(['models/Quest','Backbone','text!shared_templates/quest_settings_dialog.h
 			'click #btn_del_img':'delete_image_from_gallery',
 		},
 		gallery_timeout_id:-1,
+		
 		orient_del_btn: function(  ) {
 			console.log("orienting...")
 			if ( $('#btn_del_img').is(":visible") ) {
@@ -26,6 +27,7 @@ define(['models/Quest','Backbone','text!shared_templates/quest_settings_dialog.h
 				this.show_del_btn();
 			} 
 		},
+		
 		delete_image_from_gallery:function() {
 			var context =this;
 			var src = $('.ad-image img').attr('src')

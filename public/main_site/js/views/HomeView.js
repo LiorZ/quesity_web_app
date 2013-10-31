@@ -95,9 +95,7 @@ define(
 
 							if (!sure)
 								return;
-
-							var quest_id = $(ev.target).attr(
-									'data-quest-id');
+							var quest_id = $(ev.target).parent('button').attr('data-quest-id') || $(ev.target).attr('data-quest-id');
 							var quest = Quest.findOrCreate(quest_id, {
 								create : false
 							});
