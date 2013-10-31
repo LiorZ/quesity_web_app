@@ -167,7 +167,7 @@ define(['models/Quest','Backbone','text!shared_templates/quest_settings_dialog.h
 			this.$el.find('#tabs').tabs();
 			this.$el.find('#tags').tagit();
 			this.init_gallery();
-			this.$el.find('#allowed_hints, #allowed_public_questions, #allowed_location_finders, #txt_radius').spinner();
+			this.$el.find('#allowed_hints, #allowed_public_questions, #allowed_location_finders, #txt_radius').spinner({min:0});
 			var dialog_obj = this.$el.find('#dlg_create_quest');
 			this.$el = this.$el.find('#dlg_create_quest').dialog(
 					{
