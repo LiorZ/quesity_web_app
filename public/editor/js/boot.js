@@ -24,7 +24,7 @@ require.config({
     shared_templates:'/shared/templates/',
     shared_views:'/shared/js/views/',
     ADGallery:'/shared/js/lib/jquery-ui/plugins/ADGallery/jquery.ad-gallery',
-
+    async: '/shared/js/lib/async/async'
   },
 
   shim: {
@@ -69,17 +69,19 @@ require.config({
   }
 });
 
-require(['views/appView','models/Quest','text!../templates/all.html','Backbone','BackboneRelational','models/globals','tagit','ADGallery'],
-		function(appView,Quest,templates,Backbone,BackboneRelational,globals){
+require(['async','views/appView','models/Quest','text!../templates/all.html','Backbone','BackboneRelational','models/globals','tagit','ADGallery'],
+		function(async,appView,Quest,templates,Backbone,BackboneRelational,globals){
 	
 	Backbone.Relational.store.addModelScope(globals);
 	
 	$(document).ready(function() {
 		$('body').append(templates);
 		var quest_id = $('#quest_id').val();
+		
 		var quest_model = new Quest({_id:quest_id});
 		quest_model.fetch({
 			success: function(){
+				quest_model.get('pages').fetch({async:false});
 				var app_view = new appView({model:quest_model});
 				app_view.render();
 			},

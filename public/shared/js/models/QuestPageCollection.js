@@ -6,6 +6,15 @@ define(['models/QuestPage','models/ModelAttributes','models/QuestPageLocation','
 		    return Attributes[attrs.type].model.prototype(attrs,options);
 		},
 		arr:[],
+		url:function() {
+			console.log("Requesting the url of all pages")
+			var quest_obj = this.quest;
+			if (  quest_obj == undefined || quest_obj.isNew() ){
+				return;
+			}
+			
+			return '/quest/'+quest_obj.id+'/pages/'
+		},
 		comparator: function(page) {
 			return parseInt(page.get('page_number'));
 		},

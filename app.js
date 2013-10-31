@@ -298,22 +298,24 @@ app.get('/', function(req, res){
 	res.render("index.jade", {layout:false,booter: 'main_site/js/boot'});
 });
 
-app.get('/quest/:q_id',auth.auth_user,validate_quest_account,function(req,res,next){
-
+app.get('/quest/:q_id/pages',auth.auth_user,validate_quest_account,function(req,res,next) {
+	console.log("Fetching all pages");
 	var quest_id = req.param('q_id');
-	var quest = req.session.current_quest;
-	models.QuestPage.pages_by_quest_id(quest_id,function(pages){
-		quest_json = quest.toJSON();
-		quest_json.pages = pages || [];
-		
-		req.session.current_quest = null;
-		
-		res.send(quest_json);
+		models.QuestPage.pages_by_quest_id(quest_id,function(pages){
+			res.send(pages);
 	},function(err){
 		next({message:"Can't find quest!",raw:err});
 		return;
 	});
 	
+});
+
+app.get('/quest/:q_id',auth.auth_user,validate_quest_account,function(req,res,next){
+
+	var quest_id = req.param('q_id');
+	var quest = req.session.current_quest;
+	req.session.current_quest = null;
+	res.send(quest);
 });
 
 app.post('/new_quest',auth.auth_user,function(req,res,next) { 
