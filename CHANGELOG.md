@@ -20,7 +20,7 @@ Several bug fixes:
 	* Disabling the option to enter negative stall times
 	* Changing the erratic behavior of menus.
 
-v0.21 - 31/10/2013
+Next Version:
 -------------------
 
 * Adding settings page
