@@ -1,8 +1,0 @@
-Quesity Editor ChangeLog
-=========================
-
-v0.1 - 10/5/2013
------------------
-
-* First working version.
-	* Server + Client side quest creation editor. 6 types of pages: Static,Open Question,Multiple choice, Location, Surprise,Stall
