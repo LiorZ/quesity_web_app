@@ -10,10 +10,11 @@ require.config({
     jQueryUI: '/shared/js/lib/jquery-ui/jquery-ui-1.10.0.custom',
     tagit: '/shared/js/lib/jquery-ui/plugins/tagit/tag-it',
     ADGallery:'/shared/js/lib/jquery-ui/plugins/ADGallery/jquery.ad-gallery',
-    editor_views:'/editor/js/views/',
     shared_views:'/shared/js/views/',
     shared_templates:'/shared/templates/',
     JQueryUI_Maps: '/shared/js/lib/jquery-ui/plugins/google-maps/jquery.ui.map.full.min',
+    select2:'/shared/js/lib/jquery-ui/plugins/select2/select2',
+
   },
 
   shim: {

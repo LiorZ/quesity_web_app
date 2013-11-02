@@ -4,8 +4,8 @@
  * 2) add model validation.
  */
 
-define(['models/Quest','Backbone','text!shared_templates/quest_settings_dialog.html','shared_views/MapView'],
-		function(Quest,Backbone,quest_dialog_template,MapView) {
+define(['models/Quest','Backbone','text!shared_templates/quest_settings_dialog.html','shared_views/MapView','shared_views/PageSelectionBox','models/QuestPage'],
+		function(Quest,Backbone,quest_dialog_template,MapView,PageSelectionBox,QuestPage) {
 	var QuestSettingsView = Backbone.View.extend({
 		events: {
 			'click #btn_open_map':'open_map',
@@ -60,7 +60,7 @@ define(['models/Quest','Backbone','text!shared_templates/quest_settings_dialog.h
 			}})
 			
 		},
-		clear_hidebtn_timeout:function() {
+		clear_hidebtn_timeout:function() { 
 			console.log("clear_hidebtn_timeout");
 			clearTimeout(this.gallery_timeout_id);
 		},
@@ -169,6 +169,7 @@ define(['models/Quest','Backbone','text!shared_templates/quest_settings_dialog.h
 			this.$el.find('#tabs').tabs();
 			this.$el.find('#tags').tagit();
 			this.init_gallery();
+			
 			this.$el.find('#allowed_hints, #allowed_public_questions, #allowed_location_finders, #txt_radius').spinner({min:0});
 			var dialog_obj = this.$el.find('#dlg_create_quest');
 			this.$el = this.$el.find('#dlg_create_quest').dialog(
@@ -231,11 +232,26 @@ define(['models/Quest','Backbone','text!shared_templates/quest_settings_dialog.h
 						}
 					});
 			if ( this.model.get('images').length == 0 ){
-				console.log('Number of images is 0');
 				$('.ad-gallery').hide();
 			}
 			
 			$('#properties').scroll(_.bind(context.orient_del_btn,context));
+			var first_page = this.model.get('pages').findWhere({is_first:true});
+			this.page_selection_box = new PageSelectionBox({el:'#select_first_page',change_listener:function(new_page_id) {
+				var first_page = context.model.get('pages').where({is_first:true});
+				if (first_page.length > 1){
+					alert("Assertion: More than one first page!")
+				}
+				if ( first_page.length == 1 ){
+					first_page[0].set('is_first',false);
+					first_page[0].save(null);
+				}
+				
+				var new_page = QuestPage.findOrCreate(new_page_id,{create:false});
+				new_page.set('is_first',true);
+				new_page.save(null);
+			}});
+			this.page_selection_box.render(first_page);
 			this.delegateEvents(this.events);
 		},
 		

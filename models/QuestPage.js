@@ -12,6 +12,7 @@ module.exports = function(mongoose,extend,_) {
 		lat:{type:Number},
 		lng:{type:Number},
 		txt_street: {type:String},
+		is_first:{type:Boolean,'default':false},
 		radius:{type:Number, set:Math.round} //in meters
 		
 	},{ collection : 'links', discriminatorKey : 'type' });

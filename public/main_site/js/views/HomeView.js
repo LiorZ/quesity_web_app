@@ -73,6 +73,7 @@ define(
 							var context = this;
 							quest_model.fetch({
 								success: function(model,response,options){
+									model.get('pages').fetch({async:false});
 									context.settings_view = new QuestSettingsView({model:model, should_open_editor:false});
 									context.settings_view.render();
 								}, 

@@ -2,7 +2,6 @@ define(['views/EditableRowDialog','views/LinkView','shared_views/PageSelectionBo
 	var LinkEditableRowDialog = EditableRowDialog.extend({
 		initialize: function(options) {
 			EditableRowDialog.prototype.initialize.apply(this, [options]);
-			this.page_selection_box = new PageSelectionBox({el:'#next_page_link'});
 		},
 
 		save_object: function(dialog_obj,collection) {
@@ -31,6 +30,7 @@ define(['views/EditableRowDialog','views/LinkView','shared_views/PageSelectionBo
 				page = this.model.get('parent_page');
 			
 			var context=this;
+			this.page_selection_box = new PageSelectionBox({el:'#next_page_link'});
 			this.page_selection_box.render(page);
 		},
 		

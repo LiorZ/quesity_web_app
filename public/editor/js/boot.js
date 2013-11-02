@@ -24,7 +24,7 @@ require.config({
     shared_templates:'/shared/templates/',
     shared_views:'/shared/js/views/',
     ADGallery:'/shared/js/lib/jquery-ui/plugins/ADGallery/jquery.ad-gallery',
-    async: '/shared/js/lib/async/async'
+    async: '/shared/js/lib/async/async',
   },
 
   shim: {
