@@ -4,6 +4,7 @@ html(lang="en")
 		script(data-main='/main_site/js/boot_home', type='text/javascript',src='http://maps.google.com/maps/api/js?sensor=true&key=AIzaSyCI3y0xsOOIUye7jrp6HWjnOl1OTrCY4ls')
 		link(rel='stylesheet',type='text/css', href='/shared/js/lib/jquery-ui/css/smoothness/jquery-ui-1.10.0.custom.css')
 		link(rel='stylesheet',type='text/css', href='/main_site/css/main.css')
-		script(data-main=booter, type='text/javascript',src='/shared/js/lib/require/require.js')
+		if (typeof(booter) !== 'undefined')
+			script(data-main=booter, type='text/javascript',src='/shared/js/lib/require/require.js')
 	body
 		div#content

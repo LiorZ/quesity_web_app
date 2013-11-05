@@ -1,4 +1,4 @@
-
+var findOrCreate = require('mongoose-findorcreate')
 
 //Account.js
 module.exports = function(mongoose,Quest) {
@@ -18,10 +18,15 @@ module.exports = function(mongoose,Quest) {
 			last: { type:String } 
 		},
 		date_registered:{type:Date, 'default':Date.now},
+		gender:{type:String},
+		location:{type:String},
+		facebook_raw_data: {type:String},
+		facebook_profile_link:{type:String},
+		last_login:{type:Date, 'default':Date.now},
+		birthday:{type:Date},
 		activated:{type:Boolean, 'default':true},
-		quests_playing: [{type: mongoose.Schema.ObjectId, ref:'Quest'}],
 	});
-	
+	AccountSchema.plugin(findOrCreate);
 	var Account = mongoose.model('Account',AccountSchema);
 	var register = function(data,callbacks) { 
 		var user = new Account({ 
@@ -67,28 +72,6 @@ module.exports = function(mongoose,Quest) {
 			succ_callback(account);
 		},error_callback);
 	}
-	var get_basic_account = function(account_id, callbacks) {
-		Account.findOne({_id:account_id},function(err,doc) {
-			if (err || doc == null) { 
-				callbacks.error(err);
-			}else {
-				callbacks.success(doc);
-			}
-		});
-	}
-	var get_quests_playing = function(data,callbacks) { 
-		var account_id = data.account_id;
-		var success = function(doc){
-			doc.populate("quests_playing",function(err,res){
-				if ( err ){
-					callbacks.error(err);
-				}else {
-					callbacks.success(res.quests_playing);
-				}
-			});
-		}
-		get_basic_account(account_id,{success:success,error:callbacks.error});
-	}
 	
 	var byId = function(id,succ_callback,err_callback) {
 		
@@ -102,27 +85,12 @@ module.exports = function(mongoose,Quest) {
 			}
 		});
 	};
-
-	var add_playing_quest = function(data,callbacks) {
-		
-		Account.findOneAndUpdate({_id:data.account_id},{$addToSet: {quests_playing: data.quest_id}},{},function(err,doc) {
-			if (err || doc == null) {
-				callbacks.error(err);
-				return;
-			}else{
-				callbacks.success(doc);
-			}
-		});
-	};
-
 	
 	return {
 		Account:Account,
 		register:register,
 		login:login,
 		byId: byId,
-		add_playing_quest:add_playing_quest,
 		attach_quests: attach_quests,
-		get_quests_playing: get_quests_playing
 	}
 }

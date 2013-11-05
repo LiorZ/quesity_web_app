@@ -1,3 +1,5 @@
+//DEPRECATED!!!!
+
 require.config({
   paths: {
     jQuery: '/shared/js/lib/jquery/jquery.1.9.0',

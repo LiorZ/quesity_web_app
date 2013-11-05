@@ -3,11 +3,19 @@ var app = express();
 var mongoose = require('mongoose');
 var extend = require('mongoose-schema-extend');
 var nconf = require('nconf');
+var passport = require('passport')  , 
+util = require('util'), 
+FacebookStrategy = require('passport-facebook').Strategy,
+FacebookTokenStrategy = require('passport-facebook-token').Strategy;
 
 var nodemailer = require('nodemailer');
 var MemoryStore = require('connect').session.MemoryStore;
 var _ = require('underscore');
 var models = {};
+
+//CONSTS:
+var FACEBOOK_APP_SECRET='a3a3f2dfc55658a2c3ae3b706e7e8ac8';
+var FACEBOOK_APP_ID='211673598896341';
 
 //What configuration to open:
 nconf.argv()
@@ -45,6 +53,54 @@ var generic_error = function(err, req, res, next) {
 
 models.QuestPage = require('./models/QuestPage')(mongoose,extend,_);
 
+passport.serializeUser(function(user, done) {
+	  done(null, user._id);
+	});
+
+	passport.deserializeUser(function(id, done) {
+	  models.Account.Account.findById(id,function(err,user) {
+		 done(err,user); 
+	  });
+	});
+
+	var passport_user_handler = function(accessToken, refreshToken, obj, done) {
+	    // asynchronous verification, for effect...
+	    process.nextTick(function () {
+	    	var profile = obj._json;
+	    	console.log(profile);
+	    	models.Account.Account.findOrCreate({email:profile.email}, {
+	    		name: { first: profile.first_name, last: profile.last_name },
+	    		facebook_profile_link: profile.link,
+	    		gender:profile.gender,
+	    		location:profile.location.name,
+	    		birthday:profile.birthday,
+	    		facebook_raw_data:obj._raw
+	    	},function(err, user, created) {
+	    		user.last_login = new Date();
+	    		user.save(function(err) {
+	    			done(err,user);
+	    		})
+	    	})
+	    });
+	  }
+	
+passport.use(new FacebookStrategy({
+    clientID: FACEBOOK_APP_ID,
+    clientSecret: FACEBOOK_APP_SECRET,
+    callbackURL: "http://localhost:8000/login/facebook/callback",
+  },passport_user_handler
+  
+));
+
+passport.use(new FacebookTokenStrategy({
+    clientID: FACEBOOK_APP_ID,
+    clientSecret: FACEBOOK_APP_SECRET
+  },
+  passport_user_handler
+  
+));
+
+
 app.configure(function(){
 	console.log("Configuring ... ");
 	app.set('view engine', 'jade');
@@ -53,31 +109,21 @@ app.configure(function(){
 	app.use(express.limit('1mb'));
 	app.use(express.cookieParser());
 	app.use(express.session({secret: "Lior&Tomer", store: new MemoryStore()}));
-	app.use(app.router)
 	app.use(generic_error);
+    app.use(passport.initialize());
+    app.use(passport.session());
+	app.use(app.router);
+	
+	console.log("Connecting to database at address: " + configuration.db_address);
 	mongoose.connect(configuration.db_address);
 });
 
 
-//Load Development app extensions:
-
-//if ( nconf.get('mode') == 'development' ){
-//	
-//}
-
-//var auth_user = function(req,res,next) {
-//	if ( req.session.loggedIn ) {
-//		next();
-//	}else {
-//		return next(new Error("Error logging in!"));
-//	}
-//	
-//}
-var auth = require('./authentication')(app,models);
+var auth = require('./authentication')(passport);
 app = require('./dev_functions')(app,models,auth);
 
 var validate_quest_account = function(req,res,next) {
-	var account_id = req.session.accountId;
+	var account_id = req.user._id
 	var quest_id = req.param('q_id');
 	models.Quest.validate_quest_to_account(account_id,quest_id,function(model) {
 		if ( model == null || model == undefined ){
@@ -111,8 +157,8 @@ var link_from_params = function(req,res,next) {
 	}
 }
 
-app.del('/quest/:q_id',auth.auth_user, validate_quest_account,function(req,res,next) {
-	var account_id = req.session.accountId;
+app.del('/quest/:q_id',auth.auth_user, function(req,res,next) {
+	var account_id = req.user._id
 	var quest_id = req.param('q_id');
 	console.log("Trying to delete quest");
 	models.Quest.remove_quest(quest_id,account_id,
@@ -295,7 +341,12 @@ app.all('/editor/*',function(req,res) {
 	res.redirect('/');
 });
 app.get('/', function(req, res){
-	res.render("index.jade", {layout:false,booter: 'main_site/js/boot'});
+	if ( req.isAuthenticated() ) {
+		res.redirect('/home');
+	}else {
+		res.render("index_login.jade", {layout:false});
+	}
+	
 });
 
 app.get('/quest/:q_id/pages',auth.auth_user,validate_quest_account,function(req,res,next) {
@@ -319,7 +370,7 @@ app.get('/quest/:q_id',auth.auth_user,validate_quest_account,function(req,res,ne
 });
 
 app.post('/new_quest',auth.auth_user,function(req,res,next) { 
-	var account_id = req.session.accountId;
+	var account_id = req.user._id;
 	var quest_data = req.body;
 	// validate quest_data!
 	quest_data.accountId = quest_data.accountId || account_id;
@@ -335,55 +386,70 @@ app.post('/new_quest',auth.auth_user,function(req,res,next) {
 			})
 });
 
-app.post('/register' , function(req,res,next) { 
-	console.log("Trying to register ... ");
-	var data = {
-		first_name: req.param("firstName",null),
-		last_name: req.param("lastName",null),
-		email: req.param("email",null),
-		password: req.param("password",null)
-	};
-	_.chain(data).values().each(function(val) { 
-		if ( _.isNull(val) ){
-			console.log("DDDDD");
-			next("All values must be filled!");
-			return;
+
+//DEPRECATED!!
+
+/** app.post('/register' , function(req,res,next) { 
+//	console.log("Trying to register ... ");
+//	var data = {
+//		first_name: req.param("firstName",null),
+//		last_name: req.param("lastName",null),
+//		email: req.param("email",null),
+//		password: req.param("password",null)
+//	};
+//	_.chain(data).values().each(function(val) { 
+//		if ( _.isNull(val) ){
+//			console.log("DDDDD");
+//			next("All values must be filled!");
+//			return;
+//		}
+//	}).value();
+//	
+//	
+//	var success = function(user) {
+//		req.session.loggedIn = true;
+//		req.session.accountId = user._id;
+//		res.send(200);
+//	}
+//	
+//	var error = function (err) {
+//		next(new Error("Error registering user!" + err));
+//		return;
+//	}
+//	models.Account.register(data,{success:success,error:error});	
+//	console.log("Registration completed");
+// });**/
+
+app.get('/account/me',auth.auth_user,function(req,res,next) {
+	res.send(_.omit(req.user,['password','facebook_raw_data']));
+});
+
+app.get('/account/quests', auth.auth_user, function(req,res,next) {
+	models.Quest.Quest.find({accountId: req.user._id}, function(err,quests) {
+		if (err) {
+			next(err);
+		}else {
+			res.send(quests);
 		}
-	}).value();
-	
-	
-	var success = function(user) {
-		req.session.loggedIn = true;
-		req.session.accountId = user._id;
-		res.send(200);
-	}
-	
-	var error = function (err) {
-		next(new Error("Error registering user!" + err));
-		return;
-	}
-	models.Account.register(data,{success:success,error:error});	
-	console.log("Registration completed");
+	});
 });
 
-app.get('/account/me', 
+app.get('/login/facebook', passport.authenticate('facebook', {scope: ['email','user_location', 'user_birthday']}));
+
+app.get('/login/facebook/callback',  passport.authenticate('facebook', { failureRedirect: '/' }),
+  function(req, res) {
+    res.redirect('/home');
+  });		
+
+app.post('/register/facebook', passport.authenticate('facebook-token', {scope: ['email','user_location', 'user_birthday']}),
 		function(req,res,next) {
-			if (req.session.loggedIn ) {
-				console.log("User is logged in");
-				models.Account.byId(req.session.accountId, function(account) {
-					res.send(account);
-				},
-				function(err) {
-					next({message:"Can't verify login!",raw:err});
-					return;
-				}
-				);
-			} else {
-				res.send(401);
+			if ( req.user != undefined){
+				res.send(req.user);
+			}else {
+				next();
 			}
-			
-});
-
+		}
+);
 app.post('/login', function(req,res,next) { 
 
 	var username = req.param('email',null);
@@ -409,10 +475,7 @@ app.post('/login', function(req,res,next) {
 });
 
 app.get('/logoff',auth.auth_user,function(req,res) {
-	var account_id = req.session.accountId;
-	console.log("logging off account id: " + account_id);
-	req.session.loggedIn = false;
-	req.session.accountId = undefined;
+	req.logout();
 	res.send(200);
 });
 
