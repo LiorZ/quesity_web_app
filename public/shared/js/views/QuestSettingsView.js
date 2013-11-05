@@ -236,7 +236,6 @@ define(['models/Quest','Backbone','text!shared_templates/quest_settings_dialog.h
 			}
 			
 			$('#properties').scroll(_.bind(context.orient_del_btn,context));
-			var first_page = this.model.get('pages').findWhere({is_first:true});
 			this.page_selection_box = new PageSelectionBox({el:'#select_first_page',change_listener:function(new_page_id) {
 				var first_page = context.model.get('pages').where({is_first:true});
 				if (first_page.length > 1){
@@ -251,6 +250,8 @@ define(['models/Quest','Backbone','text!shared_templates/quest_settings_dialog.h
 				new_page.set('is_first',true);
 				new_page.save(null);
 			}});
+			
+			var first_page = this.model.get('pages').findWhere({is_first:true});
 			this.page_selection_box.render(first_page);
 			this.delegateEvents(this.events);
 		},

@@ -12,7 +12,6 @@ module.exports = function(mongoose,extend,_) {
 		lat:{type:Number},
 		lng:{type:Number},
 		txt_street: {type:String},
-		is_first:{type:Boolean,'default':false},
 		radius:{type:Number, set:Math.round} //in meters
 		
 	},{ collection : 'links', discriminatorKey : 'type' });
@@ -31,7 +30,8 @@ module.exports = function(mongoose,extend,_) {
 		page_content:{type:String},
 		links:[LinkSchema],
 		hints:[HintSchema],
-		quest_id: {type:String, index:true}
+		quest_id: {type:String, index:true},
+		is_first:{type:Boolean,'default':false},
 	},{ collection : 'pages', discriminatorKey : 'page_type' });
 	
 //Can't allow schema inheritance, so this is useless for now...
