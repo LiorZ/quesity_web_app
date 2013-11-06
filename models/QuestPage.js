@@ -52,7 +52,7 @@ module.exports = function(mongoose,extend,_) {
 	
 	var QuestPage = mongoose.model('QuestPage',QuestPageSchema);
 	var QuestPageStall = mongoose.model('stall',QuestPageStallSchema);
-	var Link = mongoose.model('regular',LinkSchema);
+	var Link = mongoose.model('Link',LinkSchema);
 	var Hint = mongoose.model('hint',HintSchema);
 //	var LinkAnswer = mongoose.model('answer',LinkAnswerSchema);
 //	var LinkLocation = mongoose.model('location',LinkLocationSchema);

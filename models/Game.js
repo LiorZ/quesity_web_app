@@ -3,33 +3,35 @@
  */
 module.exports = function(mongoose) {
 	
+	var LocationSchema = new mongoose.Schema({
+		lat: {type:Number},
+		lng:{type:Number},
+		date:{type:Date,'default':Date.now}
+	})
+	
 	var MoveSchema = new mongoose.Schema({
 		date: {type:Date, 'default':Date.now},
-		next_page:{type: mongoose.Schema.ObjectId, ref:'QuestPage'},
-		parent_page: {type: mongoose.Schema.ObjectId, ref:'QuestPage'},
-		type: {type:String},
-		answer_txt:{type:String},
-		lat:{type:Number},
-		lng:{type:Number},
+		link_id:{type:mongoose.Schema.ObjectId,ref:'Link'},
+		location:{type:mongoose.Schema.ObjectId,ref:'Location'}
 	});
 	
 	var GameSchema = new mongoose.Schema({
 		date_started:{type:Date, 'default':Date.now},
 		is_over:{type:Boolean, 'default':false},
-		account: {type: mongoose.Schema.ObjectId, ref:'Account', index:true},
-		quest: {type: mongoose.Schema.ObjectId, ref:'Quest', index:true},
-		moves:[{type: mongoose.Schema.ObjectId, ref:'Move'}]
+		account_id: {type: mongoose.Schema.ObjectId, ref:'Account', index:true},
+		quest_id: {type: mongoose.Schema.ObjectId, ref:'Quest', index:true},
+		moves:[{type: mongoose.Schema.ObjectId, ref:'Move'}],
+		locations:[{type:mongoose.Schema.ObjectId,ref:'Location'}]
 	});
 	
-	GameSchema.index({account:1, quest:1}, {unique:true});
+	GameSchema.index({account:1, quest:1});
 	
 	var Game = mongoose.model('Game',GameSchema);
 	var Move = mongoose.model('Move',MoveSchema);
+	var Location = mongoose.model('Location',LocationSchema);
 	
 	var new_game = function(data,callbacks) {
-		var account = data.account_id;
-		var quest = data.quest_id;
-		var game = new Game({account:account,quest:quest});
+		var game = new Game(data);
 		game.save(function(err) {
 			if ( err ) {
 				callbacks.error(err);
@@ -76,7 +78,9 @@ module.exports = function(mongoose) {
 	return {
 		Game: Game,
 		new_game:new_game,
-		new_move:new_move
+		new_move:new_move,
+		Location:Location,
+		Move:Move
 	}
 	
 }

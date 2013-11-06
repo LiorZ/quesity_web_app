@@ -1,6 +1,5 @@
 module.exports = function(app,models,auth) {
 	app.get('/all_quests', function(req,res,next) {
-		console.log("Requesting all quests...");
 		models.Quest.Quest.find({is_published:true},function(err,doc) {
 			if (err) {
 				res.send(401);

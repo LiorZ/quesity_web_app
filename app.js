@@ -6,12 +6,14 @@ var nconf = require('nconf');
 var passport = require('passport')  , 
 util = require('util'), 
 FacebookStrategy = require('passport-facebook').Strategy,
-FacebookTokenStrategy = require('passport-facebook-token').Strategy;
+FacebookTokenStrategy = require('passport-facebook-token').Strategy,
+LocalStrategy = require('passport-local').Strategy;
 
 var nodemailer = require('nodemailer');
 var MemoryStore = require('connect').session.MemoryStore;
 var _ = require('underscore');
 var models = {};
+
 
 //CONSTS:
 var FACEBOOK_APP_SECRET='a3a3f2dfc55658a2c3ae3b706e7e8ac8';
@@ -31,21 +33,26 @@ console.log("Starting quesity server in " + nconf.get('mode') + " mode ... ");
 var options = {
 		production:{
 			db_address: 'mongodb://lior:koko123@alex.mongohq.com:10039/app15419682',
-			port:process.env.PORT
+			port:process.env.PORT,
+			facebook_callback:"http://quesity.herokuapp.com/login/facebook/callback"
 		},
 		development: {
 			db_address:'mongodb://localhost/quesity',
-			port:8000
+			port:8000,
+			facebook_callback:"http://localhost:8000/login/facebook/callback"
 		},
 		
 		test_local:{
 			db_address: 'mongodb://localhost/quesity-test',
-			port:5000
+			port:5000,
+			faceboook_callback:"http://localhost:5000/login/facebook/callback"
 		}
 }
 var configuration = options[nconf.get('mode')];
 models.Quest = require('./models/Quest')(mongoose);
 models.Account = require('./models/Account')(mongoose,models.Quest);
+models.Game = require('./models/Game')(mongoose);
+
 var generic_error = function(err, req, res, next) {
 	console.log(err);
 	res.send(401);
@@ -67,12 +74,11 @@ passport.serializeUser(function(user, done) {
 	    // asynchronous verification, for effect...
 	    process.nextTick(function () {
 	    	var profile = obj._json;
-	    	console.log(profile);
 	    	models.Account.Account.findOrCreate({email:profile.email}, {
 	    		name: { first: profile.first_name, last: profile.last_name },
 	    		facebook_profile_link: profile.link,
 	    		gender:profile.gender,
-	    		location:profile.location.name,
+	    		location:_.isUndefined(profile.location)?'':profile.location.name,
 	    		birthday:profile.birthday,
 	    		facebook_raw_data:obj._raw
 	    	},function(err, user, created) {
@@ -87,7 +93,7 @@ passport.serializeUser(function(user, done) {
 passport.use(new FacebookStrategy({
     clientID: FACEBOOK_APP_ID,
     clientSecret: FACEBOOK_APP_SECRET,
-    callbackURL: "http://localhost:8000/login/facebook/callback",
+    callbackURL: options[nconf.get('mode')].facebook_callback,
   },passport_user_handler
   
 ));
@@ -97,8 +103,25 @@ passport.use(new FacebookTokenStrategy({
     clientSecret: FACEBOOK_APP_SECRET
   },
   passport_user_handler
-  
 ));
+
+
+passport.use(new LocalStrategy({
+    usernameField: 'email',
+    passwordField: 'password'
+},
+  function(email, password, done) {
+	  models.Account.login(email,password,{
+		  success:function(doc) {
+			  return done(null,doc);
+		  },
+		  error: function(err) {
+			  console.log(err);
+		  	return done(null,false,{message:"Incorrect login"});
+		  }
+	  })
+  })
+);
 
 
 app.configure(function(){
@@ -121,6 +144,12 @@ app.configure(function(){
 
 var auth = require('./authentication')(passport);
 app = require('./dev_functions')(app,models,auth);
+
+require('./game_reporting')({
+	app:app,
+	auth:auth,
+	models: models
+});
 
 var validate_quest_account = function(req,res,next) {
 	var account_id = req.user._id
@@ -157,7 +186,7 @@ var link_from_params = function(req,res,next) {
 	}
 }
 
-app.del('/quest/:q_id',auth.auth_user, function(req,res,next) {
+app.del('/quest/:q_id',auth.auth_user_json, function(req,res,next) {
 	var account_id = req.user._id
 	var quest_id = req.param('q_id');
 	console.log("Trying to delete quest");
@@ -172,7 +201,7 @@ app.del('/quest/:q_id',auth.auth_user, function(req,res,next) {
 	);
 });
 
-app.put('/quest/:q_id', auth.auth_user,validate_quest_account, function(req,res,next) {
+app.put('/quest/:q_id', auth.auth_user_json,validate_quest_account, function(req,res,next) {
 	var quest_id = req.param('q_id');
 //	var quest_json = req.body;
 	var quest_json = _.omit(req.body,'_id');
@@ -188,7 +217,7 @@ app.put('/quest/:q_id', auth.auth_user,validate_quest_account, function(req,res,
 	});
 });
 
-app.del('/quest/:q_id/page/:page_id',auth.auth_user,validate_quest_account,function(req,res,next){
+app.del('/quest/:q_id/page/:page_id',auth.auth_user_json,validate_quest_account,function(req,res,next){
 	var quest_id = req.param('q_id');
 	var page_id = req.param('page_id');
 	models.QuestPage.remove_page({page_id:page_id,quest_id:quest_id},
@@ -200,7 +229,7 @@ app.del('/quest/:q_id/page/:page_id',auth.auth_user,validate_quest_account,funct
 		});
 }) ;
 	
-app.put('/quest/:q_id/page/:page_id',auth.auth_user,validate_quest_account,function(req,res,next) {
+app.put('/quest/:q_id/page/:page_id',auth.auth_user_json,validate_quest_account,function(req,res,next) {
 		var quest_id = req.param('q_id');
 		models.QuestPage.update_page(quest_id,req.body,function(page) {
 			console.log("Page updated ..");
@@ -211,7 +240,7 @@ app.put('/quest/:q_id/page/:page_id',auth.auth_user,validate_quest_account,funct
 });
 
 
-app.post('/quest/:q_id/page/:page_id/new_link',auth.auth_user,validate_quest_account,link_from_params,function(req,res,next) {
+app.post('/quest/:q_id/page/:page_id/new_link',auth.auth_user_json,validate_quest_account,link_from_params,function(req,res,next) {
 	models.QuestPage.new_link({
 		quest_id:req.param('q_id'),
 		page_id:req.param('page_id'),
@@ -226,7 +255,7 @@ app.post('/quest/:q_id/page/:page_id/new_link',auth.auth_user,validate_quest_acc
 });
 
 
-app.post('/quest/:q_id/page/:page_id/new_hint',auth.auth_user,validate_quest_account,function(req,res,next) {
+app.post('/quest/:q_id/page/:page_id/new_hint',auth.auth_user_json,validate_quest_account,function(req,res,next) {
 	console.log("Inserting new hint .. ");
 	models.QuestPage.new_hint({
 		quest_id:req.param('q_id'),
@@ -243,7 +272,7 @@ app.post('/quest/:q_id/page/:page_id/new_hint',auth.auth_user,validate_quest_acc
 		}})
 });
 
-app.put('/quest/:q_id/page/:page_id/hint/:hint_id',auth.auth_user,validate_quest_account,function(req,res,next) {
+app.put('/quest/:q_id/page/:page_id/hint/:hint_id',auth.auth_user_json,validate_quest_account,function(req,res,next) {
 	console.log("Updating hint ... ");
 	var hint = {
 			_id:req.param('hint_id'),
@@ -263,7 +292,7 @@ app.put('/quest/:q_id/page/:page_id/hint/:hint_id',auth.auth_user,validate_quest
 		}})
 });
 
-app.del('/quest/:q_id/page/:page_id/hint/:hint_id',auth.auth_user,validate_quest_account,function(req,res,next) {
+app.del('/quest/:q_id/page/:page_id/hint/:hint_id',auth.auth_user_json,validate_quest_account,function(req,res,next) {
 	console.log("Deleting hint .. ");
 	var hint_id = req.param('hint_id');
 	models.QuestPage.delete_hint({
@@ -278,7 +307,7 @@ app.del('/quest/:q_id/page/:page_id/hint/:hint_id',auth.auth_user,validate_quest
 		}});
 });
 
-app.put('/quest/:q_id/page/:page_id/link/:link_id',auth.auth_user,validate_quest_account,link_from_params,function(req,res,next) {
+app.put('/quest/:q_id/page/:page_id/link/:link_id',auth.auth_user_json,validate_quest_account,link_from_params,function(req,res,next) {
 	var link_id = req.param('link_id');
 	var link = req.session.current_link;
 	_.extend(link,{_id:link_id});
@@ -297,7 +326,7 @@ app.put('/quest/:q_id/page/:page_id/link/:link_id',auth.auth_user,validate_quest
 		}})
 });
 
-app.del('/quest/:q_id/page/:page_id/link/:link_id',auth.auth_user,validate_quest_account,function(req,res,next) {
+app.del('/quest/:q_id/page/:page_id/link/:link_id',auth.auth_user_json,validate_quest_account,function(req,res,next) {
 	var link_id = req.param('link_id');
 	models.QuestPage.delete_link({
 		quest_id:req.param('q_id'),
@@ -313,7 +342,7 @@ app.del('/quest/:q_id/page/:page_id/link/:link_id',auth.auth_user,validate_quest
 		}})
 });
 
-app.post('/quest/:q_id/new_page',auth.auth_user,validate_quest_account,function(req,res,next) { 
+app.post('/quest/:q_id/new_page',auth.auth_user_json,validate_quest_account,function(req,res,next) { 
 		var quest_id = req.param('q_id');
 		var new_page_callback = function(new_page){
 			res.send({_id: new_page._id});
@@ -332,7 +361,7 @@ app.post('/quest/:q_id/new_page',auth.auth_user,validate_quest_account,function(
 		});
 	});
 		
-app.get('/editor/:q_id', auth.auth_user,validate_quest_account,function(req, res){
+app.get('/editor/:q_id', auth.auth_user_web,validate_quest_account,function(req, res){
 	console.log("Trying editor...");
 	var quest_id = req.param('q_id');
 	res.render("editor.jade",{layout:false, quest_id: quest_id});
@@ -349,8 +378,7 @@ app.get('/', function(req, res){
 	
 });
 
-app.get('/quest/:q_id/pages',auth.auth_user,validate_quest_account,function(req,res,next) {
-	console.log("Fetching all pages");
+app.get('/quest/:q_id/pages',auth.auth_user_json,function(req,res,next) {
 	var quest_id = req.param('q_id');
 		models.QuestPage.pages_by_quest_id(quest_id,function(pages){
 			res.send(pages);
@@ -361,7 +389,7 @@ app.get('/quest/:q_id/pages',auth.auth_user,validate_quest_account,function(req,
 	
 });
 
-app.get('/quest/:q_id',auth.auth_user,validate_quest_account,function(req,res,next){
+app.get('/quest/:q_id',auth.auth_user_json,validate_quest_account,function(req,res,next){
 
 	var quest_id = req.param('q_id');
 	var quest = req.session.current_quest;
@@ -369,7 +397,8 @@ app.get('/quest/:q_id',auth.auth_user,validate_quest_account,function(req,res,ne
 	res.send(quest);
 });
 
-app.post('/new_quest',auth.auth_user,function(req,res,next) { 
+app.post('/new_quest',auth.auth_user_json,function(req,res,next) { 
+	
 	var account_id = req.user._id;
 	var quest_data = req.body;
 	// validate quest_data!
@@ -420,11 +449,11 @@ app.post('/new_quest',auth.auth_user,function(req,res,next) {
 //	console.log("Registration completed");
 // });**/
 
-app.get('/account/me',auth.auth_user,function(req,res,next) {
+app.get('/account/me',auth.auth_user_json,function(req,res,next) {
 	res.send(_.omit(req.user,['password','facebook_raw_data']));
 });
 
-app.get('/account/quests', auth.auth_user, function(req,res,next) {
+app.get('/account/quests', auth.auth_user_json, function(req,res,next) {
 	models.Quest.Quest.find({accountId: req.user._id}, function(err,quests) {
 		if (err) {
 			next(err);
@@ -450,36 +479,14 @@ app.post('/register/facebook', passport.authenticate('facebook-token', {scope: [
 			}
 		}
 );
-app.post('/login', function(req,res,next) { 
+app.post('/login/local',passport.authenticate('local', { successRedirect: '/home', failureRedirect: '/'}));
 
-	var username = req.param('email',null);
-	var password = req.param('password',null);
-	console.log("Trying to log in with : " + username + " And " + password );
-	if (username == null || password == null || username.length < 1 || password.length < 1 ) {
-		next({message:"Can't login!"});
-		return;
-	}
-	models.Account.login(username,password,{
-		
-		success:function(account){
-			console.log(account);
-			req.session.loggedIn = true;
-			req.session.accountId = account._id;
-			//Remove the password:
-			res.send(_.omit(account,"password"));
-		},
-		error: function(err) {
-			next(new Error("Error while logging in " + err));
-		}
-	 } );
-});
-
-app.get('/logoff',auth.auth_user,function(req,res) {
+app.get('/logoff',auth.auth_user_web,function(req,res) {
 	req.logout();
 	res.send(200);
 });
 
-app.get('/home',auth.auth_user,function(req,res) {
+app.get('/home',auth.auth_user_web,function(req,res) {
 	res.render('index.jade',{layout:false, booter:'main_site/js/boot_home'});
 });
 
