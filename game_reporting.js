@@ -3,6 +3,7 @@ module.exports = function(params) {
 	var models = params.models;
 	var app = params.app;
 	app.post('/quest/:q_id/game/new',auth.auth_user_json,function(req,res,next){
+		console.log("Starting new game");
 		var quest_id = req.param('q_id');
 		var account_id = req.user._id, date_started = req.body.date_started;
 		var new_game = {
@@ -40,6 +41,8 @@ module.exports = function(params) {
 	app.post('/quest/:q_id/game/:game_id/location/new',auth.auth_user_json,function(req,res,next) {
 		var game_id = req.param('game_id');
 		var location_data = req.body;
+		console.log("Logging location");
+		console.log(location_data);
 		models.Game.Game.findOne({_id:game_id}, function(err,game) {
 			if ( err )
 				next(new Error(err));
@@ -51,6 +54,8 @@ module.exports = function(params) {
 		var game_id = req.param('game_id');
 		var quest_id = req.param('q_id');
 		var move_json = req.body;
+		console.log("Logging move");
+		console.log(move_json);
 		models.Game.Game.findOne({_id:game_id,quest_id:quest_id},function(err,game) {
 			if (err || game == undefined || game == null){ next(new Error(err)); return;}
 			push_several_to_mongo(game,game.moves,move_json,models.Game.Move,res);

@@ -30,7 +30,7 @@ module.exports = function(mongoose,extend,_) {
 		page_content:{type:String},
 		links:[LinkSchema],
 		hints:[HintSchema],
-		quest_id: {type:String, index:true},
+		quest_id: {type:mongoose.Schema.ObjectId,ref:'Quest', index:true},
 		is_first:{type:Boolean,'default':false},
 	},{ collection : 'pages', discriminatorKey : 'page_type' });
 	

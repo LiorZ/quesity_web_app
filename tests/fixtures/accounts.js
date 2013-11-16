@@ -42,14 +42,14 @@ module.exports.Quest = {
 			title: "Quest_1",
 			accountId: module.exports.Account.account_1._id,
 			is_published:true,
-			_id: new ObjectId()
+			_id: new ObjectId(),
 		},
 
 		quest_2:{
 			title: "Quest_2",
 			accountId: module.exports.Account.account_1._id,
 			is_published:false,
-			_id: new ObjectId()
+			_id: new ObjectId(),
 		}
 		
 }
@@ -216,3 +216,13 @@ module.exports.QuestPage.page_1 =  {
 			   ],
 			   _id: new ObjectId()
 };		
+
+
+module.exports.Quest.quest_1.pages = [module.exports.QuestPage.page_7._id,
+                                      module.exports.QuestPage.page_6._id,
+                                      module.exports.QuestPage.page_5._id,
+                                      module.exports.QuestPage.page_4._id,
+                                      module.exports.QuestPage.page_3._id,
+                                      module.exports.QuestPage.page_2._id,
+                                      module.exports.QuestPage.page_1._id
+                                    ]

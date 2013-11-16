@@ -32,11 +32,12 @@ module.exports = function(mongoose) {
 	
 	var new_game = function(data,callbacks) {
 		var game = new Game(data);
-		game.save(function(err) {
+		game.save(function(err,saved_game) {
 			if ( err ) {
 				callbacks.error(err);
 			}else {
-				callbacks.success(game);
+				callbacks.success(saved_game);
+				
 			}
 		});
 	}
