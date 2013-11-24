@@ -38,8 +38,8 @@ var options = {
 		},
 		development: {
 			db_address:'mongodb://localhost/quesity',
-			port:8000,
-			facebook_callback:"http://localhost:8000/login/facebook/callback"
+			port:80,
+			facebook_callback:"http://quesity.herokuapp.com/login/facebook/callback"
 		},
 		
 		test_local:{
@@ -51,7 +51,7 @@ var options = {
 var configuration = options[nconf.get('mode')];
 models.Quest = require('./models/Quest')(mongoose);
 models.Account = require('./models/Account')(mongoose,models.Quest);
-models.Game = require('./models/Game')(mongoose);
+models.Game = require('./models/Game')(mongoose,models.Quest);
 
 var generic_error = function(err, req, res, next) {
 	console.log(err);
@@ -467,6 +467,7 @@ app.get('/login/facebook', passport.authenticate('facebook', {scope: ['email','u
 
 app.get('/login/facebook/callback',  passport.authenticate('facebook', { failureRedirect: '/' }),
   function(req, res) {
+	console.log("Logged in!");
     res.redirect('/home');
   });		
 
