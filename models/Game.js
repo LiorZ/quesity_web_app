@@ -1,7 +1,7 @@
 /**
  * @author lior
  */
-module.exports = function(mongoose) {
+module.exports = function(mongoose,Quest) {
 	
 	var LocationSchema = new mongoose.Schema({
 		lat: {type:Number},
@@ -33,16 +33,22 @@ module.exports = function(mongoose) {
 	
 	var new_game = function(data,callbacks) {
 		var game = new Game(data);
-		game.save(function(err,saved_game) {
+		
+		Quest.Quest.findOne({_id:data.quest_id}, function(err,quest) {
 			if ( err ) {
 				callbacks.error(err);
 			}else {
-				callbacks.success(saved_game);
-				
+				game.remaining_hints = quest.allowed_hints;
+				game.save(function(err,saved_game) {
+					if ( err ) {
+						callbacks.error(err);
+					}else {
+						callbacks.success(saved_game);
+					}
+				});
 			}
 		});
 	}
-	
 	
 	var new_move = function(data,callbacks) {
 
