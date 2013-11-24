@@ -52,6 +52,13 @@ module.exports = function(mongoose,extend,_) {
 	
 	var QuestPage = mongoose.model('QuestPage',QuestPageSchema);
 	var QuestPageStall = mongoose.model('stall',QuestPageStallSchema);
+	
+	var QuestPageQuestion = mongoose.model('question',QuestPageSchema);
+	var QuestPageLocation = mongoose.model('location',QuestPageSchema);
+	var QuestPageSurprise = mongoose.model('surprise',QuestPageSchema);
+	var QuestPageStatic = mongoose.model('static',QuestPageSchema);
+	var QuestPageOpenQuestion = mongoose.model('open_question',QuestPageSchema);
+	
 	var Link = mongoose.model('Link',LinkSchema);
 	var Hint = mongoose.model('hint',HintSchema);
 //	var LinkAnswer = mongoose.model('answer',LinkAnswerSchema);
