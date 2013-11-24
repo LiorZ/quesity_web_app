@@ -33,21 +33,16 @@ module.exports = function(mongoose) {
 	
 	var new_game = function(data,callbacks) {
 		var game = new Game(data);
-		
-		Quest.Quest.findOne({_id:data.quest_id}, function(err,quest) {
+		game.save(function(err,saved_game) {
 			if ( err ) {
 				callbacks.error(err);
 			}else {
-				game.save(function(err,saved_game) {
-					if ( err ) {
-						callbacks.error(err);
-					}else {
-						callbacks.success(saved_game);
-					}
-				});
+				callbacks.success(saved_game);
+				
 			}
 		});
 	}
+	
 	
 	var new_move = function(data,callbacks) {
 
