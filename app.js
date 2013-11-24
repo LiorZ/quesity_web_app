@@ -51,7 +51,7 @@ var options = {
 var configuration = options[nconf.get('mode')];
 models.Quest = require('./models/Quest')(mongoose);
 models.Account = require('./models/Account')(mongoose,models.Quest);
-models.Game = require('./models/Game')(mongoose,models.Quest);
+models.Game = require('./models/Game')(mongoose);
 
 var generic_error = function(err, req, res, next) {
 	console.log(err);

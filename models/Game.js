@@ -1,7 +1,7 @@
 /**
  * @author lior
  */
-module.exports = function(mongoose,Quest) {
+module.exports = function(mongoose) {
 	
 	var LocationSchema = new mongoose.Schema({
 		lat: {type:Number},
