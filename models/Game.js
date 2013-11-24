@@ -38,7 +38,6 @@ module.exports = function(mongoose,Quest) {
 			if ( err ) {
 				callbacks.error(err);
 			}else {
-				game.remaining_hints = quest.allowed_hints;
 				game.save(function(err,saved_game) {
 					if ( err ) {
 						callbacks.error(err);
