@@ -18,7 +18,8 @@
     "passport-facebook-token": "latest",
     "passport-local":"latest",
     "passport": "latest",
-    "mongoose-findorcreate": "latest"
+    "mongoose-findorcreate": "latest",
+    "connect-mongo" : "latest"
   },
   "devDependencies": {
     "chai": ">=1.6",

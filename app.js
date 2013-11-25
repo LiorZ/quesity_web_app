@@ -8,6 +8,7 @@ util = require('util'),
 FacebookStrategy = require('passport-facebook').Strategy,
 FacebookTokenStrategy = require('passport-facebook-token').Strategy,
 LocalStrategy = require('passport-local').Strategy;
+var MongoStore = require('connect-mongo')(express);
 
 var nodemailer = require('nodemailer');
 var MemoryStore = require('connect').session.MemoryStore;
@@ -131,7 +132,12 @@ app.configure(function(){
 	app.use(express.bodyParser());
 	app.use(express.limit('1mb'));
 	app.use(express.cookieParser());
-	app.use(express.session({secret: "Lior&Tomer", store: new MemoryStore()}));
+	app.use(express.session({
+		secret: "Lior&Tomer", 
+		store: new MongoStore({
+			url:configuration.db_address
+		})
+	}));
 	app.use(generic_error);
     app.use(passport.initialize());
     app.use(passport.session());
