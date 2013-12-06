@@ -53,7 +53,7 @@
 </script>
 
 <script type='text/template' id='tmpl_one_location'>
-<td><a href='#' id='lnk_edit_row'><%= txt_street %></a></td>
+<td><a href='#' id='lnk_edit_row'><%= txt_street || "N/A"%></a></td>
 <td><span id='lbl_radius'><%= radius %></span></td>
 <%if ( links_to_page ) {%> 
 
