@@ -1,5 +1,6 @@
-define(['models/QuestPageStatic','models/QuestPageLocation','models/QuestPageStall','models/QuestPageQuestion','models/QuestPageSurprise'],
-        function(QuestPageStatic,QuestPageLocation,QuestPageStall,QuestPageQuestion,QuestPageSurprise) {
+define(['models/QuestPageStatic','models/QuestPageLocation','models/QuestPageStall','models/QuestPageQuestion','models/QuestPageSurprise',
+        'models/QuestPageOpenQuestion'],
+        function(QuestPageStatic,QuestPageLocation,QuestPageStall,QuestPageQuestion,QuestPageSurprise,QuestPageOpenQuestion) {
 	var Attributes  = {
 			'static': {
 				model: {
@@ -32,10 +33,10 @@ define(['models/QuestPageStatic','models/QuestPageLocation','models/QuestPageSta
 			},
 			open_question: {
 				model: {
-					page_prototype: QuestPageQuestion
+					page_prototype: QuestPageOpenQuestion
 				}
 			}
-	}
+	};
 	
 	return Attributes;
 });

@@ -1,4 +1,4 @@
-define(['models/globals','lib/utils/consts','Backbone','BackboneRelational','models/Mixins'],function(globals,consts,Backbone,BackboneRelational,Mixins) {
+define(['models/globals','Backbone','BackboneRelational','models/Mixins'],function(globals,Backbone,BackboneRelational,Mixins) {
 	var Link = Backbone.RelationalModel.extend({
 		idAttribute: "_id",
 		relations:[{
@@ -35,7 +35,7 @@ define(['models/globals','lib/utils/consts','Backbone','BackboneRelational','mod
 //			return false;
 //		},
 		url:function() {
-			var page_id = this.get('parent_page').id
+			var page_id = this.get('parent_page').id;
 			var quest_id = this.get('parent_page').get('quest').id;
 			var url = '';
 			if (this.isNew()){
@@ -51,17 +51,18 @@ define(['models/globals','lib/utils/consts','Backbone','BackboneRelational','mod
 			links_to_page:undefined
 		},
 		get_label: function(property) {
+			var label_length = 15;
 			var txt = this.get(property);
-			if ( txt == undefined )
+			if ( txt === undefined )
 				return '';
 			
-			if ( txt.length < consts.LABEL_LENGTH ){
+			if ( txt.length < label_length ){
 				return txt;
 			}
-			return txt.slice(0,consts.LABEL_LENGTH) + '...';
+			return txt.slice(0,label_length) + '...';
 		},
 		get_link_view_properties_to_listen: function() {
-			return undefined
+			return undefined;
 		}
 	});
 	_.extend(Link.prototype,Mixins.shallow_json);

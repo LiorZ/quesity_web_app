@@ -1,6 +1,6 @@
 define(['models/LinkAnswer'],function(LinkAnswer) {
 	var LinkAnswerCollection = Backbone.Collection.extend({
-		model: LinkAnswer,
+		model: LinkAnswer
 	});
 	
 	return LinkAnswerCollection;

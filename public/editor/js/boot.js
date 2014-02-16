@@ -25,6 +25,7 @@ require.config({
     shared_views:'/shared/js/views/',
     ADGallery:'/shared/js/lib/jquery-ui/plugins/ADGallery/jquery.ad-gallery',
     async: '/shared/js/lib/async/async',
+    config:'/shared/js/config'
   },
 
   shim: {

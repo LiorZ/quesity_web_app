@@ -34,7 +34,8 @@ define(['models/globals','Backbone','models/Link','models/LinkCollection','Backb
 			'question':'QuestPageQuestion',
 			'stall':'QuestPageStall',
 			'static':'QuestPageStatic',
-			'surprise':'QuestPageSurprise'
+			'surprise':'QuestPageSurprise',
+			'open_question':'QuestPageOpenQuestion'
 		},
 		subModelTypeAttribute:'page_type',
 		
@@ -42,6 +43,9 @@ define(['models/globals','Backbone','models/Link','models/LinkCollection','Backb
 			this.listenTo(this,"change:x change:page_name change:page_content",this.save_model);
 //			this.listenTo(this.get('links'),'add remove change',this.save_model);
 //			this.listenTo(this.get('hints'),'add remove change',this.save_model);
+		},
+		get_next_page: function() {
+			throw new Error("This is an abstract function!");
 		},
 		save_model:function() {
 			this.save(null,
@@ -81,13 +85,13 @@ define(['models/globals','Backbone','models/Link','models/LinkCollection','Backb
 			return pages.chain().filter( function(page) { return (
 					page != me && 
 					page.get('page_type') != 'surprise' 
-			) } );
+			); } );
 		},
 		is_connected_to: function(page_id) {
 			var links = this.get('links');
-			if ( links == undefined || links.length == 0 )
+			if ( links === undefined || links.length === 0 )
 				return false;
-			var has = links.find(function(link) { return link.get('links_to_page').id == page_id });
+			var has = links.find(function(link) { return link.get('links_to_page').id == page_id; });
 			return (!_.isUndefined(has));
 		}
 	});

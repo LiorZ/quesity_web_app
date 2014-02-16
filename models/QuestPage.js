@@ -18,7 +18,7 @@ module.exports = function(mongoose,extend,_) {
 	
 	var HintSchema = new mongoose.Schema({
 		hint_title:{type: String, unique:false},
-		hint_txt: {type:String, unique:false}
+		hint_txt: {type:String, unique:false},
 	});
 	
 	var QuestPageSchema = new mongoose.Schema({

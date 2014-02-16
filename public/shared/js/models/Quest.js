@@ -1,4 +1,5 @@
-define(['models/QuestPage','models/QuestPageCollection','Backbone','BackboneRelational'],function(QuestPage,QuestPageCollection,Backbone,BackboneRelational) {
+define(['models/QuestPage','models/QuestPageCollection','Backbone','BackboneRelational','models/Mixins'],
+		function(QuestPage,QuestPageCollection,Backbone,BackboneRelational,Mixins) {
 	var StartingLocation = Backbone.RelationalModel.extend({
 		defaults:{
 			lat:undefined,
@@ -33,13 +34,12 @@ define(['models/QuestPage','models/QuestPageCollection','Backbone','BackboneRela
 			images:[],
 			allowed_hints:3,
 			allowed_public_questions:3,
-			allowed_location_finders:3
+			allowed_location_finders:3,
+			games_played:10,
+			rating:1
 		},
 		idAttribute: "_id",
 		initialize:function(options) {
-//			var pages = new QuestPageCollection();
-//			this.set('pages',pages);
-//			this.listenTo(pages,'add',this.add_self_reference); <-- Due to moving to BackboneRelational
 			if ( _.isNull(this.get('starting_location')) ) {
 				this.set('starting_location',new StartingLocation());
 			}
@@ -55,6 +55,7 @@ define(['models/QuestPage','models/QuestPageCollection','Backbone','BackboneRela
 //			page.set('quest',this);
 //		}
 	});
+	
 	
 	return Quest;
 });

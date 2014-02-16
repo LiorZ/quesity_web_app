@@ -20,7 +20,9 @@ module.exports = function(mongoose) {
 		allowed_public_questions: {type:Number, 'default':0},
 		allowed_location_finders: {type:Number, 'default':0},
 		tags:[{type:String,index:true}],
-		images:[{type:String}]
+		images:[{type:String}],
+		rating:{type:Number, 'default':1},
+		games_played: {type:Number, 'default':10}
 	});
 	
 	QuestSchema.path('tags').set(

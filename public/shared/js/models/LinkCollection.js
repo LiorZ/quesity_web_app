@@ -15,7 +15,7 @@ define(['models/Link'],function(Link){
 		},
 		handle_remove: function(model, collection, options) {
 			this.stopListening(model);
-		}
+		},
 	});
 	
 	return LinkCollection;

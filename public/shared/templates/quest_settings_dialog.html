@@ -13,7 +13,8 @@
     height:450px;
     overflow: auto;
    }
-    #tactics input, #tactics label {
+   
+    #tactics input, #tactics label, #temp_settings input {
     	display:block;
     }
     
@@ -134,6 +135,15 @@
 
 </div>
 
+</fieldset>
+
+<fieldset id="temp_settings">
+	<legend>Temporary Settings</legend>
+	<label for="rating">Rating: </label>
+	<input type="text" id="rating" name="rating" value="<%=rating%>"/>
+	<br/>
+	<label for="played">Games Played:</label>
+	<input type="text" id="played" name="played" value="<%=games_played%>"/>
 </fieldset>
 	  	
 	  </div>

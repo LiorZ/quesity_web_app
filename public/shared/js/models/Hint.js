@@ -1,9 +1,10 @@
-define(['Backbone'],function(Backbone) {
+define(['Backbone','BackboneRelational'],function(Backbone) {
 	var Hint = Backbone.RelationalModel.extend({
 		idAttribute: "_id",
 		defaults: {
 			hint_title:undefined,
-			hint_txt:undefined
+			hint_txt:undefined,
+			is_used: false
 		},
 		url:function() {
 			var page_id = this.collection.parent.id;

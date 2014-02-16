@@ -39,7 +39,7 @@ var options = {
 		},
 		development: {
 			db_address:'mongodb://localhost/quesity',
-			port:80,
+			port:8000,
 			facebook_callback:"http://quesity.herokuapp.com/login/facebook/callback"
 		},
 		
@@ -112,6 +112,7 @@ passport.use(new LocalStrategy({
     passwordField: 'password'
 },
   function(email, password, done) {
+	 console.log("Manual login with email " + email);
 	  models.Account.login(email,password,{
 		  success:function(doc) {
 			  return done(null,doc);
@@ -384,6 +385,10 @@ app.get('/', function(req, res){
 	
 });
 
+app.get('/register', function(req,res,next) {
+	res.render("register.jade",{layout:false});
+});
+
 app.get('/quest/:q_id/pages',auth.auth_user_json,function(req,res,next) {
 	var quest_id = req.param('q_id');
 		models.QuestPage.pages_by_quest_id(quest_id,function(pages){
@@ -424,36 +429,36 @@ app.post('/new_quest',auth.auth_user_json,function(req,res,next) {
 
 //DEPRECATED!!
 
-/** app.post('/register' , function(req,res,next) { 
-//	console.log("Trying to register ... ");
-//	var data = {
-//		first_name: req.param("firstName",null),
-//		last_name: req.param("lastName",null),
-//		email: req.param("email",null),
-//		password: req.param("password",null)
-//	};
-//	_.chain(data).values().each(function(val) { 
-//		if ( _.isNull(val) ){
-//			console.log("DDDDD");
-//			next("All values must be filled!");
-//			return;
-//		}
-//	}).value();
-//	
-//	
-//	var success = function(user) {
-//		req.session.loggedIn = true;
-//		req.session.accountId = user._id;
-//		res.send(200);
-//	}
-//	
-//	var error = function (err) {
-//		next(new Error("Error registering user!" + err));
-//		return;
-//	}
-//	models.Account.register(data,{success:success,error:error});	
-//	console.log("Registration completed");
-// });**/
+app.post('/register/action' , function(req,res,next) { 
+	console.log("Trying to register ... ");
+	var data = {
+		first_name: req.param("firstName",null),
+		last_name: req.param("lastName",null),
+		email: req.param("email",null),
+		password: req.param("password",null)
+	};
+	_.chain(data).values().each(function(val) { 
+		if ( _.isNull(val) ){
+			console.log("DDDDD");
+			next("All values must be filled!");
+			return;
+		}
+	}).value();
+	
+	
+	var success = function(user) {
+		req.session.loggedIn = true;
+		req.session.accountId = user._id;
+		res.send(200);
+	}
+	
+	var error = function (err) {
+		next(new Error("Error registering user!" + err));
+		return;
+	}
+	models.Account.register(data,{success:success,error:error});	
+	console.log("Registration completed");
+ });
 
 app.get('/account/me',auth.auth_user_json,function(req,res,next) {
 	res.send(_.omit(req.user,['password','facebook_raw_data']));

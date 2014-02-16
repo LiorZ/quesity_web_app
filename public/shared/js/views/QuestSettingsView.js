@@ -170,7 +170,8 @@ define(['models/Quest','Backbone','text!shared_templates/quest_settings_dialog.h
 			this.$el.find('#tags').tagit();
 			this.init_gallery();
 			
-			this.$el.find('#allowed_hints, #allowed_public_questions, #allowed_location_finders, #txt_radius').spinner({min:0});
+			this.$el.find('#allowed_hints, #allowed_public_questions, #allowed_location_finders, #txt_radius, #played').spinner({min:0});
+			this.$el.find('#rating').spinner({step:0.1,min:0,max:7});
 			var dialog_obj = this.$el.find('#dlg_create_quest');
 			this.$el = this.$el.find('#dlg_create_quest').dialog(
 					{
@@ -217,6 +218,8 @@ define(['models/Quest','Backbone','text!shared_templates/quest_settings_dialog.h
 													lat:dialog_obj.find('#txt_lat').val(),
 													lng:dialog_obj.find('#txt_lng').val()
 												},
+												rating: dialog_obj.find('#rating').val(),
+												games_played: dialog_obj.find('#played').val(),
 												tags:jQuery.makeArray(dialog_obj.find("#tags").tagit("assignedTags"))
 										}
 										context.model.set(quest_data);

@@ -2,5 +2,21 @@ include index
 h1.text_align_center Welcome to Quesity
 
 #login_main.center_screen
-      a(href='/login/facebook')
-        img(src='/main_site/img/btn_facebook_login.png', style='margin-left: auto; margin-right: auto; display: block;')
+	a(href='/login/facebook')
+		img(src='/main_site/img/btn_facebook_login.png', style='margin-left: auto; margin-right: auto; display: block;')
+	
+	form#regular_login(action="/login/local" method="post")
+		table(style="margin-top:2em; margin-left: auto; margin-right: auto;")
+			tr
+				td email
+				td
+					input(type="text" name="email")
+			tr
+				td Password
+				td
+					input(type="password" name="password")
+			tr
+				td(colspan=2 style="text-align:center;")
+					input(type="submit")
+	a(href="/register" style="margin-top:2em; margin-left: auto; margin-right: auto; display:block;") 
+		h2 Register with email

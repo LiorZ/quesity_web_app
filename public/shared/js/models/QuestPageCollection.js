@@ -1,19 +1,22 @@
 define(['models/QuestPage','models/ModelAttributes','models/QuestPageLocation','models/QuestPageQuestion','models/QuestPageStall','models/QuestPageStatic',
-        'models/QuestPageSurprise'],function(QuestPage,Attributes,QuestPageLocation,QuestPageQuestion,QuestPageStall,QuestPageStatic,QuestPageSurprise) {
+        'models/QuestPageSurprise','models/QuestPageOpenQuestion','models/api'],
+        function(QuestPage,Attributes,QuestPageLocation,QuestPageQuestion,QuestPageStall,QuestPageStatic,QuestPageSurprise,
+        		QuestPageOpenQuestion,api) {
 	
 	var QuestPageList = Backbone.Collection.extend({
-		model: function(attrs, options) {
-		    return Attributes[attrs.type].model.prototype(attrs,options);
-		},
+//		model: function(attrs, options) {
+//		    return Attributes[attrs.type].model.prototype(attrs,options);
+//		},
+		model:QuestPage,
 		arr:[],
 		url:function() {
-			console.log("Requesting the url of all pages")
+			console.log("Requesting the url of all pages");
 			var quest_obj = this.quest;
-			if (  quest_obj == undefined || quest_obj.isNew() ){
+			if (  quest_obj === undefined || quest_obj.isNew() ){
 				return;
 			}
-			
-			return '/quest/'+quest_obj.id+'/pages/'
+			var url = api.all_quest_pages(quest_obj.id);
+			return url;
 		},
 		comparator: function(page) {
 			return parseInt(page.get('page_number'));
@@ -21,7 +24,7 @@ define(['models/QuestPage','models/ModelAttributes','models/QuestPageLocation','
 		initialize:function() {
 			this.listenTo(this,'add',this.add_some_listeners);
 			this.listenTo(this,'remove',this.remove_from_array);
-			this.arr = new Array();
+			this.arr = [];
 		},
 		add_some_listeners:function(elem) {
 			elem.once("change:jointObj",this.add_joint,this);
@@ -49,7 +52,7 @@ define(['models/QuestPage','models/ModelAttributes','models/QuestPageLocation','
 			var res= this.filter(function(object){
 				return object.get('jointObj') == joint_obj.wholeShape;
 			});
-			if ( res == undefined )
+			if ( res === undefined )
 				return undefined;
 			if ( res.length != 1 ){
 				alert("ERROR: Not one joint per page");

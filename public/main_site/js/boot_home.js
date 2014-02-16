@@ -14,7 +14,7 @@ require.config({
     shared_templates:'/shared/templates/',
     JQueryUI_Maps: '/shared/js/lib/jquery-ui/plugins/google-maps/jquery.ui.map.full.min',
     select2:'/shared/js/lib/jquery-ui/plugins/select2/select2',
-
+    config:'/shared/js/config'
   },
 
   shim: {
