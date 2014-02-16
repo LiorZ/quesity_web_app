@@ -39,7 +39,7 @@ var options = {
 		},
 		development: {
 			db_address:'mongodb://localhost/quesity',
-			port:8000,
+			port:8080,
 			facebook_callback:"http://quesity.herokuapp.com/login/facebook/callback"
 		},
 		

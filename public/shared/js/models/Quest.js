@@ -36,7 +36,10 @@ define(['models/QuestPage','models/QuestPageCollection','Backbone','BackboneRela
 			allowed_public_questions:3,
 			allowed_location_finders:3,
 			games_played:10,
-			rating:1
+			rating:1,
+			distance:5,
+			time:60,
+			map_url:''
 		},
 		idAttribute: "_id",
 		initialize:function(options) {

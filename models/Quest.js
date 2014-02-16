@@ -22,7 +22,10 @@ module.exports = function(mongoose) {
 		tags:[{type:String,index:true}],
 		images:[{type:String}],
 		rating:{type:Number, 'default':1},
-		games_played: {type:Number, 'default':10}
+		games_played: {type:Number, 'default':10},
+		distance:{type:Number, 'default':3},
+		time:{type:Number, 'default':60},
+		map_url:{type:String,'default':""}
 	});
 	
 	QuestSchema.path('tags').set(

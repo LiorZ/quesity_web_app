@@ -170,8 +170,38 @@ define(['models/Quest','Backbone','text!shared_templates/quest_settings_dialog.h
 			this.$el.find('#tags').tagit();
 			this.init_gallery();
 			
-			this.$el.find('#allowed_hints, #allowed_public_questions, #allowed_location_finders, #txt_radius, #played').spinner({min:0});
+			this.$el.find('#allowed_hints, #allowed_public_questions, #allowed_location_finders, #txt_radius, #played, #distance').spinner({min:0});
 			this.$el.find('#rating').spinner({step:0.1,min:0,max:7});
+			var time_spinner = this.$el.find('#time').spinner({
+				min:0,
+				page:1
+			}).data('ui-spinner');
+			
+			time_spinner._format = function(value) {
+				console.log("FORMAT " + value);
+				var h = Math.floor(parseInt(value)/60);
+				var m = value%60;
+				if ( m < 10 )
+					m= '0' +m;
+				return h+':'+m;
+			};
+			time_spinner._parse = function(value) {
+				if (typeof value == typeof 1){
+					return value;
+				}
+				if (value.indexOf(":") != -1){
+					var arr = value.split(':');
+					var time = parseInt(arr[0])*60 + parseInt(arr[1]);
+					return time;
+				}else {
+					return parseInt(value);
+				}
+			};
+			
+			//Refreshing the spinner:
+			this.$el.find('#time').spinner('pageUp');
+			this.$el.find('#time').spinner('pageDown');
+			
 			var dialog_obj = this.$el.find('#dlg_create_quest');
 			this.$el = this.$el.find('#dlg_create_quest').dialog(
 					{
@@ -220,6 +250,9 @@ define(['models/Quest','Backbone','text!shared_templates/quest_settings_dialog.h
 												},
 												rating: dialog_obj.find('#rating').val(),
 												games_played: dialog_obj.find('#played').val(),
+												time: dialog_obj.find('#time').spinner('value'),
+												map_url: dialog_obj.find('#map_url').val(),
+												distance: dialog_obj.find('#distance').val(),
 												tags:jQuery.makeArray(dialog_obj.find("#tags").tagit("assignedTags"))
 										}
 										context.model.set(quest_data);

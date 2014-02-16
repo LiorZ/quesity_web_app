@@ -14,7 +14,7 @@
     overflow: auto;
    }
    
-    #tactics input, #tactics label, #temp_settings input {
+    #tactics input, #tactics label, #temp_settings input, #temp_settings label {
     	display:block;
     }
     
@@ -141,9 +141,14 @@
 	<legend>Temporary Settings</legend>
 	<label for="rating">Rating: </label>
 	<input type="text" id="rating" name="rating" value="<%=rating%>"/>
-	<br/>
 	<label for="played">Games Played:</label>
 	<input type="text" id="played" name="played" value="<%=games_played%>"/>
+	<label for="time">Approx time:</label>
+	<input type="text" id='time' name='time' value="<%=time%>">
+	<label for="distance">Approx Distance:</label>
+	<input type="text" id="distance" name="distance" value="<%=distance%>">
+	<label for="map_url">Map URL: </label>
+	<input type="text" id="map_url" name="map_url" value="<%=map_url ||''%>" style="width:85%;"/>
 </fieldset>
 	  	
 	  </div>

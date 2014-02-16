@@ -6,6 +6,9 @@ define(['config'],function(config) {
 		},
 		all_quest_pages: function(quest_id) {
 			return config.server_url + "/quest/" + quest_id + "/pages";
+		},
+		login_local:function() {
+			return config.server_url + '/login/local';
 		}
 	};
 
