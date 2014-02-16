@@ -140,7 +140,7 @@ define(['models/Quest','Backbone','text!shared_templates/quest_settings_dialog.h
 						text:"OK",
 						click: function() {
 							var starting_location = {
-								street: context.$el.find('#txt_street').val(),
+//								street: context.$el.find('#txt_street').val(),
 								radius: context.$el.find('#txt_radius').val(),
 								lat:context.$el.find('#txt_lat').val(),
 								lng:context.$el.find('#txt_lng').val()
@@ -171,7 +171,7 @@ define(['models/Quest','Backbone','text!shared_templates/quest_settings_dialog.h
 			this.init_gallery();
 			
 			this.$el.find('#allowed_hints, #allowed_public_questions, #allowed_location_finders, #txt_radius, #played, #distance').spinner({min:0});
-			this.$el.find('#rating').spinner({step:0.1,min:0,max:7});
+			this.$el.find('#rating').spinner({step:0.1,min:0,max:5});
 			var time_spinner = this.$el.find('#time').spinner({
 				min:0,
 				page:1
@@ -243,7 +243,7 @@ define(['models/Quest','Backbone','text!shared_templates/quest_settings_dialog.h
 												allowed_public_questions: dialog_obj.find('#allowed_public_questions').val(),
 												allowed_location_finders: dialog_obj.find('#allowed_location_finders').val(),
 												starting_location: {
-													street: dialog_obj.find('#txt_street').val(),
+													street: dialog_obj.find('#street_address').val(),
 													radius: dialog_obj.find('#txt_radius').val(),
 													lat:dialog_obj.find('#txt_lat').val(),
 													lng:dialog_obj.find('#txt_lng').val()
