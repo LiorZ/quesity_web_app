@@ -431,33 +431,37 @@ app.post('/new_quest',auth.auth_user_json,function(req,res,next) {
 
 app.post('/register/action' , function(req,res,next) { 
 	console.log("Trying to register ... ");
+	console.log(req.body);
 	var data = {
-		first_name: req.param("firstName",null),
-		last_name: req.param("lastName",null),
-		email: req.param("email",null),
-		password: req.param("password",null)
+		first_name: req.param("firstName",null) || req.body.firstName,
+		last_name: req.param("lastName",null) || req.body.lastName,
+		email: req.param("email",null) || req.body.email,
+		password: req.param("password",null) || req.body.password
 	};
 	_.chain(data).values().each(function(val) { 
-		if ( _.isNull(val) ){
-			console.log("DDDDD");
-			next("All values must be filled!");
+		if ( _.isNull(val) || _.isUndefined(val)){
+			next(new Error("All values must be filled!"));
 			return;
 		}
 	}).value();
 	
 	
 	var success = function(user) {
-		req.session.loggedIn = true;
-		req.session.accountId = user._id;
-		res.send(200);
+		req.logIn(user, function(err) {
+		      if (err) { return next(err); }
+		      return res.send(user);
+		});
 	}
 	
 	var error = function (err) {
+		if ( err && err.err && err.err.match("E11000") ) {
+			res.send(401);
+			return;
+		}
 		next(new Error("Error registering user!" + err));
 		return;
 	}
 	models.Account.register(data,{success:success,error:error});	
-	console.log("Registration completed");
  });
 
 app.get('/account/me',auth.auth_user_json,function(req,res,next) {
@@ -491,7 +495,23 @@ app.post('/register/facebook', passport.authenticate('facebook-token', {scope: [
 			}
 		}
 );
+
+//For the web:
 app.post('/login/local',passport.authenticate('local', { successRedirect: '/home', failureRedirect: '/'}));
+
+//For the app:
+app.post('/app/login/local',function(req, res, next) {
+	  passport.authenticate('local', function(err, user, info) {
+		    if (err) { return next(err) }
+		    if (!user) {
+		      return next(new Error("Error logging in, user cannot be found"))
+		    }
+		    req.logIn(user, function(err) {
+		      if (err) { return next(err); }
+		      return res.send(user);
+		    });
+		  })(req, res, next);
+});
 
 app.get('/logoff',auth.auth_user_web,function(req,res) {
 	req.logout();
