@@ -27,6 +27,15 @@ module.exports = function(mongoose,Quest) {
 		activated:{type:Boolean, 'default':true},
 	});
 	AccountSchema.plugin(findOrCreate);
+	
+	//Omitting the password field from all jsons:
+	AccountSchema.methods.toJSON = function() {
+		  var obj = this.toObject()
+		  delete obj.password
+		  return obj
+	}
+	
+	
 	var Account = mongoose.model('Account',AccountSchema);
 	var register = function(data,callbacks) { 
 		var user = new Account({ 
