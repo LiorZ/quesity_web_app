@@ -513,6 +513,17 @@ app.post('/app/login/local',function(req, res, next) {
 		  })(req, res, next);
 });
 
+//app.get('/admin/game/:game_id/show', auth.auth_user_web, function(req,res) {
+//	var game_id = req.param('game_id',0);
+//	models.Game.Game.findOne({_id:game_id}).populate('quest_id').exec(function(err,g) {
+//		if ( err ) {
+//			res.send(401);
+//			return;
+//		}
+//		res.send(g);
+//	});
+//});
+
 app.get('/logoff',auth.auth_user_web,function(req,res) {
 	req.logout();
 	res.send(200);

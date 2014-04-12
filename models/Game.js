@@ -3,21 +3,25 @@
  */
 module.exports = function(mongoose,Quest) {
 	
-	var LocationSchema = new mongoose.Schema({
-		lat: {type:Number},
-		lng:{type:Number},
-		date:{type:Date,'default':Date.now}
-	})
+	
+	var location_raw_schema = {
+			lat: {type:Number},
+			lng:{type:Number},
+			date:{type:Date,'default':Date.now}
+		};
+	
+	var LocationSchema = new mongoose.Schema(location_raw_schema)
 	
 	var MoveSchema = new mongoose.Schema({
 		date: {type:Date, 'default':Date.now},
 		link_id:{type:mongoose.Schema.ObjectId,ref:'Link'},
-		location:{type:mongoose.Schema.ObjectId,ref:'Location'}
+		location:location_raw_schema
 	});
 	
 	var GameSchema = new mongoose.Schema({
 		date_started:{type:Date, 'default':Date.now},
 		is_over:{type:Boolean, 'default':false},
+		is_at_starting_location:{type:Boolean, 'default':false},
 		account_id: {type: mongoose.Schema.ObjectId, ref:'Account', index:true},
 		quest_id: {type: mongoose.Schema.ObjectId, ref:'Quest', index:true},
 		moves:[{type: mongoose.Schema.ObjectId, ref:'Move'}],

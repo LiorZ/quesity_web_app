@@ -21,21 +21,44 @@ module.exports = function(params) {
 		})
 	});
 	
-	var push_several_to_mongo = function(model,array,value,what_to_create,res) {
+	var push_several_to_mongo = function(model,array,value,what_to_create,res,next) {
 		if ( Object.prototype.toString.call( value ) === '[object Array]' ){
-			for (var i=0; i<value.length; ++i){
-				var val = new what_to_create(value[i]);
-				array.push(val)
-			}
+			
+			what_to_create.create(value, function(err) {
+				if ( arguments.length <= 1 ) {
+					next("Not enough arguments");
+					return;
+				}
+				if (err) {
+					next(err)
+					return;
+				}
+				for (var i =1; i<arguments.length; i++ ){
+					var m = arguments[i];
+					array.push(m);
+				}
+				model.save(function(err,doc) {
+					if (err)
+						next(err);
+					res.send(doc);
+				});
+				
+			});
+			
 		}else {
 			var val = new what_to_create(value);
-			array.push(val);
+			val.save(function(err,doc) {
+				if ( err ) 
+					next(err);
+				array.push(val);
+				model.save(function(err,doc) {
+					if (err)
+						next(err);
+					res.send(doc);
+				});				
+			})
+			
 		}
-		model.save(function(err,doc) {
-			if (err)
-				next(err);
-			res.send(doc);
-		})
 	};
 	
 	app.post('/quest/:q_id/game/:game_id/location/new',auth.auth_user_json,function(req,res,next) {
@@ -46,7 +69,7 @@ module.exports = function(params) {
 		models.Game.Game.findOne({_id:game_id}, function(err,game) {
 			if ( err )
 				next(new Error(err));
-			push_several_to_mongo(game,game.locations,location_data,models.Game.Location,res);
+			push_several_to_mongo(game,game.locations,location_data,models.Game.Location,res,next);
 		});
 	});
 	
@@ -58,7 +81,7 @@ module.exports = function(params) {
 		console.log(move_json);
 		models.Game.Game.findOne({_id:game_id,quest_id:quest_id},function(err,game) {
 			if (err || game == undefined || game == null){ next(new Error(err)); return;}
-			push_several_to_mongo(game,game.moves,move_json,models.Game.Move,res);
+			push_several_to_mongo(game,game.moves,move_json,models.Game.Move,res,next);
 			
 		});
 	});
