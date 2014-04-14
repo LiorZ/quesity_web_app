@@ -6,11 +6,14 @@ module.exports = function(params) {
 		console.log("Starting new game");
 		var quest_id = req.param('q_id');
 		var account_id = req.user._id, date_started = req.body.date_started;
+		
 		var new_game = {
 				quest_id:quest_id,
 				account_id: account_id,
-				date_started: date_started
+				date_started: date_started,
+				is_at_starting_location: req.body.is_at_starting_location
 		};
+		
 		models.Game.new_game(new_game,{
 			error: function(err){ 
 				next(err);

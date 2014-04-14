@@ -433,8 +433,8 @@ app.post('/register/action' , function(req,res,next) {
 	console.log("Trying to register ... ");
 	console.log(req.body);
 	var data = {
-		first_name: req.param("firstName",null) || req.body.firstName,
-		last_name: req.param("lastName",null) || req.body.lastName,
+		first_name: req.param("firstName",null) || req.body.name.first,
+		last_name: req.param("lastName",null) || req.body.name.last,
 		email: req.param("email",null) || req.body.email,
 		password: req.param("password",null) || req.body.password
 	};
@@ -504,7 +504,7 @@ app.post('/app/login/local',function(req, res, next) {
 	  passport.authenticate('local', function(err, user, info) {
 		    if (err) { return next(err) }
 		    if (!user) {
-		      return next(new Error("Error logging in, user cannot be found"))
+		      return next(new Error("Error logging in, user cannot be found"));
 		    }
 		    req.logIn(user, function(err) {
 		      if (err) { return next(err); }
