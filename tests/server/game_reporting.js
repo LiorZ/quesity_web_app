@@ -27,8 +27,9 @@ before(function(done) {
 
 describe("Testing game reporting" , function() {
 	it("Logging in",function(done) {
-		request_handler('/login/local','post',function(res){
-			res.status.should.eql(302);
+		request_handler('/app/login/local','post',function(res){
+			res.status.should.eql(200);
+			test_data.account = res.body;
 	    	login_cookie = res.headers['set-cookie'][0];
 	    	done();
 		},{email:'test1d@test.com',password:'abcd'})
@@ -151,7 +152,39 @@ describe("Testing game reporting" , function() {
     		done();
     	},moves,login_cookie);
     	
-    })
+    });
+    
+    it("Submitting review", function(done) {
+    	var quest_id = test_data.quest._id;
+    	var game_id = test_data.game._id;
+    	var account_id = test_data.account._id;
+    	
+    	var review = {
+    			quest_id: quest_id,
+    			game_id: game_id,
+    			account_id: account_id,
+    			review_text: "Bla Bla Bla",
+    			rating:4.5
+    	};
+    	
+    	request_handler('/quest/' + quest_id + '/review', 'post', function(res) {
+    		res.status.should.eql(200);
+    		var review = res.body;
+    		console.log(JSON.stringify(review));
+    		done();
+    	},review,login_cookie);
+    });
+    
+    it ("Finish game", function(done) {
+    	var game_id = test_data.game._id;
+    	
+    	request_handler('/game/'+game_id+'/finish','post',function(res) {
+    		res.status.should.eql(200);
+    		var game = res.body;
+    		game.is_over.should.eql(true);
+    		done();
+    	},{},login_cookie);
+    });
     	
     	
  });

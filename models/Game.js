@@ -86,12 +86,33 @@ module.exports = function(mongoose,Quest) {
 				})
 			}
 		})
+	};
+	
+	var game_over = function(game_id, success_callback,error_callback) {
+		Game.findOne({_id: game_id} , function(err,game) {
+			if ( err ) {
+				error_callback(err);
+				return;
+			}
+			
+			game.is_over = true;
+			game.save(function(err) {
+				if ( err ) {
+					error_callback(err);
+					return;
+				}
+				
+				success_callback(game);
+			})
+		});
 	}
+	
 	
 	return {
 		Game: Game,
 		new_game:new_game,
 		new_move:new_move,
+		game_over:game_over,
 		Location:Location,
 		Move:Move
 	}

@@ -13,7 +13,7 @@ var MongoStore = require('connect-mongo')(express);
 var nodemailer = require('nodemailer');
 var MemoryStore = require('connect').session.MemoryStore;
 var _ = require('underscore');
-var models = {};
+var models = require('./models/models')(mongoose);
 
 
 //CONSTS:
@@ -48,18 +48,16 @@ var options = {
 			port:5000,
 			faceboook_callback:"http://localhost:5000/login/facebook/callback"
 		}
-}
+};
+
 var configuration = options[nconf.get('mode')];
-models.Quest = require('./models/Quest')(mongoose);
-models.Account = require('./models/Account')(mongoose,models.Quest);
-models.Game = require('./models/Game')(mongoose,models.Quest);
 
 var generic_error = function(err, req, res, next) {
 	console.log(err);
 	res.send(401);
 }
 
-models.QuestPage = require('./models/QuestPage')(mongoose,extend,_);
+
 
 passport.serializeUser(function(user, done) {
 	  done(null, user._id);
@@ -86,10 +84,10 @@ passport.serializeUser(function(user, done) {
 	    		user.last_login = new Date();
 	    		user.save(function(err) {
 	    			done(err,user);
-	    		})
-	    	})
+	    		});
+	    	});
 	    });
-	  }
+};
 	
 passport.use(new FacebookStrategy({
     clientID: FACEBOOK_APP_ID,
@@ -136,8 +134,9 @@ app.configure(function(){
 	app.use(express.session({
 		secret: "Lior&Tomer", 
 		store: new MongoStore({
-			url:configuration.db_address
-		})
+			url:configuration.db_address,
+		}),
+		cookie: { expires: new Date(Date.now() + 94608000000) }
 	}));
 	app.use(generic_error);
     app.use(passport.initialize());
@@ -318,7 +317,7 @@ app.put('/quest/:q_id/page/:page_id/link/:link_id',auth.auth_user_json,validate_
 	var link_id = req.param('link_id');
 	var link = req.session.current_link;
 	_.extend(link,{_id:link_id});
-	console.log("Updating link: ")
+	console.log("Updating link: ");
 	console.log(link);
 	models.QuestPage.update_link({
 		quest_id:req.param('q_id'),
@@ -329,8 +328,8 @@ app.put('/quest/:q_id/page/:page_id/link/:link_id',auth.auth_user_json,validate_
 			req.session.current_link = null;
 			res.send(link);
 		},error:function(err){
-			next(new Error(err))
-		}})
+			next(new Error(err));
+		}});
 });
 
 app.del('/quest/:q_id/page/:page_id/link/:link_id',auth.auth_user_json,validate_quest_account,function(req,res,next) {
@@ -451,7 +450,7 @@ app.post('/register/action' , function(req,res,next) {
 		      if (err) { return next(err); }
 		      return res.send(user);
 		});
-	}
+	};
 	
 	var error = function (err) {
 		if ( err && err.err && err.err.match("E11000") ) {
@@ -460,7 +459,7 @@ app.post('/register/action' , function(req,res,next) {
 		}
 		next(new Error("Error registering user!" + err));
 		return;
-	}
+	};
 	models.Account.register(data,{success:success,error:error});	
  });
 
@@ -511,6 +510,28 @@ app.post('/app/login/local',function(req, res, next) {
 		      return res.send(user);
 		    });
 		  })(req, res, next);
+});
+
+app.post('/report/login', auth.auth_user_json,function(req,res,next) {
+	
+	console.log("Updating last login of user " + req.user._id);
+	req.user.last_login = new Date();
+	req.user.save();
+	res.send(200);
+});
+
+
+//Send feedback through the app.
+app.post('/app/feedback',auth.auth_user_json,function(req,res,next) {
+	var feedback = new models.Feedback({
+		account_id: req.user._id,
+		feedback_text:req.body.feedback_text
+	});
+	console.log(JSON.stringify(feedback));
+	//We don't want to burden the user if the feedback not saved due to server error ... 
+	feedback.save();
+
+	res.send(200);
 });
 
 //app.get('/admin/game/:game_id/show', auth.auth_user_web, function(req,res) {

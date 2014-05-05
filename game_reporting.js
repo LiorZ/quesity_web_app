@@ -89,4 +89,28 @@ module.exports = function(params) {
 		});
 	});
 	
+	app.post('/quest/:q_id/review', auth.auth_user_json, function(req,res,next) {
+		console.log("Submitting review " + JSON.stringify(req.body) );
+		var quest_id = req.param('q_id');
+		var review_json = req.body;
+		
+		review_json.account_id = req.user._id;
+		
+		if ( quest_id == null || quest_id == undefined ) {
+			next(new Error("Can't locate quest without id"));
+			return;
+		}
+		models.Quest.submit_review(quest_id,review_json,function(review){
+			res.send(review);
+		}, function(err) { next(err); } );
+	});
+	
+	app.post('/game/:g_id/finish', auth.auth_user_json, function(req,res,next) {
+		var game_id = req.param('g_id');
+		console.log("Finishing game with id " + game_id);
+		models.Game.game_over(game_id, function(game) {
+			res.send(game);
+		}, function(err) { next(err); });
+	});
+	
 }

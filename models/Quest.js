@@ -4,6 +4,16 @@ var _ = require('underscore');
 module.exports = function(mongoose) {
 	
 	
+	var ReviewSchema = new mongoose.Schema({
+		account_id: {type: mongoose.Schema.ObjectId, ref:'Account', index:true},
+		date_created: {type:Date, 'default':Date.now},
+		review_text: {type:String, 'default':''},
+		rating: {type: Number,'default':0},
+		game_id: {type: mongoose.Schema.ObjectId, ref:'Game', index:true}
+	});
+	
+	var Review = mongoose.model('Review',ReviewSchema);
+	
 	var QuestSchema = new mongoose.Schema({
 		title: { type:String } ,
 		accountId: {type:mongoose.Schema.ObjectId},
@@ -25,7 +35,8 @@ module.exports = function(mongoose) {
 		games_played: {type:Number, 'default':10},
 		distance:{type:Number, 'default':3},
 		time:{type:Number, 'default':60},
-		map_url:{type:String,'default':""}
+		map_url:{type:String,'default':""},
+		reviews: [ReviewSchema]
 	});
 	
 	QuestSchema.path('tags').set(
@@ -69,13 +80,32 @@ module.exports = function(mongoose) {
 		});
 	}
 	
+	var submit_review = function(q_id, review_json,success_callback, error_callback) {
+		Quest.findOne({_id:q_id}, function(err,quest) {
+			if ( err ) {
+				error_callback(err);
+			}else{
+				var review = new Review(review_json);
+				quest.reviews.push(review_json);
+				quest.save(function(err){
+					if ( err ) {
+						error_callback(err);
+					}else{
+						success_callback(review);
+					}
+				});
+			}
+		})
+	}
+	
 	return {
 		Quest: Quest,
 		create_new: create_new,
 		quests_by_account: quests_by_account,
 		Schema: QuestSchema,
 		validate_quest_to_account:validate_quest_to_account,
-		remove_quest:remove_quest
+		remove_quest:remove_quest,
+		submit_review: submit_review
 	};
 
 }
