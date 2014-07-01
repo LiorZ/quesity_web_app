@@ -388,7 +388,7 @@ app.get('/register', function(req,res,next) {
 	res.render("register.jade",{layout:false});
 });
 
-app.get('/quest/:q_id/pages',auth.auth_user_json,function(req,res,next) {
+app.get('/quest/:q_id/pages',function(req,res,next) {
 	var quest_id = req.param('q_id');
 		models.QuestPage.pages_by_quest_id(quest_id,function(pages){
 			res.send(pages);

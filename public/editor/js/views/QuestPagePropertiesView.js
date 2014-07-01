@@ -71,7 +71,6 @@ define(['views/ViewAttributes','lib/utils/consts','lib/utils/utils','jQueryUI_ta
 				theme_advanced_toolbar_align : "left",
 				theme_advanced_statusbar_location : "bottom",
 				theme_advanced_resizing : true,
-
 				// Drop lists for link/image/media/template dialogs
 				template_external_list_url : "lists/template_list.js",
 				external_link_list_url : "lists/link_list.js",
