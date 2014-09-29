@@ -39,7 +39,8 @@ define(['models/QuestPage','models/QuestPageCollection','Backbone','BackboneRela
 			rating:1,
 			distance:5,
 			time:60,
-			map_url:''
+			map_url:'',
+			access_restriction:"free"
 		},
 		idAttribute: "_id",
 		initialize:function(options) {

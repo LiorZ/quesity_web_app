@@ -157,6 +157,16 @@ define(['models/Quest','Backbone','text!shared_templates/quest_settings_dialog.h
 
 		},
 		
+		set_access_restriction:function() {
+			var current_restriction = this.model.get("access_restriction");
+			var option = this.$el.find("#access_restriction option[value='"+current_restriction+"']");
+			if ( _.isNull(option) || _.isUndefined(option) || option.length == 0 ) {
+				return;
+			}
+			option.attr("selected","selected");
+			
+		},
+		
 		render:function(){
 			var context = this;
 
@@ -201,6 +211,9 @@ define(['models/Quest','Backbone','text!shared_templates/quest_settings_dialog.h
 			//Refreshing the spinner:
 			this.$el.find('#time').spinner('pageUp');
 			this.$el.find('#time').spinner('pageDown');
+			
+			//Setting access restriction:
+			this.set_access_restriction();
 			
 			var dialog_obj = this.$el.find('#dlg_create_quest');
 			this.$el = this.$el.find('#dlg_create_quest').dialog(
@@ -248,6 +261,7 @@ define(['models/Quest','Backbone','text!shared_templates/quest_settings_dialog.h
 													lat:dialog_obj.find('#txt_lat').val(),
 													lng:dialog_obj.find('#txt_lng').val()
 												},
+												access_restriction:dialog_obj.find("#access_restriction option:selected").val(),
 												rating: dialog_obj.find('#rating').val(),
 												games_played: dialog_obj.find('#played').val(),
 												time: dialog_obj.find('#time').spinner('value'),

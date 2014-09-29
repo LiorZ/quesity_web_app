@@ -37,7 +37,11 @@ module.exports = function(mongoose) {
 		time:{type:Number, 'default':60},
 		map_url:{type:String,'default':""},
 		reviews: [ReviewSchema],
-		requires_code:{type:Boolean,'default':false}
+		access_restriction:{ type:String, enum:{
+				values:["code","in_app","free"],
+				message:"Wrong entry for access_restriction"
+			}
+		}
 	});
 	
 	QuestSchema.path('tags').set(

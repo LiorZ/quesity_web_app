@@ -138,7 +138,7 @@
 </fieldset>
 
 <fieldset id="temp_settings">
-	<legend>Temporary Settings</legend>
+	<legend>Misc Settings</legend>
 	<label for="rating">Rating: </label>
 	<input type="text" id="rating" name="rating" value="<%=rating%>"/>
 	<label for="played">Games Played:</label>
@@ -151,6 +151,12 @@
 	<input type="text" id="map_url" name="map_url" value="<%=map_url ||''%>" style="width:85%;"/>
 	<label for="street_address">Street Address: </label>
 	<input type="text" id="street_address" name="street_address" value="<%=starting_location.street%>" style="width:85%;"/>
+	<label for="access_restriction">Code Required?</label>
+	<select id="access_restriction" name="access_restriction">
+	 	<option value="free">Free</option>
+	 	<option value="code">Ticket Code</option>
+	 	<option value="in_app">In-App purchase</option>
+	</select>
 </fieldset>
 	  	
 	  </div>
