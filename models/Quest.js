@@ -40,7 +40,8 @@ module.exports = function(mongoose) {
 		access_restriction:{ type:String, enum:{
 				values:["code","in_app","free"],
 				message:"Wrong entry for access_restriction"
-			}
+			},
+			'default':'free'
 		}
 	});
 	
