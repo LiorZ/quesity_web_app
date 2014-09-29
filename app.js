@@ -534,16 +534,22 @@ app.post('/app/feedback',auth.auth_user_json,function(req,res,next) {
 	res.send(200);
 });
 
-//app.get('/admin/game/:game_id/show', auth.auth_user_web, function(req,res) {
-//	var game_id = req.param('game_id',0);
-//	models.Game.Game.findOne({_id:game_id}).populate('quest_id').exec(function(err,g) {
-//		if ( err ) {
-//			res.send(401);
-//			return;
-//		}
-//		res.send(g);
-//	});
-//});
+app.post('/app/validate_code',auth.auth_user_json,function(req,res,next) {
+	
+	var code = req.body.code;
+	if ( code == undefined || code == null ) {
+		res.send(401);
+	}
+	
+	models.UsageCode.validate_code(code,{
+		success:function(code) {
+			res.send({code:code});
+		},error:function(err){
+			res.send(401);
+		}
+	});
+	
+});
 
 app.get('/logoff',auth.auth_user_web,function(req,res) {
 	req.logout();

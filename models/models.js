@@ -8,6 +8,7 @@ module.exports = function(mongoose) {
 	models.Account = require('./Account')(mongoose,models.Quest);
 	models.Feedback = require('./Feedback')(mongoose);
 	models.Game = require('./Game')(mongoose,models.Quest);
+	models.UsageCode = require('./UsageCode')(mongoose);
 	var _ = require('underscore');
 	var extend = require('mongoose-schema-extend');
 

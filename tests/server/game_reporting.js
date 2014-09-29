@@ -11,7 +11,7 @@ var fixtures = require('pow-mongoose-fixtures');
 var login_cookie = {};
 var test_data = {}
 before(function(done){
-	db = mongoose.connect('mongodb://localhost/quesity-test', function(err) { if (err) { console.log(err); } else { done(); } } );
+	db = mongoose.createConnection('mongodb://localhost/quesity-test', function(err) { if (err) { console.log(err); } else { done(); } } );
 });
 before(function(done) {
 	fixtures.load('../fixtures/',db, function(err) {

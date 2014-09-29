@@ -36,7 +36,8 @@ module.exports = function(mongoose) {
 		distance:{type:Number, 'default':3},
 		time:{type:Number, 'default':60},
 		map_url:{type:String,'default':""},
-		reviews: [ReviewSchema]
+		reviews: [ReviewSchema],
+		requires_code:{type:Boolean,'default':false}
 	});
 	
 	QuestSchema.path('tags').set(
