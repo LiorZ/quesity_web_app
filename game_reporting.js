@@ -11,7 +11,8 @@ module.exports = function(params) {
 				quest_id:quest_id,
 				account_id: account_id,
 				date_started: date_started,
-				is_at_starting_location: req.body.is_at_starting_location
+				is_at_starting_location: req.body.is_at_starting_location,
+				access_code: req.body.access_code
 		};
 		
 		models.Game.new_game(new_game,{

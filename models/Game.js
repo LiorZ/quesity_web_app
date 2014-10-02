@@ -27,7 +27,7 @@ module.exports = function(mongoose,Quest) {
 		moves:[{type: mongoose.Schema.ObjectId, ref:'Move'}],
 		locations:[{type:mongoose.Schema.ObjectId,ref:'Location'}],
 		remaining_hints:{type:Number, 'default':0},
-		code:{type:Number,'default':0}
+		access_code:{type:Number,'default':0}
 	});
 	
 	GameSchema.index({account:1, quest:1});

@@ -534,7 +534,7 @@ app.post('/app/feedback',auth.auth_user_json,function(req,res,next) {
 	res.send(200);
 });
 
-app.post('/app/validate_code',auth.auth_user_json,function(req,res,next) {
+app.post('/app/validate_code',function(req,res,next) {
 	
 	var code = req.body.code;
 	if ( code == undefined || code == null ) {
