@@ -2,7 +2,8 @@ module.exports = function(mongoose) {
 	
 	var UsageCodeSchema = new mongoose.Schema({
 		code: {type:String,unique: true,index:true},
-		used:{type:Boolean, 'default':false}
+		used:{type:Boolean, 'default':false},
+		printed:{type:Boolean,'default':false}
 	});
 	
 	var UsageCode = mongoose.model("UsageCode",UsageCodeSchema);
