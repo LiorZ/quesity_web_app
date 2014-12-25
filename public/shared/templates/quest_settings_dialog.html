@@ -1,23 +1,23 @@
 
 <div id='dlg_create_quest'>
-	
+
 <style type="text/css" media="screen">
-	
+
 	.select_box_image {
 		height:32px;
 		width:32px;
 		vertical-align:middle;
 	}
-	
+
 	#tabs .ui-tabs-panel {
     height:450px;
     overflow: auto;
    }
-   
+
     #tactics input, #tactics label, #temp_settings input, #temp_settings label {
     	display:block;
     }
-    
+
 	.ui-spinner {
 		margin-bottom:20px;
 		margin-top:10px;
@@ -36,7 +36,7 @@
 	fieldset {
 		margin-bottom:30px;
 	}
-	
+
 	#add_image {
 		margin-left:auto;
 		margin-right: auto;
@@ -46,7 +46,7 @@
 	.ad-thumbs img {
 		width:90px;
 		height:60px;
-	} 
+	}
 </style>
 	<div id="tabs" style="padding-top:10px;">
 	  <ul>
@@ -60,7 +60,7 @@
 		<br/>
 		<label for="description" class='form_field'>Description</label><br/>
 		<textarea name="description" style='width:30em; height:20em;'  class='form_field' id='description'><%=description%></textarea>
-		
+
 	  </div>
 	  <div id="properties">
 	  	<fieldset id="" class="">
@@ -81,7 +81,7 @@
 		<legend>First Page of the Quest</legend>
 	  	<select id='select_first_page' name='select_first_page' style="width:90%;">
 			<% _.each(pages, function(page) { %>
-			<option data-page-id='<%=page._id%>' data-page-type='<%=page.page_type%>' value='<%= page.page_number%>'    
+			<option data-page-id='<%=page._id%>' data-page-type='<%=page.page_type%>' value='<%= page.page_number%>'
 				<% if (page.is_first) { %>
 					SELECTED
 				<% } %> >
@@ -90,7 +90,7 @@
 			</option>
 			<% }); %>
 		</select>
-	  		
+
 	  	</fieldset>
 	  	<fieldset id="tag_fieldset" class="">
 			<legend>Tags</legend>
@@ -121,7 +121,7 @@
 								<a href="http://coffeescripter.com/code/ad-gallery/images/4.jpg"><img src="http://coffeescripter.com/code/ad-gallery/images/thumbs/t4.jpg" title="Title for 1.jpg" class='image2'></a>
 							</li>
 							<li>
-								
+
 								<a href="http://coffeescripter.com/code/ad-gallery/images/3.jpg"><img src="http://coffeescripter.com/code/ad-gallery/images/thumbs/t3.jpg" title="Title for 1.jpg" class='image3'></a>
 							</li> -->
 							<% for(var i=0; i<images.length; ++i) { %>
@@ -157,30 +157,33 @@
 	 	<option value="code">Ticket Code</option>
 	 	<option value="in_app">In-App purchase</option>
 	</select>
+	<label for="ages">Ages:</label>
+	<input type="text" id="ages" name="ages" value="<%=ages%>" />
+	<label for="quest_type">Type of Quest:</label>
+	<input type="text" id="quest_type" name="quest_type" value="<%=quest_type%>"/>
 </fieldset>
-	  	
+
 	  </div>
 	  <div id="tactics">
 	  <fieldset>
 		<legend>Tactics</legend>
 		<label for='allowed_hints'>Number of hints the player is allowed to take during the quest:</label>
 		<input type='text' name='allowed_hints' class='form_field' id='allowed_hints' value="<%=allowed_hints%>"/><br/>
-		<label for="allowed_public_questions">Number of public questions the player is allowed to ask during the quest:</label> 
+		<label for="allowed_public_questions">Number of public questions the player is allowed to ask during the quest:</label>
 		<input type='text' name='allowed_public_questions' class='form_field' id='allowed_public_questions' value="<%=allowed_public_questions%>"/><br/>
 		<label for="allowed_location_finders">Number of location hints the player is allowed to take during the quest:</label>
 		<input type='text' name='allowed_location_finders' class='form_field' id='allowed_location_finders' value="<%=allowed_location_finders%>"/><br/>
 	  </fieldset>
 	  </div>
 	</div>
-	
-	
+
+
 	<!-- <form id='frm_create_quest'>
 		<fieldset id="fieldset" class="">
 		  <legend>Quest details</legend>
 		  Name: <input type='text' id='txt_quest_title' name='txt_quest_title'/>
-		</fieldset>	
+		</fieldset>
 	</form> -->
 	<div id='map_container'></div>
 	<button id='btn_del_img' name='btn_del_img' style='display:block; position:absolute; height:2em;'></button>
 </div>
-

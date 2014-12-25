@@ -8,7 +8,7 @@ define(['models/QuestPage','models/QuestPageCollection','Backbone','BackboneRela
 			street:''
 		}
 	});
-	
+
 	var Quest = Backbone.RelationalModel.extend({
 		relations: [{
 			type: Backbone.HasMany,
@@ -40,7 +40,9 @@ define(['models/QuestPage','models/QuestPageCollection','Backbone','BackboneRela
 			distance:5,
 			time:60,
 			map_url:'',
-			access_restriction:"free"
+			access_restriction:"free",
+			ages:'0-100',
+			quest_type:'Museum'
 		},
 		idAttribute: "_id",
 		initialize:function(options) {
@@ -59,7 +61,7 @@ define(['models/QuestPage','models/QuestPageCollection','Backbone','BackboneRela
 //			page.set('quest',this);
 //		}
 	});
-	
-	
+
+
 	return Quest;
 });

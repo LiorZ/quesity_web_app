@@ -2,8 +2,8 @@
 
 var _ = require('underscore');
 module.exports = function(mongoose) {
-	
-	
+
+
 	var ReviewSchema = new mongoose.Schema({
 		account_id: {type: mongoose.Schema.ObjectId, ref:'Account', index:true},
 		date_created: {type:Date, 'default':Date.now},
@@ -11,9 +11,9 @@ module.exports = function(mongoose) {
 		rating: {type: Number,'default':0},
 		game_id: {type: mongoose.Schema.ObjectId, ref:'Game', index:true}
 	});
-	
+
 	var Review = mongoose.model('Review',ReviewSchema);
-	
+
 	var QuestSchema = new mongoose.Schema({
 		title: { type:String } ,
 		accountId: {type:mongoose.Schema.ObjectId},
@@ -42,32 +42,34 @@ module.exports = function(mongoose) {
 				message:"Wrong entry for access_restriction"
 			},
 			'default':'free'
-		}
+		},
+		ages: { type:String, 'default': '8-100'},
+		quest_type:{type:String, 'default':'Museum'}
 	});
-	
+
 	QuestSchema.path('tags').set(
 	function(tag_arr) {
 		var tag_uniq = _.uniq(tag_arr);
 		return tag_uniq;
 	});
-	
+
 	var Quest = mongoose.model('Quest',QuestSchema);
 
 	var create_new = function(data,success_callback,error_callback) {
 		var new_quest = new Quest(data);
 		new_quest.save(function(err) { if ( err) error_callback(err); else { success_callback(new_quest) }});
 	};
-	
+
 	var quests_by_account = function(accountId,success_callback,error_callback) {
 		Quest.find({accountId:accountId},function(err,doc) {
 			if (err) {
 				error_callback(err);
-			}else { 
+			}else {
 				success_callback(doc);
 			}
 		});
 	};
-	
+
 	var validate_quest_to_account = function(accountId,quest_id,success_callback,error_callback) {
 		Quest.findOne({accountId:accountId, _id:quest_id},function(err,doc) {
 			if (err) {
@@ -75,7 +77,7 @@ module.exports = function(mongoose) {
 			}else { success_callback(doc) }
 		});
 	}
-	
+
 	var remove_quest = function(q_id,account_id,success_callback,error_callback) {
 		Quest.remove({accountId:account_id, _id: q_id},function(err){
 			if ( err ){
@@ -85,7 +87,7 @@ module.exports = function(mongoose) {
 			}
 		});
 	}
-	
+
 	var submit_review = function(q_id, review_json,success_callback, error_callback) {
 		Quest.findOne({_id:q_id}, function(err,quest) {
 			if ( err ) {
@@ -103,7 +105,7 @@ module.exports = function(mongoose) {
 			}
 		})
 	}
-	
+
 	return {
 		Quest: Quest,
 		create_new: create_new,
